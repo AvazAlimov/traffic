@@ -11,7 +11,6 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="panel panel-primary">
-                    {{-- <div class="panel-heading">Admin Dashboard</div> --}}
                     <div class="panel-body">
                         <ul class="nav nav-pills nav-stacked">
                             <li data-toggle="tab" class="active"><a onclick="switchSection('section1')">Тип авто</a>
