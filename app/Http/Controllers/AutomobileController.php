@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Automobile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class AutomobileController extends Controller
 {
@@ -63,7 +64,18 @@ class AutomobileController extends Controller
 		$automobile->name = $request->name;
 		$automobile->info = $request->info;
 		$automobile->price = $request->price;
-		$automobile->image = $request->image;
+		if($request->file('image') != null) {
+            $file = $request->file('image');
+            $file_name = time().'.'.$file->getClientOriginalName();
+            $location = public_path('automobile/');
+            $file->move($location, $file_name);
+            if($automobile->image != null)
+            {
+                $old_image = $automobile->image;
+                File::delete(public_path('automobile/').$old_image);
+            }
+            $automobile->image = $file_name;
+        }
 		$automobile->save();
 
 		return redirect()->intended(route('admin.dashboard'));

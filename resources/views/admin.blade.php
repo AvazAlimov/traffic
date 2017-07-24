@@ -36,7 +36,7 @@
                             <th class="col-md-5">Info</th>
                             <th class="col-md-1">Price</th>
                             <th>Image</th>
-                            <th class="col-md-2"></th>
+                            <th class="col-md-2">Controls</th>
                           </tr>
                         </thead>
                         @foreach ($automobiles as $automobile)
@@ -46,8 +46,8 @@
                             <td>{{ $automobile->name }}</td>
                             <td>{{ $automobile->info }}</td>
                             <td>{{ $automobile->price }}</td>
-                            <td>{{ $automobile->image }}</td>
-                            <th>
+                            <td><img id="price" src="{{ "automobile/".$automobile->image }}" style="width: 200px; height: 120px;"></td>
+                            <td>
                                 <form action="{{ route('automobile.show', $automobile->id) }}" method="get">
                                     <button type="submit" class="btn btn-default">Edit</button>
                                 </form>
@@ -55,7 +55,7 @@
                                 {{ csrf_field() }}
                                   <button type="submit" class="btn btn-default">Remove</button>
                                 </form>
-                            </th>
+                            </td>
                           </tr>
                           {{ $a++ }}
                         @endforeach
