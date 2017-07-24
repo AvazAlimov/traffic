@@ -30,6 +30,18 @@ class AdminOperatorController extends Controller
 		$operator->name = $request->name;
 		$operator->username = $request->username;
 		$operator->password = bcrypt($request->password);
+        if($request->file('image') != null) {
+            $file = $request->file('image');
+            $file_name = time().'.'.$file->getClientOriginalName();
+            $location = public_path('operator/');
+            $file->move($location, $file_name);
+            if($operator->image != null)
+            {
+                $old_image = $operator->image;
+                File::delete(public_path('operator/').$old_image);
+            }
+            $operator->image = $file_name;
+        }
 		$operator->save();
 
 		return redirect()->intended(route('admin.dashboard'));

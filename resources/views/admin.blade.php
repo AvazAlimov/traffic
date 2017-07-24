@@ -82,7 +82,7 @@
                             <tr>
                                 <th>#</th>
                                 <th class="col-md-3">Name</th>
-                                <th class="col-md-3">Email</th>
+                                <th class="col-md-3">Image</th>
                                 <th class="col-md-2">Created At</th>
                                 <th class="col-md-2"></th>
                             </tr>
@@ -92,7 +92,7 @@
                                 <tr>
                                     <td>{{ $a + 1 }}</td>
                                     <td>{{ $operator->name }}</td>
-                                    <td>{{ $operator->email }}</td>
+                                    <td>{{ $operator->image }}</td>
                                     <td>{{ $operator->created_at }}</td>
                                     <th>
                                         <form action="{{ route('operator.show', $operator->id) }}" method="get">
