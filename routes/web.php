@@ -29,6 +29,19 @@ Route::prefix('admin')->group(function(){
 	// Route::post('/passwords/reset', 'Auth\AdminResetPasswordController@reset');
 	// Route::get('/password/reset/{token}', 'Auth\AdminResetPasswordController@showResetForm')->name('admin.password.reset');
 });
+Route::prefix('operator')->group(function(){
+    Route::get('/login', 'Auth\OperatorLoginController@showLoginForm')->name('operator.login');
+    Route::post('/login', 'Auth\OperatorLoginController@login')->name('operator.login.submit');
+    Route::get('/', 'OperatorController@index')->name('operator.dashboard');
+    Route::get('/logout', 'Auth\OperatorLoginController@logout')->name('operator.logout');
+
+    Route::get('/create', 'AdminOperatorController@index')->name('operator.create');
+    Route::post('/create', 'AdminOperatorController@store')->name('operator.create.submit');
+    Route::get('/{id}', 'AdminOperatorController@showOperatorForm')->name('operator.show');
+    Route::post('/update{id}', 'AdminOperatorController@update')->name('operator.update');
+    Route::post('/delete{id}', 'AdminOperatorController@delete')->name('operator.delete');
+
+});
 
 Route::get('automobile/create', 'AutomobileController@index')->name('automobile.create');
 Route::post('automobile/create', 'AutomobileController@store')->name('automobile.create.submit');
@@ -36,11 +49,6 @@ Route::get('automobile/{id}', 'AutomobileController@showAutomobileForm')->name('
 Route::post('automobile/update{id}', 'AutomobileController@update')->name('automobile.update');
 Route::post('automobile/delete{id}', 'AutomobileController@delete')->name('automobile.delete');
 
-Route::get('operator/create', 'OperatorController@index')->name('operator.create');
-Route::post('operator/create', 'OperatorController@store')->name('operator.create.submit');
-Route::get('operator/{id}', 'OperatorController@showOperatorForm')->name('operator.show');
-Route::post('operator/update{id}', 'OperatorController@update')->name('operator.update');
-Route::post('operator/delete{id}', 'OperatorController@delete')->name('operator.delete');
 
 
 Route::post('tarif/update{id}', 'AdminController@updateTarif')->name('tarif.update');

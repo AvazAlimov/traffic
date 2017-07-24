@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOperatorsTable extends Migration
+class CreateOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,8 @@ class CreateOperatorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('operators', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('image')->nullable();
-
-            $table->string('username')->unique();
-            $table->string('name')->nullable();
-            $table->string('password');
-            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -32,6 +26,6 @@ class CreateOperatorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('operators');
+        Schema::dropIfExists('orders');
     }
 }

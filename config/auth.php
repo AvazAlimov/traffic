@@ -50,6 +50,10 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+        'operator' => [
+            'driver' => 'session',
+            'provider' => 'operators',
+        ],
     ],
 
     /*
@@ -77,6 +81,10 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Admin::class,
+        ],
+        'operators' => [
+            'driver' => 'eloquent',
+            'model' => App\Operator::class,
         ],
         // 'users' => [
         //     'driver' => 'database',
@@ -109,7 +117,12 @@ return [
             'provider' => 'admins',
             'table' => 'password_resets',
             'expire' => 15,
-        ]
+        ],
+        'operators' => [
+            'provider' => 'operators',
+            'table' => 'password_resets',
+            'expire' => 45,
+        ],
     ],
 
 ];
