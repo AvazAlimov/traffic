@@ -96,6 +96,7 @@
                                     <td>{{ $operator->created_at }}</td>
                                     <th>
                                         <form action="{{ route('operator.show', $operator->id) }}" method="get">
+                                            {{ csrf_field() }}
                                             <button type="submit" class="btn btn-default">Edit</button>
                                         </form>
                                         <form action="{{ route('operator.delete', $operator->id) }}" method="post">
