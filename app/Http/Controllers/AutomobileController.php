@@ -22,7 +22,8 @@ class AutomobileController extends Controller
 		$this->validate($request, [
     		'name' => 'required',
     		'price' => 'required',
-    		'info' => 'required'
+    		'info' => 'required',
+
 		]);
 
 		//set a Model
@@ -30,8 +31,15 @@ class AutomobileController extends Controller
 		$automobile->name = $request->name;
 		$automobile->info = $request->info;
 		$automobile->price = $request->price;
-		$automobile->image = $request->image;
-		$automobile->save();
+
+        if($request->file('image') != null) {
+            $file = $request->file('image');
+            $file_name = time().'.'.$file->getClientOriginalName();
+            $location = public_path('automobile/');
+            $file->move($location, $file_name);
+            $automobile->image = $file_name;
+        }
+        $automobile->save();
 
 		return redirect()->intended(route('admin.dashboard'));
 	}
