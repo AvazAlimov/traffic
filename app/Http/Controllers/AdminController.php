@@ -31,16 +31,25 @@ class AdminController extends Controller
         $tarifs = DB::table('tarifs')->get();
         return view('admin')->with('automobiles', $automobiles)->with('operators', $operators)->with('tarifs', $tarifs);
     }
-    public function updateTarif(Request $request, $id){
+    public function updateTarif(Request $request, $id)
+    {
         $tarif = Tarif::find($id);
+
         if($tarif->type == 0){
             $tarif->price_per_hour = $request->price_per_hour;
             $tarif->min_hour = $request->min_hour;
         }
+        else
+        {
+            $tarif->price_per_distance = $request->price_per_distance;
+            $tarif->min_distance = $request->min_distance;
+        }
 
         $tarif->price_minimum =$request->price_minimum;
         $tarif->price_per_person =$request->price_per_person;
+        $tarif->discard = $request->discard;
         $tarif->save();
+
         return redirect()->back();
     }
     public function sendPasswordResetNotification($token)
