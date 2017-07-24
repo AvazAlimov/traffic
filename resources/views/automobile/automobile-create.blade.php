@@ -59,7 +59,7 @@
 								<label for="image" class="col-md-2 control-label">Image</label>
 
 								<div class="col-md-10">
-									<input id="price" type="file" min="0" class="form-control" name="image">
+									<input id="price" type="file" min="0" class="form-control" name="image" accept="image/*">
 
 									@if ($errors->has('image'))
 										<span class="help-block">
