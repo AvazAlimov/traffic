@@ -71,10 +71,10 @@
             </div>
             <div id="section2" class="section">
                 <h1>Users</h1>
-                @php 
+                @php
                     $a = 0; 
                 @endphp
-                <div class="table-responsive">          
+                <div class="table-responsive">
                     <table class="table">
                         <thead>
                           <tr>
@@ -115,6 +115,58 @@
                 </form> 
             </div>
             <div id="section3" class="section">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th class="col-md-1">#</th>
+                            <th class="col-md-2">Price</th>
+                            <th class="col-md-2">Minimum </th>
+                            <th class="col-md-2">Minimum Price</th>
+                            <th class="col-md-2">Price per Person</th>
+                            <th class="col-md-1">Discard</th>
+                            <th class="col-md-1">Updated at</th>
+                            <th class="col-md-1"></th>
+                        </tr>
+                        </thead>
+                        @foreach ($tarifs as $tarif)
+                            @if($tarif->type == 0)
+
+                                <form method="post" action="{{route('tarif.update', 0)}}">
+                                    {{ csrf_field() }}
+                                <tbody>
+                                <tr>
+
+                                        <td>{{ $tarif->type}}</td>
+                                        <td><input type="number" min="0" name="price_per_hour" value="{{ $tarif->price_per_hour }}"></td>
+                                        <td><input type="number" min="0" name="min_hour" value="{{ $tarif->min_hour }}"> hour</td>
+                                        <td><input type="number" min="0" name="price_minimum" value="{{ $tarif->price_minimum }}"></td>
+                                        <td><input type="number" min="0" name="price_per_person" value="{{ $tarif->price_per_person }}"></td>
+                                        <td><input type="number" min="0" name="discard" value="{{ $tarif->discard }}"></td>
+                                        <td>{{ $tarif->updated_at }}</td>
+                                        <td><input type="submit" class="btn btn-primary"></td>
+
+                                </tr>
+                                </form>
+
+                            @else
+                                <tbody>
+                                <tr>
+                                    <td>{{ $tarif->type}}</td>
+                                    <td>{{ $tarif->price_per_distance }}</td>
+                                    <td>{{ $tarif->min_distance }} km</td>
+                                    <td>{{ $tarif->price_minimum }}</td>
+                                    <td>{{ $tarif->price_per_person }}</td>
+                                    <td>{{ $tarif->discard }}</td>
+                                    <td>{{ $tarif->updated_at }}</td>
+                                </tr>
+                                @endif
+                                @endforeach
+                                </tbody>
+                    </table>
+
+                </div>
+
                 <h1>Prices</h1>
             </div>
         </div>

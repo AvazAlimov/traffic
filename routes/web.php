@@ -41,3 +41,6 @@ Route::post('operator/create', 'OperatorController@store')->name('operator.creat
 Route::get('operator/{id}', 'OperatorController@showOperatorForm')->name('operator.show');
 Route::post('operator/update{id}', 'OperatorController@update')->name('operator.update');
 Route::post('operator/delete{id}', 'OperatorController@delete')->name('operator.delete');
+
+
+Route::post('tarif/update{id}', 'AdminController@updateTarif')->name('tarif.update');
