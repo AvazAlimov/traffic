@@ -57,7 +57,8 @@ class AutomobileController extends Controller
 		$this->validate($request, [
     		'name' => 'required',
     		'price' => 'required',
-    		'info' => 'required'
+    		'info' => 'required',
+            'image' => 'mimes:jpeg,jpg,png | max:2048',
 		]);
 
 		$automobile = Automobile::find($id);

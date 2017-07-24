@@ -23,6 +23,7 @@ class AdminOperatorController extends Controller
     		'name' => 'required',
     		'username' => 'required',
     		'password' => 'required',
+            'image' => 'mimes:jpeg,jpg,png | max:2048',
 		]);
 
 		//set a Model

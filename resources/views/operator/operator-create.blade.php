@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Register</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('operator.create.submit') }}">
+                    <form class="form-horizontal" method="POST" action="{{ route('operator.create.submit') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -64,7 +64,7 @@
                             <label for="image" class="col-md-4 control-label">Image</label>
 
                             <div class="col-md-6">
-                                <input id="price" type="file" min="0" class="form-control" name="image">
+                                <input id="price" type="file" min="0" class="form-control" name="image" accept="image/*">
 
                                 @if ($errors->has('image'))
                                     <span class="help-block">
