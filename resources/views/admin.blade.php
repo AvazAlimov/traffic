@@ -4,26 +4,24 @@
         .section {
             display: none;
         }
+        #navbar{
+            margin: 0;
+        }
     </style>
 @endsection
 @section('content')
-    <div class="container-fluid">
+    <nav class="navbar navbar-default" style="border-radius: 0;">
+        <ul class="nav navbar-nav">
+            <li data-toggle="tab" class="active"><a onclick="switchSection('section1')"><i class="fa fa-car"></i> Автомобили</a></li>
+            <li data-toggle="tab"><a onclick="switchSection('section2')"><i class="fa fa-users"></i> Пользователи</a></li>
+            <li data-toggle="tab"><a onclick="switchSection('section3')"><i class="fa fa-money"></i> Цены</a></li>
+        </ul>
+    </nav>
+    <div class="container-fluid" style="padding: 0;">
         <div class="row">
-            <div class="col-md-2">
-                <div class="panel panel-primary">
-                    <div class="panel-body">
-                        <ul class="nav nav-pills nav-stacked">
-                            <li data-toggle="tab" class="active"><a onclick="switchSection('section1')">Тип авто</a>
-                            </li>
-                            <li data-toggle="tab"><a onclick="switchSection('section2')">Users</a></li>
-                            <li data-toggle="tab"><a onclick="switchSection('section3')">Prices</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-10 col-md-offset-0">
+            <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section" style="display: block;">
-                    <h1>Automobiles</h1>
+                    <h1>Автомобили</h1>
                     @php
                         $a = 0;
                     @endphp
@@ -71,7 +69,7 @@
                     </form>
                 </div>
                 <div id="section2" class="section">
-                    <h1>Users</h1>
+                    <h1>Пользователи</h1>
                     @php
                         $a = 0;
                     @endphp
@@ -117,7 +115,7 @@
                     </form>
                 </div>
                 <div id="section3" class="section">
-                    <h1>Prices</h1>
+                    <h1>Цены</h1>
                     @foreach ($tarifs as $tarif)
                         @if($tarif->type == 0)
                             <div class="container">
