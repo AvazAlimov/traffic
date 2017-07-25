@@ -32,6 +32,7 @@
         <div>
             <label> From </label>
             {{Form::text('address_A',null)}}
+            {{Form::text()}}
         </div>
         <div>
             <label> To </label>
