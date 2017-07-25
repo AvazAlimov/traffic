@@ -54,9 +54,9 @@
                             </div>
 
                             <div class="col-md-12 form-group{{ $errors->has('image') ? ' has-error' : '' }}">
-                                <label for="image" class="col-md-3 control-label">Image</label>
+                                <label for="image" class="col-md-3 control-label">Изображение:</label>
                                 <div class="col-md-9">
-                                    <input id="price" type="file" min="0" class="form-control" name="image"
+                                    <input id="image" type="file" min="0" class="form-control" name="image"
                                            accept="image/*">
                                     @if ($errors->has('image'))
                                         <span class="help-block">

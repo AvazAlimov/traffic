@@ -79,44 +79,49 @@
                         <h2>Операторы</h2>
                     </div>
                     @foreach ($operators as $operator)
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <strong>{{ $operator->username }}</strong>
-                            </div>
-                            <div class="panel-body">
-                                <div class="media">
-                                    <div class="media-left">
-                                        <img src="{{ "operator/".$operator->image }}" class="img-circle"
-                                             style="width: 128px; height: 128px">
-                                    </div>
-                                    <div class="media-body">
-                                        <h3 class="media-heading">Имя: {{ $operator->name }}</h3>
-                                        <br>
-                                        <p><strong>Создан:</strong> {{ $operator->created_at }}</p>
-                                        <p><strong>Обновлен:</strong> {{ $operator->updated_at }}</p>
+                        <div class="col-md-6">
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <strong>{{ $operator->username }}</strong>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="media">
+                                        <div class="media-left">
+                                            <img src="{{ "operator/".$operator->image }}" class="img-circle"
+                                                 style="width: 128px; height: 128px">
+                                        </div>
+                                        <div class="media-body">
+                                            <h3 class="media-heading">Имя: {{ $operator->name }}</h3>
+                                            <br>
+                                            <p><strong>Создан:</strong> {{ $operator->created_at }}</p>
+                                            <p><strong>Обновлен:</strong> {{ $operator->updated_at }}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="panel-footer">
-                                <table>
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <form action="{{ route('operator.show', $operator->id) }}" method="get">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-primary pull-right">Изменить
-                                                </button>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <form action="{{ route('operator.delete', $operator->id) }}" method="post">
-                                                {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger pull-right">Удалить</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                <div class="panel-footer">
+                                    <table>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <form action="{{ route('operator.show', $operator->id) }}" method="get">
+                                                    {{ csrf_field() }}
+                                                    <button type="submit" class="btn btn-primary pull-right">Изменить
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form action="{{ route('operator.delete', $operator->id) }}"
+                                                      method="post">
+                                                    {{ csrf_field() }}
+                                                    <button type="submit" class="btn btn-danger pull-right">Удалить
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     @endforeach
