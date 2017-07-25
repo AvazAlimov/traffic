@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Operator;
+use Illuminate\Support\Facades\File;
 
 class AdminOperatorController extends Controller
 {
@@ -23,7 +24,7 @@ class AdminOperatorController extends Controller
     		'name' => 'required',
     		'username' => 'required',
     		'password' => 'required',
-            'image' => 'mimes:jpeg,jpg,png | max:2048',
+            'image' => 'image|max:2048',
 		]);
 
 		//set a Model
@@ -36,11 +37,6 @@ class AdminOperatorController extends Controller
             $file_name = time().'.'.$file->getClientOriginalName();
             $location = public_path('operator/');
             $file->move($location, $file_name);
-            if($operator->image != null)
-            {
-                $old_image = $operator->image;
-                File::delete(public_path('operator/').$old_image);
-            }
             $operator->image = $file_name;
         }
 		$operator->save();
@@ -60,7 +56,8 @@ class AdminOperatorController extends Controller
 		$this->validate($request, [
     		'name' => 'required',
     		'username' => 'required',
-    		'password' => 'required'
+    		'password' => 'required',
+            'image' => 'image|max:2048',
 		]);
 
 		//set a Model
@@ -68,7 +65,20 @@ class AdminOperatorController extends Controller
         $operator->username = $request->username;
         $operator->name = $request->name;
 		$operator->password = bcrypt($request->password);
-		$operator->image = $request->image;
+
+        if($request->file('image') != null) {
+            if($operator->image != null)
+            {
+                $old_image = $operator->image;
+                File::delete(public_path('operator/').$old_image);
+            }
+            $file = $request->file('image');
+            $file_name = time().'.'.$file->getClientOriginalName();
+            $location = public_path('operator/');
+            $file->move($location, $file_name);
+            $operator->image = $file_name;
+        }
+
 		$operator->save();
 
 		return redirect()->intended(route('admin.dashboard'));
@@ -77,6 +87,11 @@ class AdminOperatorController extends Controller
 	public function delete($id)
 	{
 		$operator = Operator::find($id);
+        if($operator->image != null)
+        {
+            $old_image = $operator->image;
+            File::delete(public_path('operator/').$old_image);
+        }
 		$operator->delete();
 		return redirect()->intended(route('admin.dashboard'));
 	}

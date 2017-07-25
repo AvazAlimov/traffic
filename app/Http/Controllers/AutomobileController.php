@@ -58,7 +58,7 @@ class AutomobileController extends Controller
     		'name' => 'required',
     		'price' => 'required',
     		'info' => 'required',
-            'image' => 'mimes:jpeg,jpg,png | max:2048',
+            'image' => 'image | max:2048',
 		]);
 
 		$automobile = Automobile::find($id);
