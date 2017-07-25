@@ -9,7 +9,6 @@
                 <div class="panel-body">
                     <form class="form-horizontal" method="POST" action="{{ route('admin.login.submit') }}">
                         {{ csrf_field() }}
-
                         <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
                             <label for="username" class="col-md-4 control-label">Имя пользователя:</label>
 
@@ -52,10 +51,6 @@
                                 <button type="submit" class="btn btn-primary">
                                     Авторизоваться
                                 </button>
-
-                                <!--a class="btn btn-link" href="{{-- {{ route('admin.password.request') }} --}}">
-                                    Forgot Your Password?
-                                </a-->
                             </div>
                         </div>
                     </form>

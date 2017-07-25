@@ -69,10 +69,10 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @if (Auth::check())
-                        <a href="{{ url('/home') }}">Home</a>
+                        <a href="{{ url('/home') }}">Главная</a>
                     @else
-                        <a href="{{ url('/login') }}">Login</a>
-                        <a href="{{ url('/register') }}">Register</a>
+                        <a href="{{ url('/login') }}">Авторизоваться</a>
+                        <a href="{{ url('/register') }}">Зарегистрироваться</a>
                     @endif
                 </div>
             @endif
@@ -82,7 +82,7 @@
                     <div class="col-md-8 col-md-offset-2">
                         <div class="panel">
                             @component('components.who')
-                    @endcomponent
+                            @endcomponent
                         </div>
                     </div>
                 </div>
