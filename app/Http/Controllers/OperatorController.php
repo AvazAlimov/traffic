@@ -31,7 +31,7 @@ class OperatorController extends Controller
         }
 
         $tarifs = Tarif::all();
-        $tarif = array();
+       $tarif = array();
         foreach ($tarifs as $tr) {
             if($tr->type == 0)
                 $tarif[$tr->id] = "Inside";
@@ -41,7 +41,7 @@ class OperatorController extends Controller
 
 
 
-        return view('operator.order')->withCars($car)->withTarifs($tarif);
+        return view('operator.order')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif);
     }
     public function orderSubmit(Request $request){
 
