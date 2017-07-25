@@ -43,7 +43,8 @@
                     <div class="form-group col-md-12">
                         <label for="unit_id" id="label_tarif" class="col-md-2">Unit</label>
                         <div class="col-md-10">
-                            <input name="unit" type="number" value="{{ $tarifs[0]->min_hour  }}" min="0" class="form-control" id="unit_id">
+                            <input name="unit" type="number" value="{{ $tarifs[0]->min_hour  }}" min="0"
+                                   class="form-control" id="unit_id" onchange="unitChange()">
                             {{--{{Form::number('unit', null, ['class'=>'form-control', 'id' => 'unit_id'])}}--}}
                         </div>
                     </div>
@@ -91,17 +92,16 @@
         var tarif_index;
         var car_index;
         var persons_price;
+        var unit;
 
         function changeTarif() {
             tarif_index = document.getElementById('tarif_id').selectedIndex;
-            if (tarif_index === 0)
-            {
+            if (tarif_index === 0) {
                 document.getElementById('label_tarif').innerHTML = "Hours";
                 document.getElementById('unit_id').min = tarifs[tarif_index]['min_hour'];
                 document.getElementById('unit_id').value = tarifs[tarif_index]['min_hour'];
             }
-            else
-            {
+            else {
                 document.getElementById('label_tarif').innerHTML = "Kilometers";
                 document.getElementById('unit_id').min = tarifs[tarif_index]['min_distance'];
                 document.getElementById('unit_id').value = tarifs[tarif_index]['min_distance'];
@@ -119,20 +119,32 @@
             calculatePrice();
         }
 
+        function unitChange() {
+            if(document.getElementById('unit_id').value < 0)
+                changeTarif();
+            if (tarif_index === 0)
+                unit = (document.getElementById('unit_id').value - tarifs[tarif_index]['min_hour']) * tarifs[tarif_index]['price_per_hour'];
+            else
+                unit = (document.getElementById('unit_id').value - tarifs[tarif_index]['min_distance']) * tarifs[tarif_index]['price_per_distance'];
+            calculatePrice();
+        }
+
         function calculatePrice() {
             var price = tarifs[tarif_index]['price_minimum'];
             price += cars[car_index]['price'];
             price += persons_price;
+            price += unit;
             document.getElementById('sum_id').value = price;
         }
 
-        window.onload = function() {
+        window.onload = function () {
             tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
             car_index = document.getElementById('car_id').selectedIndex = 0;
             document.getElementById('person_id').value = 0;
             changeTarif();
             changeCar();
             personsChange();
+            unitChange();
         };
     </script>
 @endsection
