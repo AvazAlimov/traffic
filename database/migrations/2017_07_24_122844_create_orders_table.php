@@ -29,6 +29,7 @@ class CreateOrdersTable extends Migration
             $table->string('phone');
             $table->string('name');
             $table->double('sum');
+            $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
     }
