@@ -41,6 +41,10 @@ Route::prefix('operator')->group(function(){
     Route::post('/update{id}', 'AdminOperatorController@update')->name('operator.update');
     Route::post('/delete{id}', 'AdminOperatorController@delete')->name('operator.delete');
 
+    Route::prefix('/order')->group(function (){
+        Route::get('/create', 'OperatorController@createOrder')->name('operator.order.create');
+        Route::post('/submit', 'OperatorController@orderSubmit')->name('operator.order.submit');
+    });
 });
 
 Route::get('automobile/create', 'AutomobileController@index')->name('automobile.create');

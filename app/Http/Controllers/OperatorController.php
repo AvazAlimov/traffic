@@ -24,7 +24,24 @@ class OperatorController extends Controller
     }
     public function createOrder(){
         $cars = Automobile::all();
+        $car =array();
+        foreach ($cars as $key) {
+            $car[$key->id]= $key->name;
+        }
+
         $tarifs = Tarif::all();
-        return view('operator.order')->withCars($cars)->withTarifs($tarifs);
+        $tarif = array();
+        foreach ($tarifs as $tr) {
+            if($tr->type == 0)
+                $tarif[$tr->id] = "Inside";
+            else
+                $tarif[$tr->id] = "Outside";
+        }
+
+        return view('operator.order')->withCars($car)->withTarifs($tarif);
+    }
+    public function orderSubmit(Request $request){
+
+
     }
 }
