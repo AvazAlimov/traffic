@@ -66,7 +66,7 @@
                             <div class="form-group">
                                 <label class="col-md-4 control-label">Изображение:</label>
                                 <div class="col-md-6">
-                                    <img src="{{ $operator->image }}" class="img-circle"
+                                    <img src="{{ asset("operator_file/".$operator->image) }}" class="img-circle"
                                          style="width: 128px; height: 128px;"/>
                                 </div>
                             </div>

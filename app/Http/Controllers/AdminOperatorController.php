@@ -35,7 +35,7 @@ class AdminOperatorController extends Controller
         if($request->file('image') != null) {
             $file = $request->file('image');
             $file_name = time().'.'.$file->getClientOriginalName();
-            $location = public_path('operator/');
+            $location = public_path('operator_file/');
             $file->move($location, $file_name);
             $operator->image = $file_name;
         }
@@ -70,11 +70,11 @@ class AdminOperatorController extends Controller
             if($operator->image != null)
             {
                 $old_image = $operator->image;
-                File::delete(public_path('operator/').$old_image);
+                File::delete(public_path('operator_file/').$old_image);
             }
             $file = $request->file('image');
             $file_name = time().'.'.$file->getClientOriginalName();
-            $location = public_path('operator/');
+            $location = public_path('operator_file/');
             $file->move($location, $file_name);
             $operator->image = $file_name;
         }
@@ -90,7 +90,7 @@ class AdminOperatorController extends Controller
         if($operator->image != null)
         {
             $old_image = $operator->image;
-            File::delete(public_path('operator/').$old_image);
+            File::delete(public_path('operator_file/').$old_image);
         }
 		$operator->delete();
 		return redirect()->intended(route('admin.dashboard'));
