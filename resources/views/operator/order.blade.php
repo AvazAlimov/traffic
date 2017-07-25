@@ -22,9 +22,22 @@
         </div>
         <div>
             <label> Start Time</label>
-            {{Form::date('date')}}
-
+            {{Form::date('date', \Carbon\Carbon::now())}}
+            {{Form::time('time', \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('h:i'))}}
         </div>
+        <div>
+            <label> Unit km/hour</label>
+            {{Form::number('unit')}}
+        </div>
+        <div>
+            <label> From </label>
+            {{Form::text('address_A',null)}}
+        </div>
+        <div>
+            <label> To </label>
+            {{Form::text('address_B',null)}}
+        </div>
+
 
         {{Form::close()}}
 

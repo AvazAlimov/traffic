@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Automobile;
 use App\Tarif;
@@ -37,6 +38,8 @@ class OperatorController extends Controller
             else
                 $tarif[$tr->id] = "Outside";
         }
+
+
 
         return view('operator.order')->withCars($car)->withTarifs($tarif);
     }
