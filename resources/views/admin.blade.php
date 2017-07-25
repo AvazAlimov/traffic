@@ -86,7 +86,8 @@
                             <div class="panel-body">
                                 <div class="media">
                                     <div class="media-left">
-                                        <img src="{{ "operator/".$operator->image }}" class="img-circle" style="width: 128px; height: 128px">
+                                        <img src="{{ "operator/".$operator->image }}" class="img-circle"
+                                             style="width: 128px; height: 128px">
                                     </div>
                                     <div class="media-body">
                                         <h3 class="media-heading">Имя: {{ $operator->name }}</h3>
@@ -103,7 +104,8 @@
                                         <td>
                                             <form action="{{ route('operator.show', $operator->id) }}" method="get">
                                                 {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-primary pull-right">Изменить</button>
+                                                <button type="submit" class="btn btn-primary pull-right">Изменить
+                                                </button>
                                             </form>
                                         </td>
                                         <td>
@@ -127,187 +129,186 @@
                     </form>
                 </div>
                 <div id="section3" class="section">
-                    <h1>Цены</h1>
-                    @foreach ($tarifs as $tarif)
-                        @if($tarif->type == 0)
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <strong>Inside City</strong>
-                                            </div>
-                                            <div class="panel-body">
-                                                <form class="for-horizontal"
-                                                      action="{{ route('tarif.update', $tarif->id)  }}" method="post">
-                                                    {{ csrf_field() }}
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <label for="price_per_hour" class="col-md-4 control-label">Price
-                                                                per hour</label>
-                                                            <div class="col-md-8">
-                                                                <input id="price_per_hour" type="number" min="0"
-                                                                       class="form-control"
-                                                                       name="price_per_hour"
-                                                                       value="{{ $tarif->price_per_hour }}" required>
-                                                            </div>
+                    <div class="page-header">
+                        <h2>Цены</h2>
+                    </div>
+                    <div class="row">
+                        @foreach ($tarifs as $tarif)
+                            @if($tarif->type == 0)
+                                <div class="col-md-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <strong>Внутри города</strong>
+                                        </div>
+                                        <div class="panel-body">
+                                            <form class="for-horizontal"
+                                                  action="{{ route('tarif.update', $tarif->id)  }}" method="post">
+                                                {{ csrf_field() }}
+
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <label for="price_per_hour" class="col-md-6 control-label">Цена за час</label>
+                                                        <div class="col-md-5">
+                                                            <input id="price_per_hour" type="number" min="0"
+                                                                   class="form-control align-middle"
+                                                                   name="price_per_hour"
+                                                                   value="{{ $tarif->price_per_hour }}" required>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <p>сум</p>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <label for="min_hour" class="col-md-4 control-label">Minimum
-                                                                hour</label>
-                                                            <div class="col-md-8">
-                                                                <input id="min_hour" type="number" min="0"
-                                                                       class="form-control"
-                                                                       name="min_hour"
-                                                                       value="{{ $tarif->min_hour }}" required>
-                                                            </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <label for="min_hour" class="col-md-6 control-label">Час по умолчанию</label>
+                                                        <div class="col-md-5">
+                                                            <input id="min_hour" type="number" min="0"
+                                                                   class="form-control"
+                                                                   name="min_hour"
+                                                                   value="{{ $tarif->min_hour }}" required>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <p>сум</p>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <label for="price_minimum" class="col-md-4 control-label">Starting
-                                                                price</label>
-                                                            <div class="col-md-8">
-                                                                <input id="price_minimum" type="number" min="0"
-                                                                       class="form-control"
-                                                                       name="price_minimum"
-                                                                       value="{{ $tarif->price_minimum }}" required>
-                                                            </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <label for="price_minimum" class="col-md-4 control-label">Starting
+                                                            price</label>
+                                                        <div class="col-md-8">
+                                                            <input id="price_minimum" type="number" min="0"
+                                                                   class="form-control"
+                                                                   name="price_minimum"
+                                                                   value="{{ $tarif->price_minimum }}" required>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <label for="price_per_person"
-                                                                   class="col-md-4 control-label">Price for
-                                                                person</label>
-                                                            <div class="col-md-8">
-                                                                <input id="price_per_person" type="number" min="0"
-                                                                       class="form-control"
-                                                                       name="price_per_person"
-                                                                       value="{{ $tarif->price_per_person }}" required>
-                                                            </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <label for="price_per_person"
+                                                               class="col-md-4 control-label">Price for
+                                                            person</label>
+                                                        <div class="col-md-8">
+                                                            <input id="price_per_person" type="number" min="0"
+                                                                   class="form-control"
+                                                                   name="price_per_person"
+                                                                   value="{{ $tarif->price_per_person }}" required>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <label for="discard"
-                                                                   class="col-md-4 control-label">Discard</label>
-                                                            <div class="col-md-8">
-                                                                <input id="discard" type="number" min="0"
-                                                                       class="form-control"
-                                                                       name="discard"
-                                                                       value="{{ $tarif->discard }}" required>
-                                                            </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <label for="discard"
+                                                               class="col-md-4 control-label">Discard</label>
+                                                        <div class="col-md-8">
+                                                            <input id="discard" type="number" min="0"
+                                                                   class="form-control"
+                                                                   name="discard"
+                                                                   value="{{ $tarif->discard }}" required>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <input type="submit" class="btn btn-primary">
-                                                        </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <input type="submit" class="btn btn-primary pull-right">
                                                     </div>
-                                                </form>
-                                            </div>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @else
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <strong>Outside City</strong>
-                                            </div>
-                                            <div class="panel-body">
-                                                <form class="for-horizontal"
-                                                      action="{{ route('tarif.update', $tarif->id)  }}" method="post">
-                                                    {{ csrf_field() }}
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <label for="price_per_distance"
-                                                                   class="col-md-4 control-label">Price
-                                                                per distance</label>
-                                                            <div class="col-md-8">
-                                                                <input id="price_per_distance" type="number" min="0"
-                                                                       class="form-control"
-                                                                       name="price_per_distance"
-                                                                       value="{{ $tarif->price_per_distance }}"
-                                                                       required>
-                                                            </div>
+                            @else
+                                <div class="col-md-6">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <strong>За городом</strong>
+                                        </div>
+                                        <div class="panel-body">
+                                            <form class="for-horizontal"
+                                                  action="{{ route('tarif.update', $tarif->id)  }}" method="post">
+                                                {{ csrf_field() }}
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <label for="price_per_distance"
+                                                               class="col-md-4 control-label">Price
+                                                            per distance</label>
+                                                        <div class="col-md-8">
+                                                            <input id="price_per_distance" type="number" min="0"
+                                                                   class="form-control"
+                                                                   name="price_per_distance"
+                                                                   value="{{ $tarif->price_per_distance }}"
+                                                                   required>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <label for="min_distance" class="col-md-4 control-label">Minimum
-                                                                distance</label>
-                                                            <div class="col-md-8">
-                                                                <input id="min_distance" type="number" min="0"
-                                                                       class="form-control"
-                                                                       name="min_distance"
-                                                                       value="{{ $tarif->min_distance }}" required>
-                                                            </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <label for="min_distance" class="col-md-4 control-label">Minimum
+                                                            distance</label>
+                                                        <div class="col-md-8">
+                                                            <input id="min_distance" type="number" min="0"
+                                                                   class="form-control"
+                                                                   name="min_distance"
+                                                                   value="{{ $tarif->min_distance }}" required>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <label for="price_minimum" class="col-md-4 control-label">Starting
-                                                                price</label>
-                                                            <div class="col-md-8">
-                                                                <input id="price_minimum" type="number" min="0"
-                                                                       class="form-control"
-                                                                       name="price_minimum"
-                                                                       value="{{ $tarif->price_minimum }}" required>
-                                                            </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <label for="price_minimum" class="col-md-4 control-label">Starting
+                                                            price</label>
+                                                        <div class="col-md-8">
+                                                            <input id="price_minimum" type="number" min="0"
+                                                                   class="form-control"
+                                                                   name="price_minimum"
+                                                                   value="{{ $tarif->price_minimum }}" required>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <label for="price_per_person"
-                                                                   class="col-md-4 control-label">Price for
-                                                                person</label>
-                                                            <div class="col-md-8">
-                                                                <input id="price_per_person" type="number" min="0"
-                                                                       class="form-control"
-                                                                       name="price_per_person"
-                                                                       value="{{ $tarif->price_per_person }}" required>
-                                                            </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <label for="price_per_person"
+                                                               class="col-md-4 control-label">Price for
+                                                            person</label>
+                                                        <div class="col-md-8">
+                                                            <input id="price_per_person" type="number" min="0"
+                                                                   class="form-control"
+                                                                   name="price_per_person"
+                                                                   value="{{ $tarif->price_per_person }}" required>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <label for="discard"
-                                                                   class="col-md-4 control-label">Discard</label>
-                                                            <div class="col-md-8">
-                                                                <input id="discard" type="number" min="0"
-                                                                       class="form-control"
-                                                                       name="discard"
-                                                                       value="{{ $tarif->discard }}" required>
-                                                            </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <label for="discard"
+                                                               class="col-md-4 control-label">Discard</label>
+                                                        <div class="col-md-8">
+                                                            <input id="discard" type="number" min="0"
+                                                                   class="form-control"
+                                                                   name="discard"
+                                                                   value="{{ $tarif->discard }}" required>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <div class="col-md-12">
-                                                            <input type="submit" class="btn btn-primary">
-                                                        </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <input type="submit" class="btn btn-primary">
                                                     </div>
-                                                </form>
-                                            </div>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endif
-                    @endforeach
-                    {{--<td>{{ $tarif->type}}</td>--}}
-                    {{--<td>{{ $tarif->price_per_distance }}</td>--}}
-                    {{--<td>{{ $tarif->min_distance }} km</td>--}}
-                    {{--<td>{{ $tarif->price_minimum }}</td>--}}
-                    {{--<td>{{ $tarif->price_per_person }}</td>--}}
-                    {{--<td>{{ $tarif->discard }}</td>--}}
-                    {{--<td>{{ $tarif->updated_at }}</td>--}}
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
