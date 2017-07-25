@@ -15,7 +15,7 @@
         <ul class="nav navbar-nav">
             <li data-toggle="tab" class="active"><a onclick="switchSection('section1')"><i class="fa fa-car"></i>
                     Автомобили</a></li>
-            <li data-toggle="tab"><a onclick="switchSection('section2')"><i class="fa fa-users"></i> Пользователи</a>
+            <li data-toggle="tab"><a onclick="switchSection('section2')"><i class="fa fa-users"></i> Операторы</a>
             </li>
             <li data-toggle="tab"><a onclick="switchSection('section3')"><i class="fa fa-money"></i> Цены</a></li>
         </ul>
@@ -76,7 +76,7 @@
                 </div>
                 <div id="section2" class="section">
                     <div class="page-header">
-                        <h2>Пользователи</h2>
+                        <h2>Операторы</h2>
                     </div>
                     @foreach ($operators as $operator)
                         <div class="panel panel-default">
@@ -86,11 +86,13 @@
                             <div class="panel-body">
                                 <div class="media">
                                     <div class="media-left">
-                                        <img id="price" src="{{ "operator/".$operator->image }}">
+                                        <img src="{{ "operator/".$operator->image }}" class="img-circle" style="width: 128px; height: 128px">
                                     </div>
                                     <div class="media-body">
                                         <h3 class="media-heading">Имя: {{ $operator->name }}</h3>
-                                        <p>{{ $automobile->info }}</p>
+                                        <br>
+                                        <p><strong>Создан:</strong> {{ $operator->created_at }}</p>
+                                        <p><strong>Обновлен:</strong> {{ $operator->updated_at }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -101,13 +103,13 @@
                                         <td>
                                             <form action="{{ route('operator.show', $operator->id) }}" method="get">
                                                 {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-primary pull-right">Edit</button>
+                                                <button type="submit" class="btn btn-primary pull-right">Изменить</button>
                                             </form>
                                         </td>
                                         <td>
                                             <form action="{{ route('operator.delete', $operator->id) }}" method="post">
                                                 {{ csrf_field() }}
-                                                <button type="submit" class="btn btn-danger pull-right">Remove</button>
+                                                <button type="submit" class="btn btn-danger pull-right">Удалить</button>
                                             </form>
                                         </td>
                                     </tr>
@@ -117,41 +119,10 @@
                         </div>
                     @endforeach
 
-
-                    @php
-                        $a = 0;
-                    @endphp
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th class="col-md-3">Name</th>
-                                <th class="col-md-3">Image</th>
-                                <th class="col-md-2">Created At</th>
-                                <th class="col-md-2"></th>
-                            </tr>
-                            </thead>
-                            @foreach ($operators as $operator)
-                                <tbody>
-                                <tr>
-                                    <td>{{ $a + 1 }}</td>
-                                    <td>{{ $operator->name }}</td>
-                                    <td>{{ $operator->image }}</td>
-                                    <td>{{ $operator->created_at }}</td>
-                                    <th>
-
-                                    </th>
-                                </tr>
-                                {{ $a++ }}
-                                @endforeach
-                                </tbody>
-                        </table>
-                    </div>
                     <form action="{{ route('operator.create') }}" method="GET">
                         {{ csrf_field() }}
-                        <button type="submit" class="btn btn-primary">
-                            Add
+                        <button type="submit" class="btn btn-primary pull-right">
+                            Добавить оператор
                         </button>
                     </form>
                 </div>
