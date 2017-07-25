@@ -66,15 +66,15 @@ class AutomobileController extends Controller
 		$automobile->info = $request->info;
 		$automobile->price = $request->price;
 		if($request->file('image') != null) {
-            $file = $request->file('image');
-            $file_name = time().'.'.$file->getClientOriginalName();
-            $location = public_path('automobile/');
-            $file->move($location, $file_name);
             if($automobile->image != null)
             {
                 $old_image = $automobile->image;
                 File::delete(public_path('automobile/').$old_image);
             }
+            $file = $request->file('image');
+            $file_name = time().'.'.$file->getClientOriginalName();
+            $location = public_path('automobile/');
+            $file->move($location, $file_name);
             $automobile->image = $file_name;
         }
 		$automobile->save();
@@ -85,6 +85,11 @@ class AutomobileController extends Controller
 	public function delete($id)
 	{
 		$automobile = Automobile::find($id);
+        if($automobile->image != null)
+        {
+            $old_image = $automobile->image;
+            File::delete(public_path('automobile/').$old_image);
+        }
 		$automobile->delete();
 		return redirect()->intended(route('admin.dashboard'));
 	}
