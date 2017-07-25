@@ -13,7 +13,7 @@
                 <div class="panel panel-primary">
                     <div class="panel-body">
                         <ul class="nav nav-pills nav-stacked">
-                            <li data-toggle="tab" class="active"><a onclick="switchSection('section1')">Тип авто</a>
+                            <li data-toggle="tab" class="active"><a onclick="switchSection('section1')">Order</a>
                             </li>
                             <li data-toggle="tab"><a onclick="switchSection('section2')">Users</a></li>
                             <li data-toggle="tab"><a onclick="switchSection('section3')">Prices</a></li>
@@ -24,6 +24,7 @@
             <div class="col-md-10 col-md-offset-0">
                 <div id="section1" class="section" style="display: block;">
                     <h1>Automobiles</h1>
+                    <a href="{{route('operator.order.create')}}">Create Order</a>
                 </div>
                 <div id="section2" class="section">
                     <h1>Users</h1>
