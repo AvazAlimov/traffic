@@ -4,7 +4,8 @@
         .section {
             display: none;
         }
-        #navbar{
+
+        #navbar {
             margin: 0;
         }
     </style>
@@ -12,59 +13,62 @@
 @section('content')
     <nav class="navbar navbar-default" style="border-radius: 0;">
         <ul class="nav navbar-nav">
-            <li data-toggle="tab" class="active"><a onclick="switchSection('section1')"><i class="fa fa-car"></i> Автомобили</a></li>
-            <li data-toggle="tab"><a onclick="switchSection('section2')"><i class="fa fa-users"></i> Пользователи</a></li>
+            <li data-toggle="tab" class="active"><a onclick="switchSection('section1')"><i class="fa fa-car"></i>
+                    Автомобили</a></li>
+            <li data-toggle="tab"><a onclick="switchSection('section2')"><i class="fa fa-users"></i> Пользователи</a>
+            </li>
             <li data-toggle="tab"><a onclick="switchSection('section3')"><i class="fa fa-money"></i> Цены</a></li>
         </ul>
     </nav>
-    <div class="container-fluid" style="padding: 0;">
+    <div class="container" style="padding: 0;">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section" style="display: block;">
                     <h1>Автомобили</h1>
-                    @php
-                        $a = 0;
-                    @endphp
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th class="col-md-2">Name</th>
-                                <th class="col-md-5">Info</th>
-                                <th class="col-md-1">Price</th>
-                                <th>Image</th>
-                                <th class="col-md-2">Controls</th>
-                            </tr>
-                            </thead>
-                            @foreach ($automobiles as $automobile)
-                                <tbody>
-                                <tr>
-                                    <td>{{ $a + 1 }}</td>
-                                    <td>{{ $automobile->name }}</td>
-                                    <td>{{ $automobile->info }}</td>
-                                    <td>{{ $automobile->price }}</td>
-                                    <td><img id="price" src="{{ "automobile/".$automobile->image }}"
-                                             style="width: 200px; height: 120px;"></td>
-                                    <td>
-                                        <form action="{{ route('automobile.show', $automobile->id) }}" method="get">
-                                            <button type="submit" class="btn btn-default">Edit</button>
-                                        </form>
-                                        <form action="{{ route('automobile.delete', $automobile->id) }}" method="post">
-                                            {{ csrf_field() }}
-                                            <button type="submit" class="btn btn-default">Remove</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                {{ $a++ }}
-                                @endforeach
-                                </tbody>
-                        </table>
-                    </div>
+                    @foreach ($automobiles as $automobile)
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <strong>{{ $automobile->name }}</strong>
+                            </div>
+                            <div class="panel-body">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img id="price" src="{{ "automobile/".$automobile->image }}">
+                                    </div>
+                                    <div class="media-body">
+                                        <h3 class="media-heading">{{ $automobile->price }} сум</h3>
+                                        <p>{{ $automobile->info }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <form action="{{ route('automobile.show', $automobile->id) }}"
+                                                  method="get">
+                                                <button type="submit" class="btn btn-primary pull-right">Изменить
+                                                </button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="{{ route('automobile.delete', $automobile->id) }}"
+                                                  method="post">
+                                                {{ csrf_field() }}
+                                                <button type="submit" class="btn btn-danger pull-right">Удалить</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    @endforeach
                     <form action="{{ route('automobile.create') }}" method="GET">
                         {{ csrf_field() }}
-                        <button type="submit" class="btn btn-primary">
-                            Add
+                        <button type="submit" class="btn btn-primary pull-right">
+                            Добавить автомобиль
                         </button>
                     </form>
                 </div>
@@ -180,7 +184,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-md-12">
-                                                            <label for="discard" class="col-md-4 control-label">Discard</label>
+                                                            <label for="discard"
+                                                                   class="col-md-4 control-label">Discard</label>
                                                             <div class="col-md-8">
                                                                 <input id="discard" type="number" min="0"
                                                                        class="form-control"
@@ -214,13 +219,15 @@
                                                     {{ csrf_field() }}
                                                     <div class="form-group">
                                                         <div class="col-md-12">
-                                                            <label for="price_per_distance" class="col-md-4 control-label">Price
+                                                            <label for="price_per_distance"
+                                                                   class="col-md-4 control-label">Price
                                                                 per distance</label>
                                                             <div class="col-md-8">
                                                                 <input id="price_per_distance" type="number" min="0"
                                                                        class="form-control"
                                                                        name="price_per_distance"
-                                                                       value="{{ $tarif->price_per_distance }}" required>
+                                                                       value="{{ $tarif->price_per_distance }}"
+                                                                       required>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -263,7 +270,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-md-12">
-                                                            <label for="discard" class="col-md-4 control-label">Discard</label>
+                                                            <label for="discard"
+                                                                   class="col-md-4 control-label">Discard</label>
                                                             <div class="col-md-8">
                                                                 <input id="discard" type="number" min="0"
                                                                        class="form-control"
