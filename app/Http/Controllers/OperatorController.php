@@ -13,7 +13,7 @@ class OperatorController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:operator');
+       $this->middleware('auth:operator');
     }
 
     public function index()
