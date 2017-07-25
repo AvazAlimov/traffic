@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use App\Automobile;
+use App\Tarif;
 
 class OperatorController extends Controller
 {
@@ -19,5 +21,10 @@ class OperatorController extends Controller
     public function index()
     {
         return view('operator');
+    }
+    public function createOrder(){
+        $cars = Automobile::all();
+        $tarifs = Tarif::all();
+        return view('operator.order')->withCars($cars)->withTarifs($tarifs);
     }
 }
