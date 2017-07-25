@@ -88,7 +88,7 @@
                                 <div class="panel-body">
                                     <div class="media">
                                         <div class="media-left">
-                                            <img src="{{ "operator/".$operator->image }}" class="img-circle"
+                                            <img src="{{ "operator_file/".$operator->image }}" class="img-circle"
                                                  style="width: 128px; height: 128px">
                                         </div>
                                         <div class="media-body">
