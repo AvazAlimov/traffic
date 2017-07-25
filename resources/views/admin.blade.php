@@ -11,7 +11,7 @@
     </style>
 @endsection
 @section('content')
-    <nav class="navbar navbar-default" style="border-radius: 0;">
+    <nav class="navbar navbar-default" style="border-radius: 0; border-width: 0 0 thin 0;">
         <ul class="nav navbar-nav">
             <li data-toggle="tab" class="active"><a onclick="switchSection('section1')"><i class="fa fa-car"></i>
                     Автомобили</a></li>
@@ -20,11 +20,13 @@
             <li data-toggle="tab"><a onclick="switchSection('section3')"><i class="fa fa-money"></i> Цены</a></li>
         </ul>
     </nav>
-    <div class="container" style="padding: 0;">
+    <div class="container" style="padding: 0 20px 20px 20px">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section" style="display: block;">
-                    <h1>Автомобили</h1>
+                    <div class="page-header">
+                        <h2>Автомобили</h2>
+                    </div>
                     @foreach ($automobiles as $automobile)
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -73,7 +75,49 @@
                     </form>
                 </div>
                 <div id="section2" class="section">
-                    <h1>Пользователи</h1>
+                    <div class="page-header">
+                        <h2>Пользователи</h2>
+                    </div>
+                    @foreach ($operators as $operator)
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <strong>{{ $operator->username }}</strong>
+                            </div>
+                            <div class="panel-body">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img id="price" src="{{ "operator/".$operator->image }}">
+                                    </div>
+                                    <div class="media-body">
+                                        <h3 class="media-heading">Имя: {{ $operator->name }}</h3>
+                                        <p>{{ $automobile->info }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <form action="{{ route('operator.show', $operator->id) }}" method="get">
+                                                {{ csrf_field() }}
+                                                <button type="submit" class="btn btn-primary pull-right">Edit</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="{{ route('operator.delete', $operator->id) }}" method="post">
+                                                {{ csrf_field() }}
+                                                <button type="submit" class="btn btn-danger pull-right">Remove</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    @endforeach
+
+
                     @php
                         $a = 0;
                     @endphp
@@ -96,14 +140,7 @@
                                     <td>{{ $operator->image }}</td>
                                     <td>{{ $operator->created_at }}</td>
                                     <th>
-                                        <form action="{{ route('operator.show', $operator->id) }}" method="get">
-                                            {{ csrf_field() }}
-                                            <button type="submit" class="btn btn-default">Edit</button>
-                                        </form>
-                                        <form action="{{ route('operator.delete', $operator->id) }}" method="post">
-                                            {{ csrf_field() }}
-                                            <button type="submit" class="btn btn-default">Remove</button>
-                                        </form>
+
                                     </th>
                                 </tr>
                                 {{ $a++ }}
