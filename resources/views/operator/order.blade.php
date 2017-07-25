@@ -14,19 +14,19 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> Tarif</label>
                         <div class="col-md-10">
-                            {{Form::select('tarifs[]', $tarif,null,['placeholder' => 'Select tarifs ...', 'class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
+                            {{Form::select('tarifs[]', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
                         </div>
                     </div>
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> Car</label>
                         <div class="col-md-10">
-                            {{Form::select('cars[]', $car, null, ['placeholder' => 'Select automobile ...', 'class'=>'form-control'])}}
+                            {{Form::select('cars[]', $car, null, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
                         </div>
                     </div>
                     <div class="form-group col-md-12">
-                        <label class="col-md-2"> Persons</label>
+                        <label class="col-md-2">Persons</label>
                         <div class="col-md-10">
-                            {{Form::number('persons', null, ['max' => 8, 'min'=>0 ,  'class'=>'form-control', 'id' =>'person_id'])}}
+                            {{Form::number('persons', 0, ['max' => 8, 'min'=>0, 'class'=>'form-control', 'id' =>'person_id', 'onchange' => 'personsChange()'])}}
                         </div>
                     </div>
 
@@ -40,11 +40,11 @@
                         </div>
                     </div>
 
-
                     <div class="form-group col-md-12">
-                        <label id="label_tarif" class="col-md-2">Unit</label>
+                        <label for="unit_id" id="label_tarif" class="col-md-2">Unit</label>
                         <div class="col-md-10">
-                            {{Form::number('unit',null, ['class'=>'form-control'])}}
+                            <input name="unit" type="number" value="{{ $tarifs[0]->min_hour  }}" min="0" class="form-control" id="unit_id">
+                            {{--{{Form::number('unit', null, ['class'=>'form-control', 'id' => 'unit_id'])}}--}}
                         </div>
                     </div>
                     <div class="form-group col-md-12">
@@ -57,7 +57,7 @@
                             {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b'])}}
                         </div>
                         <div class="col-md-1">
-                            <button class="btn btn-default"><i class="fa fa-compass"></i></button>
+                            <button type="button" class="btn btn-default"><i class="fa fa-compass"></i></button>
                         </div>
                     </div>
                     <div class="form-group col-md-12">
@@ -70,7 +70,7 @@
                             {{Form::text('point_B',null,['id'=>'point_b', 'class'=>'form-control'])}}
                         </div>
                         <div class="col-md-1">
-                            <button class="btn btn-default"><i class="fa fa-compass"></i></button>
+                            <button type="button" class="btn btn-default"><i class="fa fa-compass"></i></button>
                         </div>
                     </div>
                     <div class="form-group col-md-12">
@@ -82,32 +82,57 @@
                     {{Form::close()}}
                 </div>
             </div>
-            {{$tarifs[0]}}
         </div>
-    </div>
     </div>
 
     <script>
-        var minimum_price;
-        var array = {!! $tarifs !!}
-        alert(array[0]['price_minimum']);
+        var tarifs = {!! $tarifs !!};
+        var cars = {!! $cars !!};
+        var tarif_index;
+        var car_index;
+        var persons_price;
+
         function changeTarif() {
-            var index = document.getElementById('tarif_id').value;
-
-            if (index === 0) {
-                document.getElementById('label_tarif').innerHTML = "Hour ";
-
+            tarif_index = document.getElementById('tarif_id').selectedIndex;
+            if (tarif_index === 0)
+            {
+                document.getElementById('label_tarif').innerHTML = "Hours";
+                document.getElementById('unit_id').min = tarifs[tarif_index]['min_hour'];
+                document.getElementById('unit_id').value = tarifs[tarif_index]['min_hour'];
             }
-            else {
-                document.getElementById('label_tarif').innerHTML = "Kilometre ";
-
+            else
+            {
+                document.getElementById('label_tarif').innerHTML = "Kilometers";
+                document.getElementById('unit_id').min = tarifs[tarif_index]['min_distance'];
+                document.getElementById('unit_id').value = tarifs[tarif_index]['min_distance'];
             }
-
             calculatePrice();
         }
-        function calculatePrice() {
-            var sum = minimum_price;
-            document.getElementById('sum_id').value =sum;
+
+        function changeCar() {
+            car_index = document.getElementById('car_id').selectedIndex;
+            calculatePrice();
         }
+
+        function personsChange() {
+            persons_price = document.getElementById('person_id').value * tarifs[tarif_index]['price_per_person'];
+            calculatePrice();
+        }
+
+        function calculatePrice() {
+            var price = tarifs[tarif_index]['price_minimum'];
+            price += cars[car_index]['price'];
+            price += persons_price;
+            document.getElementById('sum_id').value = price;
+        }
+
+        window.onload = function() {
+            tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
+            car_index = document.getElementById('car_id').selectedIndex = 0;
+            document.getElementById('person_id').value = 0;
+            changeTarif();
+            changeCar();
+            personsChange();
+        };
     </script>
 @endsection
