@@ -30,21 +30,23 @@ Route::prefix('admin')->group(function(){
 	// Route::get('/password/reset/{token}', 'Auth\AdminResetPasswordController@showResetForm')->name('admin.password.reset');
 });
 Route::prefix('operator')->group(function(){
+    Route::prefix('/order')->group(function (){
+        Route::get('/create', 'OperatorController@createOrder')->name('operator.order.create');
+        Route::post('/submit', 'OperatorController@orderSubmit')->name('operator.order.submit');
+    });
+
     Route::get('/login', 'Auth\OperatorLoginController@showLoginForm')->name('operator.login');
     Route::post('/login', 'Auth\OperatorLoginController@login')->name('operator.login.submit');
-    Route::get('/', 'OperatorController@index')->name('operator.dashboard');
     Route::get('/logout', 'Auth\OperatorLoginController@logout')->name('operator.logout');
-
     Route::get('/create', 'AdminOperatorController@index')->name('operator.create');
     Route::post('/create', 'AdminOperatorController@store')->name('operator.create.submit');
     Route::get('/{id}', 'AdminOperatorController@showOperatorForm')->name('operator.show');
     Route::post('/update{id}', 'AdminOperatorController@update')->name('operator.update');
     Route::post('/delete{id}', 'AdminOperatorController@delete')->name('operator.delete');
 
-    Route::prefix('/order')->group(function (){
-        Route::get('/create', 'OperatorController@createOrder')->name('operator.order.create');
-        Route::post('/submit', 'OperatorController@orderSubmit')->name('operator.order.submit');
-    });
+    Route::get('/', 'OperatorController@index')->name('operator.dashboard');
+
+
 });
 
 Route::get('automobile/create', 'AutomobileController@index')->name('automobile.create');

@@ -32,11 +32,12 @@
         <div>
             <label> From </label>
             {{Form::text('address_A',null)}}
-            {{Form::text()}}
+            {{Form::hidden('point_A',null)}}
         </div>
         <div>
             <label> To </label>
             {{Form::text('address_B',null)}}
+            {{Form::hidden('point_A',null)}}
         </div>
 
 
