@@ -59,7 +59,8 @@
                             {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b'])}}
                         </div>
                         <div class="col-md-1">
-                            <button type="button" class="btn btn-default"><i class="fa fa-compass"></i></button>
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"
+                                    onclick="setStart()"><i class="fa fa-compass"></i></button>
                         </div>
                     </div>
                     <div class="form-group col-md-12">
@@ -72,7 +73,8 @@
                             {{Form::text('point_B',null,['id'=>'point_b', 'class'=>'form-control'])}}
                         </div>
                         <div class="col-md-1">
-                            <button type="button" class="btn btn-default"><i class="fa fa-compass"></i></button>
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"
+                                    onclick="setEnd()"><i class="fa fa-compass"></i></button>
                         </div>
                     </div>
 
@@ -92,9 +94,6 @@
                     {{Form::close()}}
                 </div>
             </div>
-            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Large
-                Modal
-            </button>
         </div>
     </div>
 
@@ -135,16 +134,15 @@
                 center: [41.299496, 69.240073],
                 zoom: 13,
                 controls: []
-            }, { searchControlProvider: 'yandex#search' });
+            }, {searchControlProvider: 'yandex#search'});
             myMap.controls.add('geolocationControl')
             myMap.controls.add('searchControl');
             myMap.controls.add('zoomControl');
             myMap.controls.get('searchControl').options.set('size', 'large');
 
-            myMap.events.add('click', function(event){
+            myMap.events.add('click', function (event) {
                 var coords = event.get('coords');
-                if(start === false)
-                {
+                if (start === false) {
                     start = new ymaps.Placemark(coords, {
                         balloonContent: 'Point A'
                     }, {
@@ -154,14 +152,12 @@
                     });
 
                     myMap.geoObjects.add(start);
-                    start.events.add('dragend', function(e) {
+                    start.events.add('dragend', function (e) {
                         setCoordinates();
                     });
                 }
-                else
-                {
-                    if(end === false)
-                    {
+                else {
+                    if (end === false) {
                         end = new ymaps.Placemark(coords, {
                             balloonContent: 'Point B'
                         }, {
@@ -171,12 +167,11 @@
                         });
 
                         myMap.geoObjects.add(end);
-                        end.events.add('dragend', function(e) {
+                        end.events.add('dragend', function (e) {
                             setCoordinates();
                         });
                     }
-                    else
-                    {
+                    else {
                         end.geometry.setCoordinates(coords);
                     }
                     setCoordinates();
@@ -184,13 +179,14 @@
             });
         }
 
-        function setCoordinates()
-        {
+        function setCoordinates() {
             distance = ymaps.coordSystem.geo.getDistance(start.geometry.getCoordinates(), end.geometry.getCoordinates());
-            if(path === null)
+            if(tarif_index === 1)
+                document.getElementById('unit_id').value = distance / 1000;
+            if (path === null)
                 return;
             myMap.geoObjects.remove(path);
-            ymaps.route([start.geometry.getCoordinates(),end.geometry.getCoordinates()],
+            ymaps.route([start.geometry.getCoordinates(), end.geometry.getCoordinates()],
                     {
                         mapStateAutoApply: true,
                         multiRoute: false
@@ -204,6 +200,12 @@
         }
 
         ymaps.ready(init);
+
+        function setStart() {
+            myMap.geoObjects.remove(start);
+            myMap.geoObjects.remove(path);
+            start = false;
+        }
 
         function changeTarif() {
             tarif_index = document.getElementById('tarif_id').selectedIndex;
