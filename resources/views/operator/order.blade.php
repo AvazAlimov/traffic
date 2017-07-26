@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('head')
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 @endsection
 @section('content')
 
@@ -74,6 +75,14 @@
                             <button type="button" class="btn btn-default"><i class="fa fa-compass"></i></button>
                         </div>
                     </div>
+
+                    <div class="form-group col-md-12">
+                        <label for="discount_id" class="col-md-2">Discount</label>
+                        <div class="col-md-10">
+                            {{Form::number('discount', $tarifs[0]->discard, ['id' => 'discount_id', 'class' => 'form-control', 'disabled'])}}
+                        </div>
+                    </div>
+
                     <div class="form-group col-md-12">
                         <label class="col-md-2">Price</label>
                         <div class="col-md-10">
@@ -83,16 +92,118 @@
                     {{Form::close()}}
                 </div>
             </div>
+            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Large
+                Modal
+            </button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">УКАЖИТЕ АДРЕС ОТКУДА ПОЕДЕМ</h4>
+                </div>
+                <div class="modal-body" style="height: 500px; padding: 0;">
+                    <div id="map" class="col-md-12" style="height: 500px;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Сохранить</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         var tarifs = {!! $tarifs !!};
         var cars = {!! $cars !!};
-        var tarif_index;
-        var car_index;
-        var persons_price;
-        var unit;
+        var tarif_index = 0;
+        var car_index = 0;
+        var persons_price = 0;
+        var unit = 0;
+        var discount = 0;
+
+        var myMap;
+        var start = false;
+        var end = false;
+        var distance = 0;
+        var path;
+
+        function init() {
+            myMap = new ymaps.Map("map", {
+                center: [41.299496, 69.240073],
+                zoom: 13,
+                controls: []
+            }, { searchControlProvider: 'yandex#search' });
+            myMap.controls.add('geolocationControl')
+            myMap.controls.add('searchControl');
+            myMap.controls.add('zoomControl');
+            myMap.controls.get('searchControl').options.set('size', 'large');
+
+            myMap.events.add('click', function(event){
+                var coords = event.get('coords');
+                if(start === false)
+                {
+                    start = new ymaps.Placemark(coords, {
+                        balloonContent: 'Point A'
+                    }, {
+                        draggable: true,
+                        preset: 'islands#icon',
+                        iconColor: '#F44336'
+                    });
+
+                    myMap.geoObjects.add(start);
+                    start.events.add('dragend', function(e) {
+                        setCoordinates();
+                    });
+                }
+                else
+                {
+                    if(end === false)
+                    {
+                        end = new ymaps.Placemark(coords, {
+                            balloonContent: 'Point B'
+                        }, {
+                            draggable: true,
+                            preset: 'islands#icon',
+                            iconColor: '#2196F3'
+                        });
+
+                        myMap.geoObjects.add(end);
+                        end.events.add('dragend', function(e) {
+                            setCoordinates();
+                        });
+                    }
+                    else
+                    {
+                        end.geometry.setCoordinates(coords);
+                    }
+                    setCoordinates();
+                }
+            });
+        }
+
+        function setCoordinates()
+        {
+            distance = ymaps.coordSystem.geo.getDistance(start.geometry.getCoordinates(), end.geometry.getCoordinates());
+            if(path === null)
+                return;
+            myMap.geoObjects.remove(path);
+            ymaps.route([start.geometry.getCoordinates(),end.geometry.getCoordinates()],
+                    {
+                        mapStateAutoApply: true,
+                        multiRoute: false
+                    }).then(function (route) {
+                        path = route;
+                        myMap.geoObjects.add(route);
+                    }, function (error) {
+                        alert("Error occurred: " + error.message);
+                    }
+            );
+        }
+
+        ymaps.ready(init);
 
         function changeTarif() {
             tarif_index = document.getElementById('tarif_id').selectedIndex;
@@ -106,6 +217,7 @@
                 document.getElementById('unit_id').min = tarifs[tarif_index]['min_distance'];
                 document.getElementById('unit_id').value = tarifs[tarif_index]['min_distance'];
             }
+            discount = document.getElementById('discount_id').value = tarifs[tarif_index]['discard'];
             calculatePrice();
         }
 
@@ -120,7 +232,7 @@
         }
 
         function unitChange() {
-            if(document.getElementById('unit_id').value < 0)
+            if (document.getElementById('unit_id').value < 0)
                 changeTarif();
             if (tarif_index === 0)
                 unit = (document.getElementById('unit_id').value - tarifs[tarif_index]['min_hour']) * tarifs[tarif_index]['price_per_hour'];
@@ -134,6 +246,7 @@
             price += cars[car_index]['price'];
             price += persons_price;
             price += unit;
+            price -= price * discount / 100;
             document.getElementById('sum_id').value = price;
         }
 
