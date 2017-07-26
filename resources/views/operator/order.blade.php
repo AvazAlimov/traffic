@@ -182,7 +182,14 @@
         function setCoordinates() {
             distance = ymaps.coordSystem.geo.getDistance(start.geometry.getCoordinates(), end.geometry.getCoordinates());
             if(tarif_index === 1)
-                document.getElementById('unit_id').value = distance / 1000;
+            {
+                document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
+                unitChange();
+            }
+
+            document.getElementById('point_a').value = start.geometry.getCoordinates();
+            document.getElementById('point_b').value = end.geometry.getCoordinates();
+
             if (path === null)
                 return;
             myMap.geoObjects.remove(path);
