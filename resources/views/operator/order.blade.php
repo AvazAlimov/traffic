@@ -44,8 +44,8 @@
                     <div class="form-group col-md-12">
                         <label for="unit_id" id="label_tarif" class="col-md-2">Unit</label>
                         <div class="col-md-10">
-                            <input name="unit" type="number" value="{{ $tarifs[0]->min_hour  }}" min="0"
-                                   class="form-control" id="unit_id" onchange="unitChange()">
+                            <input name="unit" type="number" step="0.01" value="{{ $tarifs[0]->min_hour  }}" min="0.0"
+                                   class="form-control" required id="unit_id" onchange="unitChange()">
                         </div>
                     </div>
 
@@ -96,7 +96,7 @@
                     <div class="form-group col-md-12">
                         <label for="discount_id" class="col-md-2">Discount</label>
                         <div class="col-md-10">
-                            {{Form::number('discount', $tarifs[0]->discard, ['id' => 'discount_id', 'class' => 'form-control', 'disabled'])}}
+                            {{Form::number('discount', $tarifs[0]->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
                         </div>
                     </div>
 
@@ -108,32 +108,30 @@
                     </div>
 
 
-                    <div class="panel-body">
-                        @if ($errors->has('name'))
-                            <div class="col-md-4">
+                    @if ($errors->has('name'))
+                        <div class="col-md-4">
                             <span class="help-block">
-                                        <strong class="alert-danger">{{ $errors->first('name') }}</strong>
+                                <strong class="alert-danger">{{ $errors->first('name') }}</strong>
                             </span>
-                            </div>
-                        @endif
-                        <div class="form-group col-md-12">
-                            <label class="col-md-2"> Name</label>
-                            <div class="col-md-10">
-                                {{Form::text('name',null,['class'=>'form-control'])}}
-                            </div>
                         </div>
-                        @if ($errors->has('phone'))
-                            <div class="col-md-4">
+                    @endif
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2"> Name</label>
+                        <div class="col-md-10">
+                            {{Form::text('name',null,['class'=>'form-control'])}}
+                        </div>
+                    </div>
+                    @if ($errors->has('phone'))
+                        <div class="col-md-4">
                             <span class="help-block">
                                         <strong class="alert-danger">{{ $errors->first('phone') }}</strong>
                             </span>
-                            </div>
-                        @endif
-                        <div class="form-group col-md-12">
-                            <label class="col-md-2"> Phone</label>
-                            <div class="col-md-10">
-                                {{Form::text('phone',null,['class'=>'form-control'])}}
-                            </div>
+                        </div>
+                    @endif
+                    <div class="form-group col-md-12">
+                        <label class="col-md-2"> Phone</label>
+                        <div class="col-md-10">
+                            {{Form::text('phone',null,['class'=>'form-control'])}}
                         </div>
                     </div>
 
@@ -249,20 +247,20 @@
 
             myMap.geoObjects.remove(path);
             ymaps.route([start.geometry.getCoordinates(), end.geometry.getCoordinates()],
-                {
-                    mapStateAutoApply: true,
-                    multiRoute: false
-                }).then(function (route) {
-                    path = route;
-                    distance = route.getLength();
-                    myMap.geoObjects.add(route);
-                    if (tarif_index === 1) {
-                        document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                        unitChange();
+                    {
+                        mapStateAutoApply: true,
+                        multiRoute: false
+                    }).then(function (route) {
+                        path = route;
+                        distance = route.getLength();
+                        myMap.geoObjects.add(route);
+                        if (tarif_index === 1) {
+                            document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
+                            unitChange();
+                        }
+                    }, function (error) {
+                        alert("Error occurred: " + error.message);
                     }
-                }, function (error) {
-                    alert("Error occurred: " + error.message);
-                }
             );
         }
 
@@ -295,7 +293,7 @@
                     document.getElementById('unit_id').value = tarifs[tarif_index]['min_distance'];
                 else
                     document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                document.getElementById('unit_id').disabled = true;
+                document.getElementById('unit_id').readonly = true;
             }
             discount = document.getElementById('discount_id').value = tarifs[tarif_index]['discard'];
             calculatePrice();
