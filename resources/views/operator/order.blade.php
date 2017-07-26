@@ -285,6 +285,7 @@
                 document.getElementById('label_tarif').innerHTML = "Hours";
                 document.getElementById('unit_id').min = tarifs[tarif_index]['min_hour'];
                 document.getElementById('unit_id').value = tarifs[tarif_index]['min_hour'];
+                document.getElementById('unit_id').readOnly = false;
             }
             else {
                 document.getElementById('label_tarif').innerHTML = "Kilometers";
@@ -293,7 +294,7 @@
                     document.getElementById('unit_id').value = tarifs[tarif_index]['min_distance'];
                 else
                     document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                document.getElementById('unit_id').readonly = true;
+                    document.getElementById('unit_id').readOnly = true;
             }
             discount = document.getElementById('discount_id').value = tarifs[tarif_index]['discard'];
             calculatePrice();
