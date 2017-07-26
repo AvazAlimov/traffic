@@ -50,6 +50,10 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                aria-expanded="false">
+                                @if(Auth::guard('operator')->check())
+                                    <img src="{{url('operator_file/'.Auth::guard('operator')->user()->image)}}"
+                                         class="img-circle" style="width: 32px; height: 32px;"/>
+                                @endif
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
 
@@ -68,11 +72,6 @@
                                 </li>
                             </ul>
                         </li>
-
-                        @if(Auth::guard('operator')->check())
-                            <li><img src="{{url('operator_file/'.Auth::guard('operator')->user()->image)}}"
-                                     class="img-circle" style="width: 48px; height: 48px;"/></li>
-                        @endif
                     @endif
                 </ul>
             </div>
