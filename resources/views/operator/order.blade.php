@@ -3,14 +3,12 @@
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 @endsection
 @section('content')
-
     <div class="container-fluid">
         <div class="col-md-8 col-md-offset-2">
+        {{Form::open(['route' => ['operator.order.submit'], 'method' => 'post'])}}
             <div class="panel panel-default">
                 <div class="panel-heading">Order</div>
                 <div class="panel-body">
-
-                    {{Form::open(['route' => ['operator.order.submit'], 'method' => 'post'])}}
 
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> Tarif</label>
@@ -32,12 +30,12 @@
                     </div>
 
                     <div class="form-group col-md-12">
-                        <label class="col-md-2"> Start Time</label>
+                        <label for="date_id" class="col-md-2"> Start Time</label>
                         <div class="col-md-7">
-                            {{Form::date('date', \Carbon\Carbon::now(), ['class'=>'form-control'])}}
+                            <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" class="form-control" id="date_id">
                         </div>
                         <div class="col-md-3">
-                            {{Form::time('time', \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('h:i'), ['class'=>'form-control'])}}
+                            <input type="datetime" value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}" class="form-control" id="date_id">
                         </div>
                     </div>
 
@@ -46,37 +44,37 @@
                         <div class="col-md-10">
                             <input name="unit" type="number" value="{{ $tarifs[0]->min_hour  }}" min="0"
                                    class="form-control" id="unit_id" onchange="unitChange()">
-                            {{--{{Form::number('unit', null, ['class'=>'form-control', 'id' => 'unit_id'])}}--}}
                         </div>
                     </div>
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> From </label>
-                        <div class="col-md-4">
+                        <div class="col-md-9">
                             {{Form::text('address_A',null, ['class'=>'form-control', 'id'=>'address_a'])}}
-                        </div>
-                        <label class="col-md-1"> To </label>
-                        <div class="col-md-4">
-                            {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b'])}}
                         </div>
                         <div class="col-md-1">
                             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"
                                     onclick="setStart()"><i class="fa fa-compass"></i></button>
                         </div>
                     </div>
+
                     <div class="form-group col-md-12">
-                        <label class="col-md-2"> From </label>
-                        <div class="col-md-4">
-                            {{Form::text('point_A',null, ['id'=>'point_a', 'class'=>'form-control'])}}
-                        </div>
-                        <label class="col-md-1"> To </label>
-                        <div class="col-md-4">
-                            {{Form::text('point_B',null,['id'=>'point_b', 'class'=>'form-control'])}}
+                        <label class="col-md-2"> To </label>
+                        <div class="col-md-9">
+                            {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b'])}}
                         </div>
                         <div class="col-md-1">
                             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"
                                     onclick="setEnd()"><i class="fa fa-compass"></i></button>
                         </div>
                     </div>
+
+                    <div class="col-md-4">
+                        {{Form::hidden('point_A',null, ['id'=>'point_a', 'class'=>'form-control'])}}
+                    </div>
+                    <div class="col-md-4">
+                        {{Form::hidden('point_B',null,['id'=>'point_b', 'class'=>'form-control'])}}
+                    </div>
+
 
                     <div class="form-group col-md-12">
                         <label for="discount_id" class="col-md-2">Discount</label>
@@ -91,9 +89,12 @@
                             {{Form::number('price',null, ['class'=>'form-control', 'id'=>'sum_id'])}}
                         </div>
                     </div>
-                    {{Form::close()}}
+                </div>
+                <div class="panel-footer">
+                    <input type="submit" class="btn btn-success" value="Done">
                 </div>
             </div>
+            {{Form::close()}}
         </div>
     </div>
 
@@ -102,7 +103,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">УКАЖИТЕ АДРЕС ОТКУДА ПОЕДЕМ</h4>
+                    <h4 class="modal-title">УКАЖИТЕ АДРЕС</h4>
                 </div>
                 <div class="modal-body" style="height: 500px; padding: 0;">
                     <div id="map" class="col-md-12" style="height: 500px;"></div>
@@ -150,7 +151,6 @@
                         preset: 'islands#icon',
                         iconColor: '#F44336'
                     });
-
                     myMap.geoObjects.add(start);
                     start.events.add('dragend', function (e) {
                         setCoordinates();
@@ -165,7 +165,6 @@
                             preset: 'islands#icon',
                             iconColor: '#2196F3'
                         });
-
                         myMap.geoObjects.add(end);
                         end.events.add('dragend', function (e) {
                             setCoordinates();
@@ -174,24 +173,28 @@
                     else {
                         end.geometry.setCoordinates(coords);
                     }
-                    setCoordinates();
                 }
+                setCoordinates();
             });
         }
 
         function setCoordinates() {
-            distance = ymaps.coordSystem.geo.getDistance(start.geometry.getCoordinates(), end.geometry.getCoordinates());
-            if(tarif_index === 1)
-            {
-                document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                unitChange();
+            if (start != false) {
+                document.getElementById('point_a').value = start.geometry.getCoordinates();
+                getAddress('address_a', start.geometry.getCoordinates());
             }
 
-            document.getElementById('point_a').value = start.geometry.getCoordinates();
-            document.getElementById('point_b').value = end.geometry.getCoordinates();
+            if (end != false) {
+                document.getElementById('point_b').value = end.geometry.getCoordinates();
+                getAddress('address_b', end.geometry.getCoordinates());
+            }
+
+            if (start === false || end === false)
+                return;
 
             if (path === null)
                 return;
+
             myMap.geoObjects.remove(path);
             ymaps.route([start.geometry.getCoordinates(), end.geometry.getCoordinates()],
                     {
@@ -199,11 +202,23 @@
                         multiRoute: false
                     }).then(function (route) {
                         path = route;
+                        distance = route.getLength();
                         myMap.geoObjects.add(route);
+                        if (tarif_index === 1) {
+                            document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
+                            unitChange();
+                        }
                     }, function (error) {
                         alert("Error occurred: " + error.message);
                     }
             );
+        }
+
+        function getAddress(id, coords) {
+            ymaps.geocode(coords).then(function (res) {
+                var firstGeoObject = res.geoObjects.get(0);
+                document.getElementById(id).value = firstGeoObject.getAddressLine();
+            });
         }
 
         ymaps.ready(init);
@@ -224,7 +239,11 @@
             else {
                 document.getElementById('label_tarif').innerHTML = "Kilometers";
                 document.getElementById('unit_id').min = tarifs[tarif_index]['min_distance'];
-                document.getElementById('unit_id').value = tarifs[tarif_index]['min_distance'];
+                if (distance === 0)
+                    document.getElementById('unit_id').value = tarifs[tarif_index]['min_distance'];
+                else
+                    document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
+                document.getElementById('unit_id').disabled = true;
             }
             discount = document.getElementById('discount_id').value = tarifs[tarif_index]['discard'];
             calculatePrice();
