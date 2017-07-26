@@ -5,21 +5,20 @@
 @section('content')
     <div class="container-fluid">
         <div class="col-md-8 col-md-offset-2">
-        {{Form::open(['route' => ['operator.order.submit'], 'method' => 'post'])}}
+            {{Form::open(['route' => ['operator.order.submit'], 'method' => 'post'])}}
             <div class="panel panel-default">
                 <div class="panel-heading">Order</div>
                 <div class="panel-body">
-
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> Tarif</label>
                         <div class="col-md-10">
-                            {{Form::select('tarifs[]', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
+                            {{Form::select('tarif', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
                         </div>
                     </div>
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> Car</label>
                         <div class="col-md-10">
-                            {{Form::select('cars[]', $car, null, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
+                            {{Form::select('car', $car, null, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
                         </div>
                     </div>
                     <div class="form-group col-md-12">
@@ -32,10 +31,13 @@
                     <div class="form-group col-md-12">
                         <label for="date_id" class="col-md-2"> Start Time</label>
                         <div class="col-md-7">
-                            <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" class="form-control" id="date_id">
+                            <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" class="form-control"
+                                   id="date_id">
                         </div>
                         <div class="col-md-3">
-                            <input type="datetime" value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}" class="form-control" id="date_id">
+                            <input type="time"
+                                   value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}"
+                                   class="form-control" id="date_id">
                         </div>
                     </div>
 
@@ -46,6 +48,14 @@
                                    class="form-control" id="unit_id" onchange="unitChange()">
                         </div>
                     </div>
+
+                    @if ($errors->has('point_A'))
+                        <div class="col-md-4">
+                            <span class="help-block">
+                                       <strong class="alert-danger">{{ $errors->first('point_A') }}</strong>
+                            </span>
+                        </div>
+                    @endif
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> From </label>
                         <div class="col-md-9">
@@ -57,6 +67,13 @@
                         </div>
                     </div>
 
+                    @if ($errors->has('point_B'))
+                        <div class="col-md-4">
+                            <span class="help-block">
+                                        <strong class="alert-danger">{{ $errors->first('point_B') }}</strong>
+                            </span>
+                        </div>
+                    @endif
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> To </label>
                         <div class="col-md-9">
@@ -86,14 +103,49 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-2">Price</label>
                         <div class="col-md-10">
-                            {{Form::number('price',null, ['class'=>'form-control', 'id'=>'sum_id'])}}
+                            {{Form::number('sum',null, ['class'=>'form-control', 'id'=>'sum_id'])}}
                         </div>
                     </div>
+
+
+                    <div class="panel-body">
+                        @if ($errors->has('name'))
+                            <div class="col-md-4">
+                            <span class="help-block">
+                                        <strong class="alert-danger">{{ $errors->first('name') }}</strong>
+                            </span>
+                            </div>
+                        @endif
+                        <div class="form-group col-md-12">
+                            <label class="col-md-2"> Name</label>
+                            <div class="col-md-10">
+                                {{Form::text('name',null,['class'=>'form-control'])}}
+                            </div>
+                        </div>
+                        @if ($errors->has('phone'))
+                            <div class="col-md-4">
+                            <span class="help-block">
+                                        <strong class="alert-danger">{{ $errors->first('phone') }}</strong>
+                            </span>
+                            </div>
+                        @endif
+                        <div class="form-group col-md-12">
+                            <label class="col-md-2"> Phone</label>
+                            <div class="col-md-10">
+                                {{Form::text('phone',null,['class'=>'form-control'])}}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
+
                 <div class="panel-footer">
                     <input type="submit" class="btn btn-success" value="Done">
                 </div>
+
             </div>
+
             {{Form::close()}}
         </div>
     </div>
@@ -197,20 +249,20 @@
 
             myMap.geoObjects.remove(path);
             ymaps.route([start.geometry.getCoordinates(), end.geometry.getCoordinates()],
-                    {
-                        mapStateAutoApply: true,
-                        multiRoute: false
-                    }).then(function (route) {
-                        path = route;
-                        distance = route.getLength();
-                        myMap.geoObjects.add(route);
-                        if (tarif_index === 1) {
-                            document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                            unitChange();
-                        }
-                    }, function (error) {
-                        alert("Error occurred: " + error.message);
+                {
+                    mapStateAutoApply: true,
+                    multiRoute: false
+                }).then(function (route) {
+                    path = route;
+                    distance = route.getLength();
+                    myMap.geoObjects.add(route);
+                    if (tarif_index === 1) {
+                        document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
+                        unitChange();
                     }
+                }, function (error) {
+                    alert("Error occurred: " + error.message);
+                }
             );
         }
 
