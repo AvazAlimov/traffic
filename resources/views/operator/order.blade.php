@@ -261,7 +261,6 @@
                         alert("Error occurred: " + error.message);
                     }
             );
-            alert("Hi");
         }
 
         function setCoordinates() {
