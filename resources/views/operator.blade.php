@@ -14,10 +14,9 @@
 @section('content')
     <nav class="navbar navbar-default" style="border-radius: 0; border-width: 0 0 thin 0;">
         <ul class="nav navbar-nav">
-            <li data-toggle="tab" class="active"><a onclick="switchSection('section1')"><i class="fa fa-list-alt"></i>
-                    Заказы</a></li>
-            <li data-toggle="tab"><a onclick="switchSection('section2')"><i class="fa fa-columns"></i> Сделать заказ</a>
+            <li data-toggle="tab" class="active"><a onclick="switchSection('section1')"><i class="fa fa-columns"></i> Сделать заказ</a>
             </li>
+            <li data-toggle="tab"><a onclick="switchSection('section2')"><i class="fa fa-list-alt"></i> Заказы</a></li>
         </ul>
     </nav>
     <div class="container" style="padding: 0 20px 20px 20px">
@@ -25,160 +24,153 @@
             <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section" style="display: block;">
                     <div class="page-header">
-                        <h2>Заказы</h2>
-                    </div>
-                </div>
-                <div id="section2" class="section">
-                    <div class="page-header">
                         <h2>Сделать заказ</h2>
                     </div>
-                        <div class="container-fluid">
-                            <div class="col-md-12">
-                                {{Form::open(['route' => ['operator.order.submit'], 'method' => 'post'])}}
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">Order</div>
-                                    <div class="panel-body">
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-2"> Tarif</label>
-                                            <div class="col-md-10">
-                                                {{Form::select('tarif', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
-                                            </div>
+                    <div class="container-fluid">
+                        <div class="col-md-12">
+                            {{Form::open(['route' => ['operator.order.submit'], 'method' => 'post'])}}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Заказ</div>
+                                <div class="panel-body">
+                                    <div class="form-group col-md-12">
+                                        <label class="col-md-3">Тариф</label>
+                                        <div class="col-md-9">
+                                            {{Form::select('tarif', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
                                         </div>
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-2"> Car</label>
-                                            <div class="col-md-10">
-                                                {{Form::select('car', $car, null, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
-                                            </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label class="col-md-3">Тип автомобиля</label>
+                                        <div class="col-md-9">
+                                            {{Form::select('car', $car, null, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
                                         </div>
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-2">Persons</label>
-                                            <div class="col-md-10">
-                                                {{Form::number('persons', 0, ['max' => 8, 'min'=>0, 'class'=>'form-control', 'id' =>'person_id', 'onchange' => 'personsChange()'])}}
-                                            </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label class="col-md-3">Количество грузчиков</label>
+                                        <div class="col-md-9">
+                                            {{Form::number('persons', 0, ['max' => 8, 'min'=>0, 'class'=>'form-control', 'id' =>'person_id', 'onchange' => 'personsChange()'])}}
                                         </div>
-
-                                        <div class="form-group col-md-12">
-                                            <label for="date_id" class="col-md-2"> Start Time</label>
-                                            <div class="col-md-7">
-                                                <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
-                                                       class="form-control"
-                                                       id="date_id">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="time"
-                                                       value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}"
-                                                       class="form-control" id="date_id">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <label for="unit_id" id="label_tarif" class="col-md-2">Unit</label>
-                                            <div class="col-md-10">
-                                                <input name="unit" type="number" step="0.01"
-                                                       value="{{ $tarifs[0]->min_hour  }}" min="0.0"
-                                                       class="form-control" required id="unit_id"
-                                                       onchange="unitChange()">
-                                            </div>
-                                        </div>
-
-                                        @if ($errors->has('point_A'))
-                                            <div class="col-md-4">
-                            <span class="help-block">
-                                       <strong class="alert-danger">{{ $errors->first('point_A') }}</strong>
-                            </span>
-                                            </div>
-                                        @endif
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-2"> From </label>
-                                            <div class="col-md-9">
-                                                {{Form::text('address_A',null, ['class'=>'form-control', 'id'=>'address_a'])}}
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button type="button" class="btn btn-default" data-toggle="modal"
-                                                        data-target="#myModal"
-                                                        onclick="setStart()"><i class="fa fa-compass"></i></button>
-                                            </div>
-                                        </div>
-
-                                        @if ($errors->has('point_B'))
-                                            <div class="col-md-4">
-                            <span class="help-block">
-                                        <strong class="alert-danger">{{ $errors->first('point_B') }}</strong>
-                            </span>
-                                            </div>
-                                        @endif
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-2"> To </label>
-                                            <div class="col-md-9">
-                                                {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b'])}}
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button type="button" class="btn btn-default" data-toggle="modal"
-                                                        data-target="#myModal"
-                                                        onclick="setEnd()"><i class="fa fa-compass"></i></button>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            {{Form::hidden('point_A',null, ['id'=>'point_a', 'class'=>'form-control'])}}
-                                        </div>
-                                        <div class="col-md-4">
-                                            {{Form::hidden('point_B',null,['id'=>'point_b', 'class'=>'form-control'])}}
-                                        </div>
-
-
-                                        <div class="form-group col-md-12">
-                                            <label for="discount_id" class="col-md-2">Discount</label>
-                                            <div class="col-md-10">
-                                                {{Form::number('discount', $tarifs[0]->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-2">Price</label>
-                                            <div class="col-md-10">
-                                                {{Form::number('sum',null, ['class'=>'form-control', 'id'=>'sum_id'])}}
-                                            </div>
-                                        </div>
-
-
-                                        @if ($errors->has('name'))
-                                            <div class="col-md-4">
-                            <span class="help-block">
-                                <strong class="alert-danger">{{ $errors->first('name') }}</strong>
-                            </span>
-                                            </div>
-                                        @endif
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-2"> Name</label>
-                                            <div class="col-md-10">
-                                                {{Form::text('name',null,['class'=>'form-control'])}}
-                                            </div>
-                                        </div>
-                                        @if ($errors->has('phone'))
-                                            <div class="col-md-4">
-                            <span class="help-block">
-                                        <strong class="alert-danger">{{ $errors->first('phone') }}</strong>
-                            </span>
-                                            </div>
-                                        @endif
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-2"> Phone</label>
-                                            <div class="col-md-10">
-                                                {{Form::text('phone',null,['class'=>'form-control'])}}
-                                            </div>
-                                        </div>
-
                                     </div>
 
-                                    <div class="panel-footer">
-                                        <input type="submit" class="btn btn-success" value="Done">
+                                    <div class="form-group col-md-12">
+                                        <label for="date_id" class="col-md-3">Время подачи</label>
+                                        <div class="col-md-6">
+                                            <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                                   class="form-control"
+                                                   id="date_id">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="time"
+                                                   value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}"
+                                                   class="form-control" id="date_id">
+                                        </div>
                                     </div>
 
+                                    <div class="form-group col-md-12">
+                                        <label for="unit_id" id="label_tarif" class="col-md-3">Срок аренды (час)</label>
+                                        <div class="col-md-9">
+                                            <input name="unit" type="number" step="0.01"
+                                                   value="{{ $tarifs[0]->min_hour  }}" min="0.0"
+                                                   class="form-control" required id="unit_id"
+                                                   onchange="unitChange()">
+                                        </div>
+                                    </div>
+
+                                    @if ($errors->has('point_A'))
+                                        <div class="col-md-4">
+                                            <span class="help-block">
+                                                <strong class="alert-danger">{{ $errors->first('point_A') }}</strong>
+                                            </span>
+                                        </div>
+                                    @endif
+                                    <div class="form-group col-md-12">
+                                        <label class="col-md-3">Откуда</label>
+                                        <div class="col-md-8">
+                                            {{Form::text('address_A',null, ['class'=>'form-control', 'id'=>'address_a'])}}
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-default" data-toggle="modal"
+                                                    data-target="#myModal"
+                                                    onclick="setStart()"><i class="fa fa-compass"></i></button>
+                                        </div>
+                                    </div>
+
+                                    @if ($errors->has('point_B'))
+                                        <div class="col-md-4">
+                                            <span class="help-block">
+                                                <strong class="alert-danger">{{ $errors->first('point_B') }}</strong>
+                                            </span>
+                                        </div>
+                                    @endif
+                                    <div class="form-group col-md-12">
+                                        <label class="col-md-3">Куда</label>
+                                        <div class="col-md-8">
+                                            {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b'])}}
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-default" data-toggle="modal"
+                                                    data-target="#myModal"
+                                                    onclick="setEnd()"><i class="fa fa-compass"></i></button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        {{Form::hidden('point_A',null, ['id'=>'point_a', 'class'=>'form-control'])}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{Form::hidden('point_B',null,['id'=>'point_b', 'class'=>'form-control'])}}
+                                    </div>
+
+
+                                    <div class="form-group col-md-12">
+                                        <label for="discount_id" class="col-md-3">Скидка %</label>
+                                        <div class="col-md-9">
+                                            {{Form::number('discount', $tarifs[0]->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
+                                        </div>
+                                    </div>
+
+                                    @if ($errors->has('name'))
+                                        <div class="col-md-4">
+                                            <span class="help-block">
+                                                <strong class="alert-danger">{{ $errors->first('name') }}</strong>
+                                            </span>
+                                        </div>
+                                    @endif
+                                    <div class="form-group col-md-12">
+                                        <label class="col-md-3">Имя заказчика</label>
+                                        <div class="col-md-9">
+                                            {{Form::text('name',null,['class'=>'form-control'])}}
+                                        </div>
+                                    </div>
+                                    @if ($errors->has('phone'))
+                                        <div class="col-md-4">
+                                            <span class="help-block">
+                                                <strong class="alert-danger">{{ $errors->first('phone') }}</strong>
+                                            </span>
+                                        </div>
+                                    @endif
+                                    <div class="form-group col-md-12">
+                                        <label class="col-md-3">Телефон</label>
+                                        <div class="col-md-9">
+                                            {{Form::text('phone',null,['class'=>'form-control'])}}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        <label class="col-md-3">Цена</label>
+                                        <div class="col-md-9">
+                                            {{Form::number('sum',null, ['class'=>'form-control', 'id'=>'sum_id'])}}
+                                        </div>
+                                    </div>
                                 </div>
 
-                                {{Form::close()}}
+                                <div class="panel-footer">
+                                    <input type="submit" class="btn btn-success" value="Заказать">
+                                </div>
+
                             </div>
+
+                            {{Form::close()}}
+                        </div>
 
                         <div class="modal fade" id="myModal" role="dialog">
                             <div class="modal-dialog modal-lg">
@@ -315,13 +307,13 @@
                             function changeTarif() {
                                 tarif_index = document.getElementById('tarif_id').selectedIndex;
                                 if (tarif_index === 0) {
-                                    document.getElementById('label_tarif').innerHTML = "Hours";
+                                    document.getElementById('label_tarif').innerHTML = "Срок аренды (час)";
                                     document.getElementById('unit_id').min = tarifs[tarif_index]['min_hour'];
                                     document.getElementById('unit_id').value = tarifs[tarif_index]['min_hour'];
                                     document.getElementById('unit_id').readOnly = false;
                                 }
                                 else {
-                                    document.getElementById('label_tarif').innerHTML = "Kilometers";
+                                    document.getElementById('label_tarif').innerHTML = "Дистанция";
                                     document.getElementById('unit_id').min = tarifs[tarif_index]['min_distance'];
                                     if (distance === 0)
                                         document.getElementById('unit_id').value = tarifs[tarif_index]['min_distance'];
@@ -372,6 +364,11 @@
                                 unitChange();
                             };
                         </script>
+                    </div>
+                </div>
+                <div id="section2" class="section">
+                    <div class="page-header">
+                        <h2>Заказы</h2>
                     </div>
                 </div>
             </div>

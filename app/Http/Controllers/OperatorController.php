@@ -36,12 +36,14 @@ class OperatorController extends Controller
 
         foreach ($tarifs as $tr) {
             if ($tr->type == 0)
-                $tarif[$tr->id] = "Inside";
+                $tarif[$tr->id] = "Внутри города";
             else
-                $tarif[$tr->id] = "Outside";
+                $tarif[$tr->id] = "За городом";
         }
 
-        return view('operator')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif);
+        $orders = Order::all();
+
+        return view('operator')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif)->withOrders($orders);
     }
 
     public function orderSubmit(Request $request)
