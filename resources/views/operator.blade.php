@@ -269,10 +269,10 @@
                                         </div>
                                     </div>
                                     <div class="panel-footer">
+
                                         <input type="submit" class="btn btn-success" value="Принять">
                                         <input type="submit" class="btn btn-warning" value="Отказать">
                                         <input type="submit" class="btn btn-primary" value="Изменить">
-
                                         <input type="submit" class="btn btn-danger" value="Удалить">
                                     </div>
                                 </div>
