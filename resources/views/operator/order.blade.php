@@ -31,7 +31,8 @@
                     <div class="form-group col-md-12">
                         <label for="date_id" class="col-md-2"> Start Time</label>
                         <div class="col-md-7">
-                            <input type="date" value="{{ Carbon\Carbon::parse($order->start_time)->format('Y-m-d')}}" name="date" class="form-control"
+                            <input type="date" value="{{ Carbon\Carbon::parse($order->start_time)->format('Y-m-d')}}"
+                                   name="date" class="form-control"
                                    id="date_id">
                         </div>
                         <div class="col-md-3">
@@ -124,7 +125,7 @@
                     @if ($errors->has('phone'))
                         <div class="col-md-4">
                             <span class="help-block">
-                                        <strong class="alert-danger">{{ $errors->first('phone') }}</strong>
+                                <strong class="alert-danger">{{ $errors->first('phone') }}</strong>
                             </span>
                         </div>
                     @endif
@@ -185,7 +186,7 @@
                 zoom: 13,
                 controls: []
             }, {searchControlProvider: 'yandex#search'});
-            myMap.controls.add('geolocationControl')
+            myMap.controls.add('geolocationControl');
             myMap.controls.add('searchControl');
             myMap.controls.add('zoomControl');
             myMap.controls.get('searchControl').options.set('size', 'large');
@@ -225,6 +226,25 @@
                 }
                 setCoordinates();
             });
+
+            start = new ymaps.Placemark(document.getElementById('point_a').value, {
+                balloonContent: 'Point A'
+            }, {
+                draggable: true,
+                preset: 'islands#icon',
+                iconColor: '#F44336'
+            });
+            myMap.geoObjects.add(start);
+
+            end = new ymaps.Placemark(document.getElementById('point_b').value, {
+                balloonContent: 'Point B'
+            }, {
+                draggable: true,
+                preset: 'islands#icon',
+                iconColor: '#F44336'
+            });
+            myMap.geoObjects.add(end);
+            setCoordinates();
         }
 
         function setCoordinates() {
@@ -293,7 +313,7 @@
                     document.getElementById('unit_id').value = tarifs[tarif_index]['min_distance'];
                 else
                     document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                    document.getElementById('unit_id').readOnly = true;
+                document.getElementById('unit_id').readOnly = true;
             }
             discount = document.getElementById('discount_id').value = tarifs[tarif_index]['discard'];
             calculatePrice();
@@ -326,6 +346,12 @@
             price += unit;
             price -= price * discount / 100;
             document.getElementById('sum_id').value = price;
+        }
+
+        window.loaded = function () {
+            start = {{ $order->point_A  }};
+            end = {{ $order->point_B  }};
+            setCoordinates();
         }
     </script>
 @endsection
