@@ -244,7 +244,24 @@
                 iconColor: '#F44336'
             });
             myMap.geoObjects.add(end);
-            setCoordinates();
+
+            ymaps.route([start.geometry.getCoordinates(), end.geometry.getCoordinates()],
+                    {
+                        mapStateAutoApply: true,
+                        multiRoute: false
+                    }).then(function (route) {
+                        path = route;
+                        distance = route.getLength();
+                        myMap.geoObjects.add(route);
+                        if (tarif_index === 1) {
+                            document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
+                            unitChange();
+                        }
+                    }, function (error) {
+                        alert("Error occurred: " + error.message);
+                    }
+            );
+            alert("Hi");
         }
 
         function setCoordinates() {
