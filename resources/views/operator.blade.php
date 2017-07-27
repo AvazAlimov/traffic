@@ -321,7 +321,79 @@
                     </div>
                     @foreach($orders as $served_order)
                         @if($served_order->status != 0)
-                            {{ $served_order->id  }}
+                            <div class="col-md-6">
+                                <div class="panel panel-{{ $served_order->status == -1 ? "danger" : "success" }}">
+                                    <div class="panel-heading">
+                                        Имя заказчика : {{ $served_order->name  }}
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-4"><strong>Тариф:</strong></div>
+                                            <div class="col-md-8">
+                                                @if($served_order->tarif->type == 0)
+                                                    Внутри города
+                                                @else
+                                                    За городом
+                                                @endif</div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-4"><strong>Тип автомобиля:</strong></div>
+                                            <div class="col-md-8">{{ $served_order->automobile->name }}</div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-4"><strong>Количество грузчиков:</strong></div>
+                                            <div class="col-md-8">{{ $served_order->persons }}</div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-4"><strong>Время подачи:</strong></div>
+                                            <div class="col-md-8">{{ $served_order->start_time }}</div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-4">
+                                                @if($served_order->tarif->type == 0)
+                                                    <strong>Срок аренды (час):</strong>
+                                                @else
+                                                    <strong>Дистанция:</strong>
+                                                @endif
+                                            </div>
+                                            <div class="col-md-8">
+                                                {{ $served_order->unit }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-4"><strong>Откуда:</strong></div>
+                                            <div class="col-md-8">{{ $served_order->address_A }}</div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-4"><strong>Куда:</strong></div>
+                                            <div class="col-md-8">{{ $served_order->address_B }}</div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-4"><strong>Телефон:</strong></div>
+                                            <div class="col-md-8">{{ $served_order->phone }}</div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-4"><strong>Цена:</strong></div>
+                                            <div class="col-md-8">{{ $served_order->sum }} сум</div>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-4"><strong>Показать на карте:</strong></div>
+                                            <div class="col-md-8">
+                                                <button type="button" class="btn btn-default" data-toggle="modal"
+                                                        data-target="#yourModal"
+                                                        onclick="setPoints({{$served_order->point_A}},{{$served_order->point_B}})">
+                                                    <i class="fa fa-compass"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer">
+                                        <input type="button" class="btn btn-primary" value="Восстановить">
+                                    </div>
+                                </div>
+                            </div>
                         @endif
                     @endforeach
                 </div>
