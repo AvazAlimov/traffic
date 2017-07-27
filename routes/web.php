@@ -47,6 +47,8 @@ Route::prefix('operator')->group(function () {
     Route::prefix('/order')->group(function () {
         Route::post('/submit', 'OperatorController@orderSubmit')->name('operator.order.submit');
         Route::post('/accept/{order_id}/{operator_id}', 'OperatorController@orderAccept')->name('operator.order.accept');
+        Route::post('/refuse/{order_id}/{operator_id}', 'OperatorController@orderRefuse')->name('operator.order.refuse');
+        Route::post('/delete/{order_id}/{operator_id}', 'OperatorController@orderDelete')->name('operator.order.delete');
     });
 });
 

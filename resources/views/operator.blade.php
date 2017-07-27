@@ -269,15 +269,47 @@
                                         </div>
                                     </div>
                                     <div class="panel-footer">
-                                        <form method="post"
-                                              action="{{route('operator.order.accept',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <form method="post"
+                                                          action="{{route('operator.order.accept',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
                                               )}}">
-                                            {{csrf_field()}}
-                                            <input type="submit" class="btn btn-success" value="Принять">
-                                        </form>
-                                        <input type="submit" class="btn btn-warning" value="Отказать">
-                                        <input type="submit" class="btn btn-primary" value="Изменить">
-                                        <input type="submit" class="btn btn-danger" value="Удалить">
+                                                        {{csrf_field()}}
+                                                        <input type="submit" class="btn btn-success form-group"
+                                                               value="Принять">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form method="post"
+                                                          action="{{route('operator.order.refuse',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
+                                              )}}">
+                                                        {{csrf_field()}}
+                                                        <input type="submit" class="btn btn-warning form-group"
+                                                               value="Отказать">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form method="post"
+                                                          action="{{route('operator.order.refuse',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
+                                              )}}">
+                                                        {{csrf_field()}}
+                                                        <input type="submit" class="btn btn-primary form-group"
+                                                               value="Изменить">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form method="post"
+                                                          action="{{route('operator.order.delete',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
+                                              )}}">
+                                                        {{csrf_field()}}
+                                                        <input type="submit" class="btn btn-danger" value="Удалить">
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
