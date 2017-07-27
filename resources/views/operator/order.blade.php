@@ -363,11 +363,5 @@
             price -= price * discount / 100;
             document.getElementById('sum_id').value = price;
         }
-
-        window.loaded = function () {
-            start = {{ $order->point_A  }};
-            end = {{ $order->point_B  }};
-            setCoordinates();
-        }
     </script>
 @endsection
