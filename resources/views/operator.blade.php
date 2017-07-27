@@ -57,13 +57,15 @@
                                     <div class="form-group col-md-12">
                                         <label for="date_id" class="col-md-3">Время подачи</label>
                                         <div class="col-md-6">
-                                            <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" name="date"
+                                            <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                                   name="date"
                                                    class="form-control"
                                                    id="date_id">
                                         </div>
                                         <div class="col-md-3">
                                             <input type="time"
-                                                   value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}" name="time"
+                                                   value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}"
+                                                   name="time"
                                                    class="form-control" id="date_id">
                                         </div>
                                     </div>
@@ -300,8 +302,7 @@
                                                 </td>
                                                 <td>
                                                     <form method="post"
-                                                          action="{{route('operator.order.delete',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
-                                              )}}">
+                                                          action="{{route('operator.order.delete', $order->id)}}">
                                                         {{csrf_field()}}
                                                         <input type="submit" class="btn btn-danger" value="Удалить">
                                                     </form>
@@ -318,6 +319,9 @@
                 <div id="section3" class="section">
                     <div class="page-header">
                         <h2>Поданные заказы</h2>
+                    </div>
+                    <div class="col-md-12">
+                        <h3>Всего заказов: {{ $orders->total() }}</h3>
                     </div>
                     @foreach($orders as $served_order)
                         @if($served_order->status != 0)
@@ -390,12 +394,35 @@
                                         </div>
                                     </div>
                                     <div class="panel-footer">
-                                        <input type="button" class="btn btn-primary" value="Восстановить">
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <form method="post"
+                                                          action="{{route('operator.order.restore', $order->id)}}">
+                                                        {{csrf_field()}}
+                                                        <input type="submit" class="btn btn-primary"
+                                                               value="Восстановить">
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form method="post"
+                                                          action="{{route('operator.order.delete', $order->id)}}">
+                                                        {{csrf_field()}}
+                                                        <input type="submit" class="btn btn-danger" value="Удалить">
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         @endif
                     @endforeach
+                    <div class="col-md-12">
+                        {{ $orders->links() }}
+                    </div>
                 </div>
             </div>
         </div>

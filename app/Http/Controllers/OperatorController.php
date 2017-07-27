@@ -41,7 +41,7 @@ class OperatorController extends Controller
                 $tarif[$tr->id] = "За городом";
         }
 
-        $orders = Order::all();
+        $orders = Order::paginate(6);
 
         return view('operator')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif)->withOrders($orders);
     }
@@ -103,13 +103,15 @@ class OperatorController extends Controller
         return redirect()->route('operator.dashboard');
     }
 
-    public function orderDelete(Request $request, $order_id, $operator_id)
+    public function orderDelete(Request $request, $order_id)
     {
         $order = Order::find($order_id);
         $order->delete();
         return redirect()->route('operator.dashboard');
     }
-    public function orderUpdate($id){
+
+    public function orderUpdate($id)
+    {
         $order = Order::findOrFail($id);
 
         $cars = Automobile::all();
@@ -131,7 +133,9 @@ class OperatorController extends Controller
 
         return view('operator.order')->withOrder($order)->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif);
     }
-    public function orderUpdateSubmit(Request $request, $id){
+
+    public function orderUpdateSubmit(Request $request, $id)
+    {
         $rules = [
             'name' => 'required',
             'phone' => 'required',
@@ -162,6 +166,15 @@ class OperatorController extends Controller
         $order->phone = $request->phone;
         $order->sum = $request->sum;
         $order->start_time = Carbon::parse($request->date . " " . $request->time, null);
+        $order->save();
+        return redirect()->route('operator.dashboard');
+    }
+
+    public function orderRestore(Request $request, $id)
+    {
+        $order = Order::find($id);
+        $order->status = 0;
+        $order->operator_id = null;
         $order->save();
         return redirect()->route('operator.dashboard');
     }
