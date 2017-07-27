@@ -31,8 +31,9 @@
                 <div id="section2" class="section">
                     <div class="page-header">
                         <h2>Сделать заказ</h2>
+                    </div>
                         <div class="container-fluid">
-                            <div class="col-md-8 col-md-offset-2">
+                            <div class="col-md-12">
                                 {{Form::open(['route' => ['operator.order.submit'], 'method' => 'post'])}}
                                 <div class="panel panel-default">
                                     <div class="panel-heading">Order</div>
@@ -178,7 +179,6 @@
 
                                 {{Form::close()}}
                             </div>
-                        </div>
 
                         <div class="modal fade" id="myModal" role="dialog">
                             <div class="modal-dialog modal-lg">
