@@ -44,11 +44,13 @@ Route::prefix('operator')->group(function () {
     Route::get('/', 'OperatorController@index')->name('operator.dashboard');
     Route::get('/logout', 'Auth\OperatorLoginController@logout')->name('operator.logout');
 
-    Route::prefix('/order')->group(function () {
+    Route::prefix('order')->group(function () {
         Route::post('/submit', 'OperatorController@orderSubmit')->name('operator.order.submit');
         Route::post('/accept/{order_id}/{operator_id}', 'OperatorController@orderAccept')->name('operator.order.accept');
         Route::post('/refuse/{order_id}/{operator_id}', 'OperatorController@orderRefuse')->name('operator.order.refuse');
         Route::post('/delete/{order_id}/{operator_id}', 'OperatorController@orderDelete')->name('operator.order.delete');
+        Route::get('/update/{id}/', 'OperatorController@orderUpdate')->name('operator.order.update');
+        Route::post('/update/{id}', 'OperatorController@orderUpdateSubmit')->name('operator.order.update.submit');
     });
 });
 

@@ -5,38 +5,38 @@
 @section('content')
     <div class="container-fluid">
         <div class="col-md-8 col-md-offset-2">
-            {{Form::open(['route' => ['operator.order.submit'], 'method' => 'post'])}}
+            {{Form::model($order, ['route' => ['operator.order.update.submit', $order->id], 'method' => 'post'])}}
             <div class="panel panel-default">
                 <div class="panel-heading">Order</div>
                 <div class="panel-body">
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> Tarif</label>
                         <div class="col-md-10">
-                            {{Form::select('tarif', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
+                            {{Form::select('tarif', $tarif,$order->tarif->id, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
                         </div>
                     </div>
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> Car</label>
                         <div class="col-md-10">
-                            {{Form::select('car', $car, null, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
+                            {{Form::select('car', $car, $order->automobile->id,['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
                         </div>
                     </div>
                     <div class="form-group col-md-12">
                         <label class="col-md-2">Persons</label>
                         <div class="col-md-10">
-                            {{Form::number('persons', 0, ['max' => 8, 'min'=>0, 'class'=>'form-control', 'id' =>'person_id', 'onchange' => 'personsChange()'])}}
+                            {{Form::number('persons', null,['max' => 8, 'min'=>0, 'class'=>'form-control', 'id' =>'person_id', 'onchange' => 'personsChange()'])}}
                         </div>
                     </div>
 
                     <div class="form-group col-md-12">
                         <label for="date_id" class="col-md-2"> Start Time</label>
                         <div class="col-md-7">
-                            <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" class="form-control"
+                            <input type="date" value="{{ Carbon\Carbon::parse($order->start_time)->format('Y-m-d')}}" name="date" class="form-control"
                                    id="date_id">
                         </div>
                         <div class="col-md-3">
                             <input type="time"
-                                   value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}"
+                                   value="{{Carbon\Carbon::parse($order->start_time)->format('H:i') }}" name="time"
                                    class="form-control" id="date_id">
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                     <div class="form-group col-md-12">
                         <label for="unit_id" id="label_tarif" class="col-md-2">Unit</label>
                         <div class="col-md-10">
-                            <input name="unit" type="number" step="0.01" value="{{ $tarifs[0]->min_hour  }}" min="0.0"
+                            <input name="unit" type="number" step="0.01" value="{{ $order->unit  }}" min="0.0"
                                    class="form-control" required id="unit_id" onchange="unitChange()">
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> From </label>
                         <div class="col-md-9">
-                            {{Form::text('address_A',null, ['class'=>'form-control', 'id'=>'address_a'])}}
+                            {{Form::text('address_A',$order->address_A, ['class'=>'form-control', 'id'=>'address_a'])}}
                         </div>
                         <div class="col-md-1">
                             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"
@@ -77,7 +77,7 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> To </label>
                         <div class="col-md-9">
-                            {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b'])}}
+                            {{Form::text('address_B',$order->address_B, ['class'=>'form-control', 'id'=>'address_b'])}}
                         </div>
                         <div class="col-md-1">
                             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"
@@ -86,24 +86,24 @@
                     </div>
 
                     <div class="col-md-4">
-                        {{Form::hidden('point_A',null, ['id'=>'point_a', 'class'=>'form-control'])}}
+                        {{Form::hidden('point_A',$order->point_A, ['id'=>'point_a', 'class'=>'form-control'])}}
                     </div>
                     <div class="col-md-4">
-                        {{Form::hidden('point_B',null,['id'=>'point_b', 'class'=>'form-control'])}}
+                        {{Form::hidden('point_B',$order->point_B,['id'=>'point_b', 'class'=>'form-control'])}}
                     </div>
 
 
                     <div class="form-group col-md-12">
                         <label for="discount_id" class="col-md-2">Discount</label>
                         <div class="col-md-10">
-                            {{Form::number('discount', $tarifs[0]->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
+                            {{Form::number('discount', $order->tarif->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
                         </div>
                     </div>
 
                     <div class="form-group col-md-12">
                         <label class="col-md-2">Price</label>
                         <div class="col-md-10">
-                            {{Form::number('sum',null, ['class'=>'form-control', 'id'=>'sum_id'])}}
+                            {{Form::number('sum',$order->sum, ['class'=>'form-control', 'id'=>'sum_id'])}}
                         </div>
                     </div>
 
@@ -118,7 +118,7 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> Name</label>
                         <div class="col-md-10">
-                            {{Form::text('name',null,['class'=>'form-control'])}}
+                            {{Form::text('name',$order->name,['class'=>'form-control'])}}
                         </div>
                     </div>
                     @if ($errors->has('phone'))
@@ -131,7 +131,7 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-2"> Phone</label>
                         <div class="col-md-10">
-                            {{Form::text('phone',null,['class'=>'form-control'])}}
+                            {{Form::text('phone',$order->phone,['class'=>'form-control'])}}
                         </div>
                     </div>
 
@@ -327,15 +327,5 @@
             price -= price * discount / 100;
             document.getElementById('sum_id').value = price;
         }
-
-        window.onload = function () {
-            tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
-            car_index = document.getElementById('car_id').selectedIndex = 0;
-            document.getElementById('person_id').value = 0;
-            changeTarif();
-            changeCar();
-            personsChange();
-            unitChange();
-        };
     </script>
 @endsection

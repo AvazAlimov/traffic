@@ -57,13 +57,13 @@
                                     <div class="form-group col-md-12">
                                         <label for="date_id" class="col-md-3">Время подачи</label>
                                         <div class="col-md-6">
-                                            <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                            <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" name="date"
                                                    class="form-control"
                                                    id="date_id">
                                         </div>
                                         <div class="col-md-3">
                                             <input type="time"
-                                                   value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}"
+                                                   value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}" name="time"
                                                    class="form-control" id="date_id">
                                         </div>
                                     </div>
@@ -291,9 +291,8 @@
                                                     </form>
                                                 </td>
                                                 <td>
-                                                    <form method="post"
-                                                          action="{{route('operator.order.refuse',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
-                                              )}}">
+                                                    <form method="get"
+                                                          action="{{route('operator.order.update',['id'=>$order->id])}}">
                                                         {{csrf_field()}}
                                                         <input type="submit" class="btn btn-primary form-group"
                                                                value="Изменить">
