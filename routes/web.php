@@ -45,7 +45,6 @@ Route::prefix('operator')->group(function(){
     Route::get('/logout', 'Auth\OperatorLoginController@logout')->name('operator.logout');
 
     Route::prefix('/order')->group(function (){
-    Route::get('/create', 'OperatorController@createOrder')->name('operator.order.create');
     Route::post('/submit', 'OperatorController@orderSubmit')->name('operator.order.submit');
     });
 });

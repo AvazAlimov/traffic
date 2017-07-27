@@ -25,11 +25,6 @@ class OperatorController extends Controller
 
     public function index()
     {
-        return view('operator');
-    }
-
-    public function createOrder()
-    {
         $cars = Automobile::all();
         $car = array();
         foreach ($cars as $key) {
@@ -46,7 +41,7 @@ class OperatorController extends Controller
                 $tarif[$tr->id] = "Outside";
         }
 
-        return view('operator.order')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif);
+        return view('operator')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif);
     }
 
     public function orderSubmit(Request $request)
@@ -85,5 +80,6 @@ class OperatorController extends Controller
         $order->status = 1;
         $order->start_time = Carbon::parse($request->date . " " . $request->time, new \DateTimeZone('Asia/Tashkent'));
         $order->save();
+        return redirect()->route('operator.dashboard');
     }
 }
