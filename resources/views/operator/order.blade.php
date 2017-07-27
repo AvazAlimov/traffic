@@ -137,7 +137,6 @@
 
                 </div>
 
-
                 <div class="panel-footer">
                     <input type="submit" class="btn btn-success" value="Done">
                 </div>
