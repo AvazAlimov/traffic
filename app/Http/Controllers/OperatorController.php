@@ -84,4 +84,13 @@ class OperatorController extends Controller
         $order->save();
         return redirect()->route('operator.dashboard');
     }
+
+    public function orderAccept(Request $request, $order_id, $operator_id)
+    {
+        $order = Order::find($order_id);
+        $order->operator_id = $operator_id;
+        $order->status = 1;
+        $order->save();
+        return redirect()->route('operator.dashboard');
+    }
 }

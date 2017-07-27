@@ -18,12 +18,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('users/logout','Auth\LoginController@userLogout')->name('user.logout');
-Route::prefix('admin')->group(function(){
-	Route::get('/login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
-	Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
-	Route::get('/', 'AdminController@index')->name('admin.dashboard');
-	Route::get('/logout', 'Auth\AdminLoginController@logout')->name('admin.logout');
+Route::get('users/logout', 'Auth\LoginController@userLogout')->name('user.logout');
+Route::prefix('admin')->group(function () {
+    Route::get('/login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
+    Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
+    Route::get('/', 'AdminController@index')->name('admin.dashboard');
+    Route::get('/logout', 'Auth\AdminLoginController@logout')->name('admin.logout');
 
     Route::get('operator/create', 'AdminOperatorController@index')->name('operator.create');
     Route::post('operator/create', 'AdminOperatorController@store')->name('operator.create.submit');
@@ -38,14 +38,15 @@ Route::prefix('admin')->group(function(){
     Route::post('automobile/delete{id}', 'AutomobileController@delete')->name('automobile.delete');
 });
 
-Route::prefix('operator')->group(function(){
+Route::prefix('operator')->group(function () {
     Route::get('/login', 'Auth\OperatorLoginController@showLoginForm')->name('operator.login');
     Route::post('/login', 'Auth\OperatorLoginController@login')->name('operator.login.submit');
     Route::get('/', 'OperatorController@index')->name('operator.dashboard');
     Route::get('/logout', 'Auth\OperatorLoginController@logout')->name('operator.logout');
 
-    Route::prefix('/order')->group(function (){
-    Route::post('/submit', 'OperatorController@orderSubmit')->name('operator.order.submit');
+    Route::prefix('/order')->group(function () {
+        Route::post('/submit', 'OperatorController@orderSubmit')->name('operator.order.submit');
+        Route::post('/accept/{order_id}/{operator_id}', 'OperatorController@orderAccept')->name('operator.order.accept');
     });
 });
 

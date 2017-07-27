@@ -30,7 +30,7 @@ class CreateOrdersTable extends Migration
             $table->string('name');
             $table->double('sum');
             $table->tinyInteger('status')->default(0);
-            $table->integer('servedBy')->nullable();
+            $table->integer('operator_id')->nullable();
             $table->timestamps();
         });
     }

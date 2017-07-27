@@ -199,7 +199,7 @@
                         <h2>Заказы</h2>
                     </div>
                     @foreach($orders as $order)
-                        @if($order->servedBy == null)
+                        @if($order->status == 0)
                             <div class="col-md-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
@@ -269,8 +269,12 @@
                                         </div>
                                     </div>
                                     <div class="panel-footer">
-
-                                        <input type="submit" class="btn btn-success" value="Принять">
+                                        <form method="post"
+                                              action="{{route('operator.order.accept',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
+                                              )}}">
+                                            {{csrf_field()}}
+                                            <input type="submit" class="btn btn-success" value="Принять">
+                                        </form>
                                         <input type="submit" class="btn btn-warning" value="Отказать">
                                         <input type="submit" class="btn btn-primary" value="Изменить">
                                         <input type="submit" class="btn btn-danger" value="Удалить">
@@ -285,7 +289,7 @@
                         <h2>Поданные заказы</h2>
                     </div>
                     @foreach($orders as $served_order)
-                        @if($served_order->servedBy != null)
+                        @if($served_order->status != 0)
                             {{ $served_order->id  }}
                         @endif
                     @endforeach
