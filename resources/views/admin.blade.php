@@ -173,9 +173,6 @@
                                                                name="min_hour"
                                                                value="{{ $tarif->min_hour }}" required>
                                                     </div>
-                                                    <div class="col-md-1">
-                                                        <p>сум</p>
-                                                    </div>
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     <label for="price_minimum" class="col-md-6 control-label">Начальная
@@ -214,7 +211,7 @@
                                                                value="{{ $tarif->discard }}" required>
                                                     </div>
                                                     <div class="col-md-1">
-                                                        <p>сум</p>
+                                                        <p>%</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -267,9 +264,6 @@
                                                                name="min_distance"
                                                                value="{{ $tarif->min_distance }}" required>
                                                     </div>
-                                                    <div class="col-md-1">
-                                                        <p>сум</p>
-                                                    </div>
                                                 </div>
 
                                                 <div class="form-group col-md-12">
@@ -311,7 +305,7 @@
                                                                value="{{ $tarif->discard }}" required>
                                                     </div>
                                                     <div class="col-md-1">
-                                                        <p>сум</p>
+                                                        <p>%</p>
                                                     </div>
                                                 </div>
                                             </div>
