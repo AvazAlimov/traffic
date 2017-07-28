@@ -95,7 +95,6 @@
 
         .panel {
             border: 1px solid #372e30;
-            border-radius: 0 !important;
             transition: box-shadow 0.5s;
         }
 
@@ -113,10 +112,6 @@
             color: #ffcb08 !important;
             background-color: #372e30 !important;
             border-bottom: 1px solid transparent;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
         }
 
         .panel-footer {
