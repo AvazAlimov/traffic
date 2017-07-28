@@ -30,7 +30,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Traffic.uz
+                    <img class="img-responsive" src="{{asset("resources/logo.png")}}" style="width: 32px; height: 32px;" alt>
                 </a>
             </div>
 
