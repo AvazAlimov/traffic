@@ -16,12 +16,12 @@
 
     <style>
         .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a.active {
-            background: #63b7e6;
+            background: #372e30;
             color: #fff;
         }
 
         .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
-            background: #63b7e6;
+            background: #372e30;
             color: #fff;
         }
 
@@ -51,17 +51,17 @@
             padding: 60px 50px;
         }
 
-        .bg-grey {
-            background-color: #f6f6f6;
+        .bg-yellow {
+            background-color: #ffcb08;
         }
 
         .logo-small {
-            color: #63b7e6;
+            color: #372e30;
             font-size: 50px;
         }
 
         .logo {
-            color: #63b7e6;
+            color: #372e30;
             font-size: 200px;
         }
 
@@ -85,12 +85,16 @@
             margin: 70px 0;
         }
 
+        h3{
+            color: #372e30;
+        }
+
         .item span {
             font-style: normal;
         }
 
         .panel {
-            border: 1px solid #63b7e6;
+            border: 1px solid #372e30;
             border-radius: 0 !important;
             transition: box-shadow 0.5s;
         }
@@ -100,14 +104,14 @@
         }
 
         .panel-footer .btn:hover {
-            border: 1px solid #63b7e6;
+            border: 1px solid #372e30;
             background-color: #fff !important;
-            color: #63b7e6;
+            color: #372e30;
         }
 
         .panel-heading {
-            color: #fff !important;
-            background-color: #63b7e6 !important;
+            color: #ffcb08 !important;
+            background-color: #372e30 !important;
             border-bottom: 1px solid transparent;
             border-top-left-radius: 0;
             border-top-right-radius: 0;
@@ -116,7 +120,7 @@
         }
 
         .panel-footer {
-            background-color: white !important;
+            background-color: #372e30 !important;
         }
 
         .panel-footer h3 {
@@ -130,11 +134,12 @@
 
         .panel-footer .btn {
             margin: 15px 0;
-            background-color: #63b7e6;
+            background-color: #372e30;
             color: #fff;
         }
 
         .navbar {
+            background-color: #372e30;
             margin-bottom: 0;
             z-index: 9999;
             border: 0;
@@ -147,8 +152,10 @@
 
         .navbar-default .navbar-toggle {
             border-color: transparent;
-            color: #fff !important;
+            color: #ffcb08 !important;
         }
+
+
 
         .slideanim {
             visibility: hidden;
@@ -201,6 +208,14 @@
                 font-size: 150px;
             }
         }
+
+        hr {
+            width: 200px;
+            display: block;
+            height: 1px;
+            border: 0;
+            background-color: #ffcb08;
+        }
     </style>
 </head>
 <body id="app" data-spy="scroll" data-target=".navbar" data-offset="60">
@@ -217,11 +232,13 @@
                     <tbody>
                     <tr>
                         <td>
-                            <img src="{{asset('resources/logo.png')}}" class="img-responsive" alt=""
+                            <img src="{{asset('resources/logo-yellow.png')}}" class="img-responsive" alt=""
                                  style="width: 24px; height: 24px; margin-right: 12px;">
                         </td>
                         <td>
-                            Traffic.uz
+                            <div style="color: #ffcb08;">
+                                Traffic.uz
+                            </div>
                         </td>
                     </tr>
                     </tbody>
@@ -230,69 +247,78 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#about">О НАС</a></li>
-                <li><a href="#pricing">ТАРИФЫ</a></li>
-                <li><a href="#">КОНТАКТЫ</a>
-                <li><a href="#">СДЕЛАТЬ ЗАКАЗ</a></li>
+                <li><a href="#about" class="active" style="color: #ffcb08;">О НАС</a></li>
+                <li><a href="#pricing" style="color: #ffcb08;">ТАРИФЫ</a></li>
+                <li><a href="#contacts" style="color: #ffcb08;">КОНТАКТЫ</a>
+                <li><a href="#" style="color: #ffcb08;">СДЕЛАТЬ ЗАКАЗ</a></li>
+                @if(Auth::check())
+                    <li><a href="{{ url('/home') }}" style="color: #ffcb08;"><i class="fa fa-home" aria-hidden="true"></i> ГЛАВНАЯ</a></li>
+                @else
+                    <li><a href="{{ url('/login') }}" style="color: #ffcb08;"><i class="fa fa-sign-in" aria-hidden="true"></i> ВОЙТИ</a></li>
+                    <li><a href="{{ url('/register') }}" style="color: #ffcb08;"><i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                            ЗАРЕГИСТРИРОВАТЬСЯ</a></li>
+                @endif
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="jumbotron text-center" style="background-color: #63b7e6; padding: 100px 25px;">
-    <img src="{{asset('resources/logo-white.png')}}" style="width: 128px; height: 128px;">
-    <h1 style="color: white; font-weight: bold;">TRAFFIC.UZ</h1>
-    <hr style="color: white; width: 200px;">
-    <p style="color: white;">Самый крупный автопарк!</p>
-    <button class="btn" style="color: #63b7e6; background-color: white; font-size: 18px;">
-        СДЕЛАТЬ ЗАКАЗАТЬ
+<div class="jumbotron text-center" style="background-color: #372e30; padding: 100px 25px; margin: 0;">
+    <img src="{{asset('resources/logo-yellow.png')}}" style="width: 128px; height: 128px;">
+    <h1 style="color: #ffcb08; font-weight: bold;">TRAFFIC.UZ</h1>
+    <hr>
+    <p style="color: #ffcb08;">Самый крупный автопарк!</p>
+    <button class="btn" style="color: #372e30; background-color: #ffcb08; font-size: 18px;">
+        СДЕЛАТЬ ЗАКАЗ
     </button>
 </div>
 
-<div id="about" class="container text-center">
-    <h2>8 причин заказывать грузоперевозки в «Траффик»</h2>
-    <br>
-    <div class="row slideanim">
-        <div class="col-sm-3">
-            <span class="glyphicon glyphicon-thumbs-up logo-small"></span>
-            <h4>Низкие цены</h4>
+<div class="container-fluid text-center bg-yellow">
+    <div id="about" class="container">
+        <h2>8 причин заказывать грузоперевозки в «Траффик»</h2>
+        <br>
+        <div class="row slideanim">
+            <div class="col-sm-3">
+                <span class="glyphicon glyphicon-thumbs-up logo-small"></span>
+                <h4>Низкие цены</h4>
+            </div>
+            <div class="col-sm-3">
+                <span class="glyphicon glyphicon-dashboard logo-small"></span>
+                <h4>Срочная подача машины через 15 минут!</h4>
+            </div>
+            <div class="col-sm-3">
+                <span class="glyphicon glyphicon-calendar logo-small"></span>
+                <h4>Работаем 24 часа без выходных</h4>
+            </div>
+            <div class="col-sm-3">
+                <span class="fa fa-handshake-o logo-small"></span>
+                <h4>100% материальная ответственность</h4>
+            </div>
         </div>
-        <div class="col-sm-3">
-            <span class="glyphicon glyphicon-dashboard logo-small"></span>
-            <h4>Срочная подача машины через 15 минут!</h4>
+        <br>
+        <div class="row slideanim">
+            <div class="col-sm-3">
+                <span class="fa fa-truck logo-small"></span>
+                <h4>Собственный автопарк более 3500 машин!</h4>
+            </div>
+            <div class="col-sm-3">
+                <span class="fa fa-credit-card logo-small"></span>
+                <h4>Удобные способы оплаты, рассрочка</h4>
+            </div>
+            <div class="col-sm-3">
+                <span class="fa fa-address-card-o logo-small"></span>
+                <h4 style="color:#303030;">Опытные водители и аккуратные грузчики</h4>
+            </div>
+            <div class="col-sm-3">
+                <span class="glyphicon glyphicon-ok-circle logo-small"></span>
+                <h4>Высокий уровень сервиса грузоперевозок</h4>
+            </div>
         </div>
-        <div class="col-sm-3">
-            <span class="glyphicon glyphicon-calendar logo-small"></span>
-            <h4>Работаем 24 часа без выходных</h4>
-        </div>
-        <div class="col-sm-3">
-            <span class="fa fa-handshake-o logo-small"></span>
-            <h4>100% материальная ответственность</h4>
-        </div>
+        <br>
     </div>
-    <br>
-    <div class="row slideanim">
-        <div class="col-sm-3">
-            <span class="fa fa-truck logo-small"></span>
-            <h4>Собственный автопарк более 3500 машин!</h4>
-        </div>
-        <div class="col-sm-3">
-            <span class="fa fa-credit-card logo-small"></span>
-            <h4>Удобные способы оплаты, рассрочка</h4>
-        </div>
-        <div class="col-sm-3">
-            <span class="fa fa-address-card-o logo-small"></span>
-            <h4 style="color:#303030;">Опытные водители и аккуратные грузчики</h4>
-        </div>
-        <div class="col-sm-3">
-            <span class="glyphicon glyphicon-ok-circle logo-small"></span>
-            <h4>Высокий уровень сервиса грузоперевозок</h4>
-        </div>
-    </div>
-    <br>
 </div>
 
-<div class="container-fluid text-center bg-grey">
+<div class="container-fluid text-center">
     <div class="container" id="pricing">
         <div class="text-center">
             <h2>ТАРИФЫ</h2>
@@ -301,7 +327,7 @@
             <div class="col-sm-6 col-xs-12">
                 <div class="panel panel-default text-center">
                     <div class="panel-heading">
-                        <h3>Внутри города</h3>
+                        <h3 style="color: #ffcb08;">Внутри города</h3>
                     </div>
                     <div class="panel-body">
                         <h4><strong>Цена за час:</strong> 50000 сум</h4>
@@ -311,14 +337,14 @@
                         <h4><strong>Скидка:</strong> 15 %</h4>
                     </div>
                     <div class="panel-footer">
-                        <button class="btn btn-lg">Заказать</button>
+                        <button class="btn btn-lg" style="color: #ffcb08;">Заказать</button>
                     </div>
                 </div>
             </div>
             <div class="col-sm-6 col-xs-12">
                 <div class="panel panel-default text-center">
                     <div class="panel-heading">
-                        <h3>За городом</h3>
+                        <h3 style="color: #ffcb08;">За городом</h3>
                     </div>
                     <div class="panel-body">
                         <h4><strong>Цена за км:</strong> 3000 сум</h4>
@@ -328,7 +354,7 @@
                         <h4><strong>Скидка:</strong> 0 %</h4>
                     </div>
                     <div class="panel-footer">
-                        <button class="btn btn-lg">Заказать</button>
+                        <button class="btn btn-lg" style="color: #ffcb08;">Заказать</button>
                     </div>
                 </div>
             </div>
@@ -336,11 +362,23 @@
     </div>
 </div>
 
-<footer class="container-fluid text-center">
+<div id="contacts" class="container-fluid text-center bg-yellow">
+    <div class="container">
+        <div class="row slideanim">
+            <h2>Телефоны колл-центра</h2>
+            <img src="{{asset('resources/call.png')}}" alt="" style="width: 96px; height: 96px;">
+            <h2>+998 (90) 373-73-73</h2>
+            <h2>+998 (71) 147-73-73</h2>
+            <h3>Звоните в любое время и когда угодно!</h3>
+        </div>
+    </div>
+</div>
+
+<footer class="container-fluid text-center" style="background-color: #372e30;">
     <a href="#" data-scroll-goto="0" data-section="top">
         <button class="btn"
-                style="margin-top: -150px; background-color: white; width: 64px; height: 64px; border-radius: 32px; box-shadow: 0 6px 6px #ddd;">
-            <i class="fa fa-angle-up" style="font-size: 24px;"></i>
+                style="margin-top: -150px; background-color: #372e30; width: 64px; height: 64px; border-radius: 32px; box-shadow: 0 0px 6px #ffcb08;">
+            <i class="fa fa-angle-up" style="font-size: 24px; color: #ffcb08;"></i>
         </button>
     </a>
 
@@ -349,34 +387,37 @@
             <div class="col-md-12 col-sm-12">
                 <ul style="list-style-type: none; margin: 0; padding: 0;">
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-facebook" aria-hidden="true"
-                                                                             style="font-size: 32px;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-twitter" aria-hidden="true"
-                                                                             style="font-size: 32px;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-rss" aria-hidden="true"
-                                                                             style="font-size: 32px;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-google-plus"
                                                                              aria-hidden="true"
-                                                                             style="font-size: 32px;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-linkedin" aria-hidden="true"
-                                                                             style="font-size: 32px;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-skype" aria-hidden="true"
-                                                                             style="font-size: 32px;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-vimeo" aria-hidden="true"
-                                                                             style="font-size: 32px;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-tumblr" aria-hidden="true"
-                                                                             style="font-size: 32px;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
                 </ul>
             </div>
         </div>
         <br>
         <div class="row">
             <div class="col-md-12 col-sm-12">
-                <p>IUTLAB © All Rights Reserved</p>
+                <p style="color: #ffcb08;">IUTLAB © All Rights Reserved</p>
             </div>
         </div>
         <br>
         <br>
         <br>
+        <div class="col-md-12 col-sm-12">
+            <h4 style="color: #ffcb08;">Ташкент 2017</h4>
+        </div>
     </div>
 </footer>
 
