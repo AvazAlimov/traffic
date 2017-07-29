@@ -151,7 +151,7 @@
                     <div class="form-group col-md-12">
                         <label for="tarif" class="col-md-4">Тариф:</label>
                         <div class="col-md-8">
-                            {{Form::select('tarif', $tarif, $tarif[0], ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
+                            {{Form::select('tarif', ["Внутри города","За городом"], null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
                         </div>
                     </div>
 
@@ -434,6 +434,10 @@
         }).then(function (route) {
                     path = route;
                     distance = (route.getLength() / 1000).toFixed(2);
+                    if (tarifs[tarif_index]['type'] === 1) {
+                        document.getElementById('unit_id').value = distance;
+                        calculatePrice();
+                    }
                     firstMap.geoObjects.add(route);
                     path.getWayPoints().removeAll();
                 }, function (error) {
@@ -468,6 +472,7 @@
     var discount = 0;
     var car_price = 0;
     var persons = 0;
+    var unit = 0;
 
     function changeTarif() {
         tarif_index = document.getElementById('tarif_id').selectedIndex;
@@ -504,15 +509,25 @@
         calculatePrice();
     }
 
+    function unitChange() {
+        calculatePrice();
+    }
+
     function calculatePrice() {
         var price = min_price;
         price += car_price;
         price += price_for_unit * (document.getElementById('unit_id').value - min_price_unit);
         price += persons * price_per_person;
 
-        price -= (document.getElementById('sum_discount_id').value = price * (discount / 100));
+        price -= (document.getElementById('sum_discount_id').value = (price * (discount / 100))).toFixed(0);
         document.getElementById('sum_id').value = price;
     }
 
+    window.onload = function(){
+        tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
+        car_index = document.getElementById('car_id').selectedIndex = 0;
+        changeTarif();
+        changeCar();
+    }
 </script>
 </body>
