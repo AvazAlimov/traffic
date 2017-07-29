@@ -214,8 +214,8 @@
                         </div>
                         <div class="col-md-1">
                             <button type="button" class="btn btn-default" data-toggle="modal"
-                                    data-target="#firstMapModal"
-                                    onclick="setStart()"><i class="fa fa-compass"></i></button>
+                                    data-target="#firstMapModal" onclick="setStartPoint()"><i class="fa fa-compass"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="form-group col-md-12">
@@ -225,7 +225,7 @@
                         </div>
                         <div class="col-md-1">
                             <button type="button" class="btn btn-default" data-toggle="modal"
-                                    data-target="#firstMapModal"><i class="fa fa-compass"></i></button>
+                                    data-target="#firstMapModal" onclick="setEndPoint()"><i class="fa fa-compass"></i></button>
                         </div>
                     </div>
 
@@ -415,34 +415,47 @@
                 setPoint(endPoint, "address_b", "point_b");
             }
         });
+    }
 
-        function setPoint(placemark, id_address, id_point) {
-            var coords = placemark.geometry.getCoordinates();
-            ymaps.geocode(coords).then(function (res) {
-                var firstGeoObject = res.geoObjects.get(0);
-                document.getElementById(id_address).value = firstGeoObject.getAddressLine();
-            });
-            document.getElementById(id_point).value = coords;
-            drawPath();
-        }
+    function setPoint(placemark, id_address, id_point) {
+        var coords = placemark.geometry.getCoordinates();
+        ymaps.geocode(coords).then(function (res) {
+            var firstGeoObject = res.geoObjects.get(0);
+            document.getElementById(id_address).value = firstGeoObject.getAddressLine();
+        });
+        document.getElementById(id_point).value = coords;
+        drawPath();
+    }
 
-        function drawPath() {
-            if (startPoint === false || startPoint === false)
-                return;
+    function drawPath() {
+        if (startPoint === false || startPoint === false)
+            return;
 
-            firstMap.geoObjects.remove(path);
+        firstMap.geoObjects.remove(path);
 
-            ymaps.route([startPoint.geometry.getCoordinates(), endPoint.geometry.getCoordinates()], {
-                mapStateAutoApply: true,
-                multiRoute: false
-            }).then(function (route) {
-                        path = route;
-                        firstMap.geoObjects.add(route);
-                    }, function (error) {
-                        alert("Error occurred: " + error.message);
-                    }
-            );
-        }
+        ymaps.route([startPoint.geometry.getCoordinates(), endPoint.geometry.getCoordinates()], {
+            mapStateAutoApply: true,
+            multiRoute: false
+        }).then(function (route) {
+                    path = route;
+                    firstMap.geoObjects.add(route);
+                    path.getWayPoints().removeAll();
+                }, function (error) {
+                    alert("Возникла ошибка: " + error.message);
+                }
+        );
+    }
+
+    function setStartPoint(){
+        firstMap.geoObjects.remove(startPoint);
+        firstMap.geoObjects.remove(path);
+        startPoint = false;
+    }
+
+    function setEndPoint(){
+        firstMap.geoObjects.remove(endPoint);
+        firstMap.geoObjects.remove(path);
+        endPoint = false;
     }
 </script>
 </body>
