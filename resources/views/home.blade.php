@@ -151,7 +151,7 @@
                     <div class="form-group col-md-12">
                         <label for="tarif" class="col-md-4">Тариф:</label>
                         <div class="col-md-8">
-                            {{Form::select('tarif', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
+                            {{Form::select('tarif', $tarif, $tarif[0], ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
                         </div>
                     </div>
 
@@ -261,14 +261,11 @@
 
                     <div class="form-group col-md-12">
                         <label for="discount_id" class="col-md-3">Скидка:</label>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             {{Form::number('discount', $tarifs[0]->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
                         </div>
                         <div class="col-md-1">
                             <label>%</label>
-                        </div>
-                        <div class="col-md-1">
-
                         </div>
                         <div class="col-md-4">
                             {{Form::number('discount', 0, ['id' => 'sum_discount_id', 'class' => 'form-control', 'readonly'])}}
@@ -329,7 +326,9 @@
                     <div id="firstMap" class="col-md-12" style="height: 500px;"></div>
                 </div>
                 <div class="modal-footer" style="background-color: #372e30;">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыт</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            style="background-color: #ffcb08; color: #0d3625;">Закрыт
+                    </button>
                 </div>
             </div>
         </div>
@@ -339,18 +338,13 @@
 <script src="{{ asset('js/app.js') }}"></script>
 <script>
     var baseUrl = '{{ URL::asset("") }}';
-
-    function changeCar() {
-        showAutoImage();
-    }
+    automobiles = {!! $cars !!};
 
     function showAutoImage() {
-        automobiles = {!! $cars !!};
         document.getElementById('car_image').src = baseUrl + "automobile/" + automobiles[document.getElementById('car_id').selectedIndex]['image'];
     }
 
     function showAutoInfo() {
-        automobiles = {!! $cars !!};
         var info = automobiles[document.getElementById('car_id').selectedIndex]['info'];
         var rows = 0;
         for (var i = 0; i < info.length; i++)
@@ -439,6 +433,7 @@
             multiRoute: false
         }).then(function (route) {
                     path = route;
+                    distance = (route.getLength() / 1000).toFixed(2);
                     firstMap.geoObjects.add(route);
                     path.getWayPoints().removeAll();
                 }, function (error) {
@@ -460,5 +455,56 @@
         firstMap.geoObjects.remove(path);
         endPoint = false;
     }
+
+    var tarifs = {!! $tarifs !!};
+    var tarif_index = 0;
+    var car_index = 0;
+    var hour = 0;
+    var distance = 0;
+    var min_price = 0;
+    var price_for_unit;
+    var min_price_unit;
+    var discount = 0;
+    var car_price = 0;
+
+    function changeTarif() {
+        tarif_index = document.getElementById('tarif_id').selectedIndex;
+        var unit = document.getElementById('unit_id');
+        if (tarifs[tarif_index]['type'] === 0) {
+            unit.min = tarifs[tarif_index]['min_hour'];
+            unit.value = tarifs[tarif_index]['min_hour'] > hour ? tarifs[tarif_index]['min_hour'] : hour;
+            unit.readOnly = false;
+            price_for_unit = tarifs[tarif_index]['price_per_hour'];
+            min_price_unit = tarifs[tarif_index]['min_hour'];
+        } else {
+            unit.min = tarifs[tarif_index]['min_distance'];
+            unit.value = tarifs[tarif_index]['min_distance'] > distance ? tarifs[tarif_index]['min_distance'] : distance;
+            unit.readOnly = true;
+            price_for_unit = tarifs[tarif_index]['price_per_distance'];
+            min_price_unit = tarifs[tarif_index]['min_distance'];
+        }
+        min_price = tarifs[tarif_index]['price_minimum'];
+        document.getElementById('discount_id').value = discount = tarifs[tarif_index]['discard'];
+
+        calculatePrice();
+    }
+
+    function changeCar() {
+        car_index = document.getElementById('car_id').selectedIndex;
+        car_price = automobiles[car_index]['price'];
+        showAutoImage();
+        calculatePrice();
+    }
+
+
+    function calculatePrice() {
+        var price = min_price;
+        price += car_price;
+        price += price_for_unit * (document.getElementById('unit_id').value - min_price_unit);
+
+        price -= (document.getElementById('sum_discount_id').value = price * (discount / 100));
+        document.getElementById('sum_id').value = price;
+    }
+
 </script>
 </body>
