@@ -10,15 +10,10 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <style>
-        .footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background-color: #372e30;
-            padding: 25px;
-        }
 
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+
+    <style>
         .navbar {
             background-color: #372e30;
             margin-bottom: 0;
@@ -76,8 +71,17 @@
             background-color: #372e30;
         }
 
-        label{
+        label {
             padding-top: 6px;
+        }
+
+        .modal {
+            padding-top: 60px;
+        }
+
+        .modal-header {
+            background-color: #372e30;
+            color: #ffcb08;
         }
     </style>
 </head>
@@ -161,11 +165,10 @@
                             {{Form::select('car', $car, null, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
                         </div>
                     </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-4"></label>
-                        <div class="col-md-8">
-                            <img src="{{asset('automobile/'.$cars[0]->image)}}">
-                        </div>
+                    <div class="form-group col-md-12 text-center">
+                        <img id="car_image" src="{{asset('automobile/'.$cars[0]->image)}}" data-toggle="modal"
+                             data-target="#carModal" onclick="showAutoInfo()">
+                        <p style="margin-top: 10px;">Нажмите на автомобиль чтобы увидеть информацию об автомобиле</p>
                     </div>
 
                     <div class="col-md-12">
@@ -196,8 +199,8 @@
                     <div class="form-group col-md-12">
                         <label for="unit_id" id="label_tarif" class="col-md-4">Срок аренды (час):</label>
                         <div class="col-md-8">
-                            <input name="unit" type="number" step="0.01"
-                                   value="{{ $tarifs[0]->min_hour  }}" min="0.0"
+                            <input name="unit" type="number"
+                                   value="{{ $tarifs[0]->min_hour  }}" min="{{ $tarifs[0]->min_hour  }}"
                                    class="form-control" required id="unit_id"
                                    onchange="unitChange()">
                         </div>
@@ -207,23 +210,22 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-3">Откуда:</label>
                         <div class="col-md-8">
-                            {{Form::text('address_A',null, ['class'=>'form-control', 'id'=>'address_a'])}}
+                            {{Form::text('address_A',null, ['class'=>'form-control', 'id'=>'address_a', 'readOnly'])}}
                         </div>
                         <div class="col-md-1">
                             <button type="button" class="btn btn-default" data-toggle="modal"
-                                    data-target="#myModal"
+                                    data-target="#firstMapModal"
                                     onclick="setStart()"><i class="fa fa-compass"></i></button>
                         </div>
                     </div>
                     <div class="form-group col-md-12">
                         <label class="col-md-3">Куда:</label>
                         <div class="col-md-8">
-                            {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b'])}}
+                            {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b', 'readOnly'])}}
                         </div>
                         <div class="col-md-1">
                             <button type="button" class="btn btn-default" data-toggle="modal"
-                                    data-target="#myModal"
-                                    onclick="setEnd()"><i class="fa fa-compass"></i></button>
+                                    data-target="#firstMapModal"><i class="fa fa-compass"></i></button>
                         </div>
                     </div>
 
@@ -234,13 +236,6 @@
                         {{Form::hidden('point_B',null,['id'=>'point_b', 'class'=>'form-control'])}}
                     </div>
 
-                    <div class="form-group col-md-12">
-                        <label for="discount_id" class="col-md-3">Скидка (%):</label>
-                        <div class="col-md-9">
-                            {{Form::number('discount', $tarifs[0]->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
-                        </div>
-                    </div>
-
                     <div class="col-md-12">
                         <hr>
                     </div>
@@ -248,19 +243,38 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-3">Имя заказчика:</label>
                         <div class="col-md-9">
-                            {{Form::text('name',null,['class'=>'form-control'])}}
+                            {{Form::text('name', Auth::guard('web')->user()->name,['class'=>'form-control'])}}
                         </div>
                     </div>
 
                     <div class="form-group col-md-12">
                         <label class="col-md-3">Телефон:</label>
                         <div class="col-md-9">
-                            {{Form::text('phone',null,['class'=>'form-control'])}}
+                            {{Form::text('phone','+'.Auth::guard('web')->user()->phone,['class'=>'form-control'])}}
                         </div>
                     </div>
 
                     <div class="col-md-12">
                         <hr>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label for="discount_id" class="col-md-3">Скидка:</label>
+                        <div class="col-md-2">
+                            {{Form::number('discount', $tarifs[0]->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
+                        </div>
+                        <div class="col-md-1">
+                            <label>%</label>
+                        </div>
+                        <div class="col-md-1">
+
+                        </div>
+                        <div class="col-md-4">
+                            {{Form::number('discount', 0, ['id' => 'sum_discount_id', 'class' => 'form-control', 'readonly'])}}
+                        </div>
+                        <div class="col-md-1">
+                            <label>сум</label>
+                        </div>
                     </div>
 
                     <div class="form-group col-md-12">
@@ -274,7 +288,12 @@
                     </div>
 
                     <div class="col-md-12">
-                        <button type="submit" class="btn btn-block" style="background-color: #372e30; color: #ffcb08;">
+                        <hr>
+                    </div>
+
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-block"
+                                style="background-color: #372e30; color: #ffcb08; font-size: 18px;">
                             ЗАКАЗАТЬ
                         </button>
                     </div>
@@ -282,6 +301,148 @@
             </div>
         </div>
     </form>
+
+    <div class="modal fade" id="carModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="border-radius: 0;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" style="color: #ffcb08;">&times;</button>
+                    <p class="modal-title">Автомобиль</p>
+                </div>
+                <div class="modal-body">
+                    <textarea id="automobile_info" style="width: 100%; resize: none; border-width: 0;"
+                              readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="firstMapModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="border-radius: 0;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" style="color: #ffcb08;">&times;</button>
+                    <h4 class="modal-title">Карта</h4>
+                </div>
+                <div class="modal-body" style="height: 500px; padding: 0; background-color: #372e30;">
+                    <div id="firstMap" class="col-md-12" style="height: 500px;"></div>
+                </div>
+                <div class="modal-footer" style="background-color: #372e30;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыт</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 <script src="{{ asset('js/app.js') }}"></script>
+<script>
+    var baseUrl = '{{ URL::asset("") }}';
+
+    function changeCar() {
+        showAutoImage();
+    }
+
+    function showAutoImage() {
+        automobiles = {!! $cars !!};
+        document.getElementById('car_image').src = baseUrl + "automobile/" + automobiles[document.getElementById('car_id').selectedIndex]['image'];
+    }
+
+    function showAutoInfo() {
+        automobiles = {!! $cars !!};
+        var info = automobiles[document.getElementById('car_id').selectedIndex]['info'];
+        var rows = 0;
+        for (var i = 0; i < info.length; i++)
+            if (info[i] === '\n')
+                rows++;
+        document.getElementById('automobile_info').rows = rows + 4;
+        document.getElementById('automobile_info').innerHTML = info;
+    }
+
+    var firstMap;
+    var startPoint = false;
+    var endPoint = false;
+    var path;
+
+    ymaps.ready(init);
+
+    function init() {
+        firstMap = new ymaps.Map("firstMap", {
+            center: [41.299496, 69.240073],
+            zoom: 13,
+            controls: []
+        }, {searchControlProvider: 'yandex#search'});
+
+        firstMap.controls.add('geolocationControl');
+        firstMap.controls.add('searchControl');
+        firstMap.controls.add('zoomControl');
+        firstMap.controls.get('searchControl').options.set('size', 'large');
+
+        firstMap.events.add('click', function (event) {
+            var coords = event.get('coords');
+            if (startPoint === false) {
+                startPoint = new ymaps.Placemark(coords, {
+                    balloonContent: 'Пункт А'
+                }, {
+                    draggable: true,
+                    preset: 'islands#redHomeIcon',
+                    iconColor: '#F44336'
+                });
+
+                firstMap.geoObjects.add(startPoint);
+
+                startPoint.events.add('dragend', function (e) {
+                    setPoint(startPoint, 'address_a', 'point_a');
+                });
+
+                setPoint(startPoint, "address_a", "point_a");
+                return;
+            }
+            if (endPoint === false) {
+                endPoint = new ymaps.Placemark(coords, {
+                    balloonContent: 'Пункт Б'
+                }, {
+                    draggable: true,
+                    preset: 'islands#redGovernmentIcon',
+                    iconColor: '#F44336'
+                });
+
+                firstMap.geoObjects.add(endPoint);
+
+                endPoint.events.add('dragend', function (e) {
+                    setPoint(endPoint, 'address_b', 'point_b');
+                });
+                setPoint(endPoint, "address_b", "point_b");
+            }
+        });
+
+        function setPoint(placemark, id_address, id_point) {
+            var coords = placemark.geometry.getCoordinates();
+            ymaps.geocode(coords).then(function (res) {
+                var firstGeoObject = res.geoObjects.get(0);
+                document.getElementById(id_address).value = firstGeoObject.getAddressLine();
+            });
+            document.getElementById(id_point).value = coords;
+            drawPath();
+        }
+
+        function drawPath() {
+            if (startPoint === false || startPoint === false)
+                return;
+
+            firstMap.geoObjects.remove(path);
+
+            ymaps.route([startPoint.geometry.getCoordinates(), endPoint.geometry.getCoordinates()], {
+                mapStateAutoApply: true,
+                multiRoute: false
+            }).then(function (route) {
+                        path = route;
+                        firstMap.geoObjects.add(route);
+                    }, function (error) {
+                        alert("Error occurred: " + error.message);
+                    }
+            );
+        }
+    }
+</script>
 </body>
