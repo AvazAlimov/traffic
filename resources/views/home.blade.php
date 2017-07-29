@@ -464,8 +464,10 @@
     var min_price = 0;
     var price_for_unit;
     var min_price_unit;
+    var price_per_person;
     var discount = 0;
     var car_price = 0;
+    var persons = 0;
 
     function changeTarif() {
         tarif_index = document.getElementById('tarif_id').selectedIndex;
@@ -484,6 +486,7 @@
             min_price_unit = tarifs[tarif_index]['min_distance'];
         }
         min_price = tarifs[tarif_index]['price_minimum'];
+        price_per_person = tarifs[tarif_index]['price_per_person'];
         document.getElementById('discount_id').value = discount = tarifs[tarif_index]['discard'];
 
         calculatePrice();
@@ -496,11 +499,16 @@
         calculatePrice();
     }
 
+    function personsChange() {
+        persons = document.getElementById('person_id').value;
+        calculatePrice();
+    }
 
     function calculatePrice() {
         var price = min_price;
         price += car_price;
         price += price_for_unit * (document.getElementById('unit_id').value - min_price_unit);
+        price += persons * price_per_person;
 
         price -= (document.getElementById('sum_discount_id').value = price * (discount / 100));
         document.getElementById('sum_id').value = price;
