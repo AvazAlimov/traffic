@@ -225,7 +225,8 @@
                         </div>
                         <div class="col-md-1">
                             <button type="button" class="btn btn-default" data-toggle="modal"
-                                    data-target="#firstMapModal" onclick="setEndPoint()"><i class="fa fa-compass"></i></button>
+                                    data-target="#firstMapModal" onclick="setEndPoint()"><i class="fa fa-compass"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -446,13 +447,15 @@
         );
     }
 
-    function setStartPoint(){
+    function setStartPoint() {
+        document.getElementById('point_a').value = document.getElementById('address_a').value = "";
         firstMap.geoObjects.remove(startPoint);
         firstMap.geoObjects.remove(path);
         startPoint = false;
     }
 
-    function setEndPoint(){
+    function setEndPoint() {
+        document.getElementById('point_b').value = document.getElementById('address_b').value = "";
         firstMap.geoObjects.remove(endPoint);
         firstMap.geoObjects.remove(path);
         endPoint = false;
