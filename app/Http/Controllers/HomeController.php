@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Tarif;
+use App\Automobile;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,22 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $tarifs = Tarif::all();
+        $tarif = array();
+
+        foreach ($tarifs as $tr) {
+            if ($tr->type == 0)
+                $tarif[$tr->id] = "Внутри города";
+            else
+                $tarif[$tr->id] = "За городом";
+        }
+
+        $cars = Automobile::all();
+        $car = array();
+        foreach ($cars as $key) {
+            $car[$key->id] = $key->name;
+        }
+
+        return view('home')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars);
     }
 }

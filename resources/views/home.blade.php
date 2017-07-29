@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Laravel</title>
+    <title>Traffic.uz</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -72,10 +72,13 @@
             color: #fff;
         }
 
-        #dropdownItem:focus{
+        #dropdownItem:focus {
             background-color: #372e30;
         }
 
+        label{
+            padding-top: 6px;
+        }
     </style>
 </head>
 <body style="background-color: #ffcb08;">
@@ -107,6 +110,8 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="#order" style="color: #ffcb08;">СДЕЛАТЬ ЗАКАЗ</a></li>
+                <li><a href="#" style="color: #ffcb08;">ВСЕ ЗАКАЗЫ</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" id="dropdownItem" data-toggle="dropdown" role="button"
                        aria-expanded="false" style="color: #ffcb08;">
@@ -131,55 +136,152 @@
         </div>
     </div>
 </nav>
-<div class="container" style="padding: 100px 15px;">
+<div class="container" id="order" style="padding: 100px 15px;">
+    <form>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>СДЕЛАТЬ ЗАКАЗ</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-6">
+                    <div class="form-group col-md-12">
+                        <label for="tarif" class="col-md-4">Тариф:</label>
+                        <div class="col-md-8">
+                            {{Form::select('tarif', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
+                        </div>
+                    </div>
 
+                    <div class="col-md-12">
+                        <hr>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-4">Тип автомобиля:</label>
+                        <div class="col-md-8">
+                            {{Form::select('car', $car, null, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-4"></label>
+                        <div class="col-md-8">
+                            <img src="{{asset('automobile/'.$cars[0]->image)}}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <hr>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-4">Количество грузчиков:</label>
+                        <div class="col-md-8">
+                            {{Form::number('persons', 0, ['max' => 8, 'min'=>0, 'class'=>'form-control', 'id' =>'person_id', 'onchange' => 'personsChange()'])}}
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="date_id" class="col-md-4">Время подачи:</label>
+                        <div class="col-md-5">
+                            <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                   name="date"
+                                   class="form-control"
+                                   id="date_id">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="time"
+                                   value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}"
+                                   name="time"
+                                   class="form-control" id="date_id">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="unit_id" id="label_tarif" class="col-md-4">Срок аренды (час):</label>
+                        <div class="col-md-8">
+                            <input name="unit" type="number" step="0.01"
+                                   value="{{ $tarifs[0]->min_hour  }}" min="0.0"
+                                   class="form-control" required id="unit_id"
+                                   onchange="unitChange()">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group col-md-12">
+                        <label class="col-md-3">Откуда:</label>
+                        <div class="col-md-8">
+                            {{Form::text('address_A',null, ['class'=>'form-control', 'id'=>'address_a'])}}
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-default" data-toggle="modal"
+                                    data-target="#myModal"
+                                    onclick="setStart()"><i class="fa fa-compass"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-3">Куда:</label>
+                        <div class="col-md-8">
+                            {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b'])}}
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-default" data-toggle="modal"
+                                    data-target="#myModal"
+                                    onclick="setEnd()"><i class="fa fa-compass"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        {{Form::hidden('point_A',null, ['id'=>'point_a', 'class'=>'form-control'])}}
+                    </div>
+                    <div class="col-md-4">
+                        {{Form::hidden('point_B',null,['id'=>'point_b', 'class'=>'form-control'])}}
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label for="discount_id" class="col-md-3">Скидка (%):</label>
+                        <div class="col-md-9">
+                            {{Form::number('discount', $tarifs[0]->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <hr>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-3">Имя заказчика:</label>
+                        <div class="col-md-9">
+                            {{Form::text('name',null,['class'=>'form-control'])}}
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-3">Телефон:</label>
+                        <div class="col-md-9">
+                            {{Form::text('phone',null,['class'=>'form-control'])}}
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <hr>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label class="col-md-3">Цена:</label>
+                        <div class="col-md-8">
+                            {{Form::number('sum',null, ['class'=>'form-control', 'id'=>'sum_id', 'readOnly'])}}
+                        </div>
+                        <label class="col-md-1">
+                            сум
+                        </label>
+                    </div>
+
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-block" style="background-color: #372e30; color: #ffcb08;">
+                            ЗАКАЗАТЬ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
-<footer class="text-center footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 col-sm-12">
-                <ul style="list-style-type: none; margin: 0; padding: 0;">
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-facebook"
-                                                                             aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-twitter"
-                                                                             aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-rss" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-google-plus"
-                                                                             aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-linkedin"
-                                                                             aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-skype" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-vimeo" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-tumblr" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-12 col-sm-12">
-                <p style="color: #ffcb08;">IUTLAB © All Rights Reserved</p>
-            </div>
-        </div>
-        <div class="col-md-12 col-sm-12">
-            <h4 style="color: #ffcb08;">Ташкент 2017</h4>
-        </div>
-    </div>
-</footer>
 <script src="{{ asset('js/app.js') }}"></script>
 </body>
