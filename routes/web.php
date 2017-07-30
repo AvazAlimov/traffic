@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('users/logout', 'Auth\LoginController@userLogout')->name('user.logout');
+Route::get('user/order/list', 'HomeController@orderLists')->name('user.orders');
 Route::post('user/order/submit', 'HomeController@orderSubmit')->name('user.order.submit');
 
 Route::prefix('admin')->group(function () {

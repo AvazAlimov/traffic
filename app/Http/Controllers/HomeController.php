@@ -84,4 +84,8 @@ class HomeController extends Controller
         $order->save();
         return redirect()->route('home');
     }
+    public function orderLists(){
+        $orders = Order::orderBy('id','desc')->paginate(10);
+        return view('user.order_list')->withOrders($orders);
+    }
 }
