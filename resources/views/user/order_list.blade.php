@@ -7,7 +7,7 @@
             <div class="col-md-10 col-md-offset-1">
                 <div id="section2" class="section">
                     <div class="page-header">
-                        <h2>Заказы</h2>
+                        <h2>Заказы (статус != 0)</h2>
                     </div>
 
                     @foreach($orders as $served_order)
@@ -88,7 +88,7 @@
                 </div>
                 <div id="section3" class="section">
                     <div class="page-header">
-                        <h2>Заказы</h2>
+                        <h2>Заказы (статус 0)</h2>
                     </div>
                     @foreach($orders as $order)
                         @if($order->status == 0)

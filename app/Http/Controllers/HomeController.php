@@ -42,7 +42,7 @@ class HomeController extends Controller
         $cars = Automobile::all();
         $car = array();
         foreach ($cars as $key) {
-            array_push($car, $key->name);
+            $car[$key->id] = $key->name;
         }
 
         return view('home')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars);
