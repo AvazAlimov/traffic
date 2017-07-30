@@ -148,8 +148,10 @@
                 <div class="col-md-6">
                     <div class="form-group col-md-12">
                         <label for="tarif" class="col-md-4">Тариф:</label>
+                        {{Form::open(['route' => ['user.order.submit'], 'method'=>'post'])}}
+                        {{csrf_field()}}
                         <div class="col-md-8">
-                            {{Form::select('tarif', ["Внутри города","За городом"], null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
+                            {{Form::select('tarif', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
                         </div>
                     </div>
 
@@ -206,6 +208,13 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group col-md-12">
+                        @if ($errors->has('point_A'))
+                            <div class="col-md-3">
+                                            <span class="help-block">
+                                                <strong class="alert-danger">{{ $errors->first('point_A') }}</strong>
+                                            </span>
+                            </div>
+                        @endif
                         <label class="col-md-3">Откуда:</label>
                         <div class="col-md-8">
                             {{Form::text('address_A',null, ['class'=>'form-control', 'id'=>'address_a', 'readOnly'])}}
@@ -216,7 +225,15 @@
                             </button>
                         </div>
                     </div>
+
                     <div class="form-group col-md-12">
+                        @if ($errors->has('point_B'))
+                            <div class="col-md-3">
+                                            <span class="help-block">
+                                                <strong class="alert-danger">{{ $errors->first('point_B') }}</strong>
+                                            </span>
+                            </div>
+                        @endif
                         <label class="col-md-3">Куда:</label>
                         <div class="col-md-8">
                             {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b', 'readOnly'])}}
@@ -240,6 +257,13 @@
                     </div>
 
                     <div class="form-group col-md-12">
+                        @if ($errors->has('name'))
+                            <div class="col-md-4">
+                                            <span class="help-block">
+                                                <strong class="alert-danger">{{ $errors->first('name') }}</strong>
+                                            </span>
+                            </div>
+                        @endif
                         <label class="col-md-3">Имя заказчика:</label>
                         <div class="col-md-9">
                             {{Form::text('name', Auth::guard('web')->user()->name,['class'=>'form-control'])}}
@@ -247,6 +271,13 @@
                     </div>
 
                     <div class="form-group col-md-12">
+                        @if ($errors->has('phone'))
+                            <div class="col-md-4">
+                                            <span class="help-block">
+                                                <strong class="alert-danger">{{ $errors->first('phone') }}</strong>
+                                            </span>
+                            </div>
+                        @endif
                         <label class="col-md-3">Телефон:</label>
                         <div class="col-md-9">
                             {{Form::text('phone','+'.Auth::guard('web')->user()->phone,['class'=>'form-control'])}}
