@@ -31,7 +31,7 @@ class HomeController extends Controller
     {
         $tarifs = Tarif::all();
         $tarif = array();
-        $orders = Order::where('user_type',1)->where('user_id',Auth::user()->id)->paginate(10);
+        $orders = Order::where('user_type',1)->where('user_id',Auth::user()->id)->orderBy('id', 'desc')->paginate(4);
 
         foreach ($tarifs as $tr) {
             if ($tr->type == 0)
@@ -84,10 +84,6 @@ class HomeController extends Controller
         $order->start_time = Carbon::parse($request->date . " " . $request->time, null);
         $order->save();
         return redirect()->route('home');
-    }
-    public function orderLists(){
-        $orders = Order::orderBy('id','desc')->paginate(10);
-        return view('user.order_list')->withOrders($orders);
     }
 
     public function orderAgain(Request $request, $id)

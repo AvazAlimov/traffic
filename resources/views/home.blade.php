@@ -233,8 +233,11 @@
         </div>
     </div>
 
-    <div class="container-fluid" id="orders" style="background-color: white; padding: 100px 15px;">
+    <div class="container-fluid" id="orders" style="background-color: white;">
         <div class="container">
+            <div class="page-header">
+                <h2>Все мои заказы</h2>
+            </div>
             @foreach($orders as $order)
                 <div class="col-md-6">
                     <div class="panel panel-default"
@@ -331,8 +334,62 @@
                     </div>
                 </div>
             @endforeach
+            <div class="col-md-12 text-center">
+                {{$orders->links()}}
+            </div>
         </div>
     </div>
+
+    <footer class="container-fluid text-center" style="background-color: #372e30; padding: 50px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <ul style="list-style-type: none; margin: 0; padding: 0;">
+                        <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-facebook"
+                                                                                 aria-hidden="true"
+                                                                                 style="font-size: 32px; color: #ffcb08;"></i></a>
+                        </li>
+                        <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-twitter"
+                                                                                 aria-hidden="true"
+                                                                                 style="font-size: 32px; color: #ffcb08;"></i></a>
+                        </li>
+                        <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-rss" aria-hidden="true"
+                                                                                 style="font-size: 32px; color: #ffcb08;"></i></a>
+                        </li>
+                        <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-google-plus"
+                                                                                 aria-hidden="true"
+                                                                                 style="font-size: 32px; color: #ffcb08;"></i></a>
+                        </li>
+                        <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-linkedin"
+                                                                                 aria-hidden="true"
+                                                                                 style="font-size: 32px; color: #ffcb08;"></i></a>
+                        </li>
+                        <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-skype" aria-hidden="true"
+                                                                                 style="font-size: 32px; color: #ffcb08;"></i></a>
+                        </li>
+                        <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-vimeo" aria-hidden="true"
+                                                                                 style="font-size: 32px; color: #ffcb08;"></i></a>
+                        </li>
+                        <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-tumblr" aria-hidden="true"
+                                                                                 style="font-size: 32px; color: #ffcb08;"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <p style="color: #ffcb08;">IUTLAB © All Rights Reserved</p>
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <div class="col-md-12 col-sm-12">
+                <h4 style="color: #ffcb08;">Ташкент 2017</h4>
+            </div>
+        </div>
+    </footer>
 @endsection
 @section('scripts')
     <script>
