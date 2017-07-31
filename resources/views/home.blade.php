@@ -356,11 +356,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
     </div>
 
     <footer class="container-fluid text-center" style="background-color: #372e30; padding: 50px;">
@@ -631,7 +626,7 @@
         }
 
         window.onload = function () {
-            tarif_index = document.getElementById('tarif_id').selectedIndex = 0 ;
+            tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
             car_index = document.getElementById('car_id').selectedIndex = 0;
             changeTarif();
             changeCar();

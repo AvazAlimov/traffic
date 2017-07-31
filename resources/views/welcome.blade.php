@@ -85,7 +85,7 @@
             margin: 70px 0;
         }
 
-        h3{
+        h3 {
             color: #372e30;
         }
 
@@ -149,8 +149,6 @@
             border-color: transparent;
             color: #ffcb08 !important;
         }
-
-
 
         .slideanim {
             visibility: hidden;
@@ -245,12 +243,15 @@
                 <li><a href="#about" class="active" style="color: #ffcb08;">О НАС</a></li>
                 <li><a href="#pricing" style="color: #ffcb08;">ТАРИФЫ</a></li>
                 <li><a href="#contacts" style="color: #ffcb08;">КОНТАКТЫ</a>
-                <li><a href="#" style="color: #ffcb08;">СДЕЛАТЬ ЗАКАЗ</a></li>
+                <li><a href="#" data-toggle="modal" style="color: #ffcb08;">СДЕЛАТЬ ЗАКАЗ</a></li>
                 @if(Auth::check())
-                    <li><a href="{{ url('/home') }}" style="color: #ffcb08;"><i class="fa fa-home" aria-hidden="true"></i> ГЛАВНАЯ</a></li>
+                    <li><a href="{{ url('/home') }}" style="color: #ffcb08;"><i class="fa fa-home"
+                                                                                aria-hidden="true"></i> ГЛАВНАЯ</a></li>
                 @else
-                    <li><a href="{{ url('/login') }}" style="color: #ffcb08;"><i class="fa fa-sign-in" aria-hidden="true"></i> ВОЙТИ</a></li>
-                    <li><a href="{{ url('/register') }}" style="color: #ffcb08;"><i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                    <li><a href="{{ url('/login') }}" style="color: #ffcb08;"><i class="fa fa-sign-in"
+                                                                                 aria-hidden="true"></i> ВОЙТИ</a></li>
+                    <li><a href="{{ url('/register') }}" style="color: #ffcb08;"><i class="fa fa-unlock-alt"
+                                                                                    aria-hidden="true"></i>
                             ЗАРЕГИСТРИРОВАТЬСЯ</a></li>
                 @endif
             </ul>
@@ -382,22 +383,30 @@
             <div class="col-md-12 col-sm-12">
                 <ul style="list-style-type: none; margin: 0; padding: 0;">
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-facebook" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
+                    </li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-twitter" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
+                    </li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-rss" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
+                    </li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-google-plus"
                                                                              aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
+                    </li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-linkedin" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
+                    </li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-skype" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
+                    </li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-vimeo" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
+                    </li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-tumblr" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a></li>
+                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
+                    </li>
                 </ul>
             </div>
         </div>

@@ -12,7 +12,24 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $tarifs = App\Tarif::all();
+    $tarif = array();
+    $orders = App\Order::where('user_type',1)->where('user_id',Auth::user()->id)->orderBy('id', 'desc')->paginate(4);
+
+    foreach ($tarifs as $tr) {
+        if ($tr->type == 0)
+            $tarif[$tr->id] = "Внутри города";
+        else
+            $tarif[$tr->id] = "За городом";
+    }
+
+    $cars = App\Automobile::all();
+    $car = array();
+    foreach ($cars as $key) {
+        $car[$key->id] = $key->name;
+    }
+
+    return view('welcome')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars)->withOrders($orders);
 });
 
 Auth::routes();
