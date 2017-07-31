@@ -305,7 +305,7 @@
                                 <div class="col-md-8">
                                     <button type="button" class="btn btn-default" data-toggle="modal"
                                             data-target="#secondMapModal"
-                                            onclick="setPoints({{$order->point_A}},{{$order->point_B}})">
+                                            onclick="setPoints({{$order->point_A}} + '',{{$order->point_B}} + '')">
                                         <i class="fa fa-compass"></i>
                                     </button>
                                 </div>
