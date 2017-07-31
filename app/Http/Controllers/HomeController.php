@@ -89,4 +89,9 @@ class HomeController extends Controller
         $orders = Order::orderBy('id','desc')->paginate(10);
         return view('user.order_list')->withOrders($orders);
     }
+
+    public function orderAgain(Request $request, $id)
+    {
+
+    }
 }

@@ -46,27 +46,6 @@
             color: #372e30;
         }
 
-        .panel-heading {
-            color: #ffcb08 !important;
-            background-color: #372e30 !important;
-            border-bottom: 1px solid transparent;
-        }
-
-        .panel-footer h3 {
-            font-size: 32px;
-        }
-
-        .panel-footer h4 {
-            color: #aaa;
-            font-size: 14px;
-        }
-
-        .panel-footer .btn {
-            margin: 15px 0;
-            background-color: #372e30;
-            color: #fff;
-        }
-
         #dropdownItem:focus {
             background-color: #372e30;
         }

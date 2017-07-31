@@ -415,7 +415,6 @@
         </div>
     </div>
 </footer>
-
 <script src="{{ asset('js/app.js') }}"></script>
 <script>
     $(document).ready(function () {

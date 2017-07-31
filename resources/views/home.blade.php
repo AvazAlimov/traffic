@@ -7,7 +7,7 @@
         {{Form::open(['route' => ['user.order.submit'], 'method'=>'post'])}}
         {{csrf_field()}}
         <div class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading" style="background-color: #372e30; color: #ffcb08;">
                 <h4>СДЕЛАТЬ ЗАКАЗ</h4>
             </div>
             <div class="panel-body">
@@ -233,97 +233,103 @@
         </div>
     </div>
 
-    <div class="container-fluid" id="orders" style="background-color: white; padding: 100px 15px">
+    <div class="container-fluid" id="orders" style="background-color: white; padding: 100px 15px;">
         <div class="container">
             @foreach($orders as $order)
-                @if($order->status != 0)
-                    <div class="col-md-6">
-                        <div class="panel panel-{{ $order->status == -1 ? "danger" : "success" }}">
-                            <div class="panel-heading">
-                                Имя заказчика : {{ $order->name  }}
+                <div class="col-md-6">
+                    <div class="panel panel-default"
+                         style="border: 1px solid {{ $order->status == 0 ? "#372e30" : ($order->status == -1 ? "#EF5350" : "#66BB6A") }}">
+                        <div class="panel-heading"
+                             style="color: white; background-color: {{ $order->status == 0 ? "#372e30" : ($order->status == -1 ? "#EF5350" : "#66BB6A") }}">
+                            <strong>Идентификационный номер
+                                заказа: {{ $order->id }} {{ $order->status == 0 ? "- В процессе" : ($order->status == -1 ? " - Отменен" : " - Принят") }}</strong>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group col-md-12">
+                                <div class="col-md-4"><strong>Тариф:</strong></div>
+                                <div class="col-md-8">
+                                    @if($order->tarif->type == 0)
+                                        Внутри города
+                                    @else
+                                        За городом
+                                    @endif</div>
                             </div>
-                            <div class="panel-body">
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-4"><strong>Тариф:</strong></div>
-                                    <div class="col-md-8">
-                                        @if($order->tarif->type == 0)
-                                            Внутри города
-                                        @else
-                                            За городом
-                                        @endif</div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-4"><strong>Тип автомобиля:</strong></div>
-                                    <div class="col-md-8">{{ $order->automobile->name }}</div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-4"><strong>Количество грузчиков:</strong></div>
-                                    <div class="col-md-8">{{ $order->persons }}</div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-4"><strong>Время подачи:</strong></div>
-                                    <div class="col-md-8">{{ $order->start_time }}</div>
-                                </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-4"><strong>Тип автомобиля:</strong></div>
+                                <div class="col-md-8">{{ $order->automobile->name }}</div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-4"><strong>Количество грузчиков:</strong></div>
+                                <div class="col-md-8">{{ $order->persons }}</div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-4"><strong>Время подачи:</strong></div>
+                                <div class="col-md-8">{{ $order->start_time }}</div>
+                            </div>
 
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-4">
-                                        @if($order->tarif->type == 0)
-                                            <strong>Срок аренды (час):</strong>
-                                        @else
-                                            <strong>Дистанция:</strong>
-                                        @endif
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{ $order->unit }}
-                                    </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-4">
+                                    @if($order->tarif->type == 0)
+                                        <strong>Срок аренды (час):</strong>
+                                    @else
+                                        <strong>Дистанция:</strong>
+                                    @endif
                                 </div>
-
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-4"><strong>Откуда:</strong></div>
-                                    <div class="col-md-8">{{ $order->address_A }}</div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-4"><strong>Куда:</strong></div>
-                                    <div class="col-md-8">{{ $order->address_B }}</div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-4"><strong>Телефон:</strong></div>
-                                    <div class="col-md-8">{{ $order->phone }}</div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-4"><strong>Цена:</strong></div>
-                                    <div class="col-md-8">{{ $order->sum }} сум</div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-4"><strong>Показать на карте:</strong></div>
-                                    <div class="col-md-8">
-                                        <button type="button" class="btn btn-default" data-toggle="modal"
-                                                data-target="#yourModal"
-                                                onclick="setPoints({{$order->point_A}},{{$order->point_B}})">
-                                            <i class="fa fa-compass"></i>
-                                        </button>
-                                    </div>
+                                <div class="col-md-8">
+                                    {{ $order->unit }}
                                 </div>
                             </div>
-                            <div class="panel-footer">
-                                <table>
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <form method="post"
-                                                  action="{{route('operator.order.restore', $order->id)}}">
-                                                {{csrf_field()}}
-                                                <input type="submit" class="btn" style="color: #ffcb08;"
-                                                       value="Восстановить">
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+
+                            <div class="form-group col-md-12">
+                                <div class="col-md-4"><strong>Откуда:</strong></div>
+                                <div class="col-md-8">{{ $order->address_A }}</div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-4"><strong>Куда:</strong></div>
+                                <div class="col-md-8">{{ $order->address_B }}</div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-4"><strong>Имя заказчика:</strong></div>
+                                <div class="col-md-8">{{ $order->name }}</div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-4"><strong>Телефон:</strong></div>
+                                <div class="col-md-8">{{ $order->phone }}</div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-4"><strong>Цена:</strong></div>
+                                <div class="col-md-8">{{ $order->sum }} сум</div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-4"><strong>Показать на карте:</strong></div>
+                                <div class="col-md-8">
+                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                            data-target="#yourModal"
+                                            onclick="setPoints({{$order->point_A}},{{$order->point_B}})">
+                                        <i class="fa fa-compass"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                        <div class="panel-footer"
+                             style="color: white; background-color: {{ $order->status == 0 ? "#372e30" : ($order->status == -1 ? "#EF5350" : "#66BB6A") }}">
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <form method="post"
+                                              action="{{route('user.order.again', $order->id)}}">
+                                            {{csrf_field()}}
+                                            <input type="submit" class="btn btn-default"
+                                                   value="Заказать снова">
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                @endif
+                </div>
             @endforeach
         </div>
     </div>
