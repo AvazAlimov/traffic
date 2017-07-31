@@ -317,7 +317,7 @@
                                 <tbody>
                                 <tr>
                                     <td>
-                                        <form method="post"
+                                        <form method="get"
                                               action="{{route('user.order.again', $order->id)}}">
                                             {{csrf_field()}}
                                             <input type="submit" class="btn btn-default"

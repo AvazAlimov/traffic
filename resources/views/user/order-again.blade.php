@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('styles')
     <style>
-        #all_orders{
+        #all_orders {
             display: none;
         }
     </style>
@@ -19,7 +19,7 @@
                     <div class="form-group col-md-12">
                         <label for="tarif" class="col-md-4">Тариф:</label>
                         <div class="col-md-8">
-                            {{Form::select('tarif', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
+                            {{Form::select('tarif', $tarif, $order->tarif->id, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
                         </div>
                     </div>
 
@@ -30,7 +30,7 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-4">Тип автомобиля:</label>
                         <div class="col-md-8">
-                            {{Form::select('car', $car, null, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
+                            {{Form::select('car', $car, $order->automobile->id, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
                         </div>
                     </div>
                     <div class="form-group col-md-12 text-center">
@@ -68,7 +68,7 @@
                         <label for="unit_id" id="label_tarif" class="col-md-4">Срок аренды (час):</label>
                         <div class="col-md-8">
                             <input name="unit" type="number"
-                                   value="{{ $tarifs[0]->min_hour  }}" min="{{ $tarifs[0]->min_hour  }}"
+                                   value="{{ $order->unit  }}" min="{{ $tarifs[0]->min_hour  }}"
                                    class="form-control" required id="unit_id"
                                    onchange="unitChange()">
                         </div>
@@ -323,6 +323,26 @@
             firstMap.controls.add('zoomControl');
             firstMap.controls.get('searchControl').options.set('size', 'large');
 
+            startPoint = new ymaps.Placemark([{!! $order->point_A !!}], {
+                balloonContent: 'Пункт А'
+            }, {
+                draggable: true,
+                preset: 'islands#redHomeIcon',
+                iconColor: '#F44336'
+            });
+
+            endPoint = new ymaps.Placemark([{!! $order->point_B !!}], {
+                balloonContent: 'Пункт Б'
+            }, {
+                draggable: true,
+                preset: 'islands#redGovernmentIcon',
+                iconColor: '#F44336'
+            });
+            firstMap.geoObjects.add(startPoint);
+            firstMap.geoObjects.add(endPoint);
+            setPoint(startPoint,'address_a','point_a');
+            setPoint(endPoint,'address_b','point_b');
+
             firstMap.events.add('click', function (event) {
                 var coords = event.get('coords');
                 if (startPoint === false) {
@@ -473,10 +493,12 @@
         }
 
         window.onload = function () {
-            tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
-            car_index = document.getElementById('car_id').selectedIndex = 0;
+            document.getElementById('person_id').value = {!! $order->persons !!} +"";
             changeTarif();
             changeCar();
+            personsChange();
+            document.getElementById('unit_id').value = {!! $order->unit !!} +"";
+            calculatePrice();
         }
     </script>
 @endsection

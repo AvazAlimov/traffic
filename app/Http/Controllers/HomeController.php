@@ -106,7 +106,7 @@ class HomeController extends Controller
             $car[$key->id] = $key->name;
         }
 
-        return view('user.order-again')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars);
+        return view('user.order-again')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars)->withOrder($order);
 
     }
 }
