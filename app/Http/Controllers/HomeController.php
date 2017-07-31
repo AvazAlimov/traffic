@@ -46,7 +46,7 @@ class HomeController extends Controller
             $car[$key->id] = $key->name;
         }
 
-        return view('home')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars)->withOrders($orders)->withOrder1(null);
+        return view('home')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars)->withOrders($orders);
     }
     public function orderSubmit(Request $request){
         $rules = [
@@ -89,9 +89,9 @@ class HomeController extends Controller
     public function orderAgain(Request $request, $id)
     {
         $order = Order::findOrFail($id);
+
         $tarifs = Tarif::all();
         $tarif = array();
-        $orders = Order::where('user_type',1)->where('user_id',Auth::user()->id)->orderBy('id', 'desc')->paginate(4);
 
         foreach ($tarifs as $tr) {
             if ($tr->type == 0)
@@ -106,7 +106,7 @@ class HomeController extends Controller
             $car[$key->id] = $key->name;
         }
 
-        return view('home')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars)->withOrders($orders)->withOrder($order);
+        return view('user.order-again')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars);
 
     }
 }

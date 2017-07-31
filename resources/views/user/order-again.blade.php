@@ -1,6 +1,10 @@
 @extends('layouts.main')
 @section('styles')
-
+    <style>
+        #all_orders{
+            display: none;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="container" id="order" style="padding: 100px 15px;">
@@ -230,138 +234,6 @@
         </div>
     </div>
 
-    <div class="container-fluid" id="orders" style="background-color: white;">
-        <div class="container">
-            <div class="page-header">
-                <h2>Все мои заказы</h2>
-            </div>
-            @foreach($orders as $order)
-                <div class="col-md-6">
-                    <div class="panel panel-default"
-                         style="border: 1px solid {{ $order->status == 0 ? "#372e30" : ($order->status == -1 ? "#EF5350" : "#66BB6A") }}">
-                        <div class="panel-heading"
-                             style="color: white; background-color: {{ $order->status == 0 ? "#372e30" : ($order->status == -1 ? "#EF5350" : "#66BB6A") }}">
-                            <strong>Идентификационный номер
-                                заказа: {{ $order->id }} {{ $order->status == 0 ? "- В процессе" : ($order->status == -1 ? " - Отменен" : " - Принят") }}</strong>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group col-md-12">
-                                <div class="col-md-4"><strong>Тариф:</strong></div>
-                                <div class="col-md-8">
-                                    @if($order->tarif->type == 0)
-                                        Внутри города
-                                    @else
-                                        За городом
-                                    @endif</div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-4"><strong>Тип автомобиля:</strong></div>
-                                <div class="col-md-8">{{ $order->automobile->name }}</div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-4"><strong>Количество грузчиков:</strong></div>
-                                <div class="col-md-8">{{ $order->persons }}</div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-4"><strong>Время подачи:</strong></div>
-                                <div class="col-md-8">{{ $order->start_time }}</div>
-                            </div>
-
-                            <div class="form-group col-md-12">
-                                <div class="col-md-4">
-                                    @if($order->tarif->type == 0)
-                                        <strong>Срок аренды (час):</strong>
-                                    @else
-                                        <strong>Дистанция:</strong>
-                                    @endif
-                                </div>
-                                <div class="col-md-8">
-                                    {{ $order->unit }}
-                                </div>
-                            </div>
-
-                            <div class="form-group col-md-12">
-                                <div class="col-md-4"><strong>Откуда:</strong></div>
-                                <div class="col-md-8">{{ $order->address_A }}</div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-4"><strong>Куда:</strong></div>
-                                <div class="col-md-8">{{ $order->address_B }}</div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-4"><strong>Имя заказчика:</strong></div>
-                                <div class="col-md-8">{{ $order->name }}</div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-4"><strong>Телефон:</strong></div>
-                                <div class="col-md-8">{{ $order->phone }}</div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-4"><strong>Цена:</strong></div>
-                                <div class="col-md-8">{{ $order->sum }} сум</div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-4"><strong>Показать на карте:</strong></div>
-                                <div class="col-md-8">
-                                    <button type="button" class="btn btn-default" data-toggle="modal"
-                                            data-target="#secondMapModal"
-                                            onclick="setPoints({{$order->point_A}},{{$order->point_B}})">
-                                        <i class="fa fa-compass"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel-footer"
-                             style="color: white; background-color: {{ $order->status == 0 ? "#372e30" : ($order->status == -1 ? "#EF5350" : "#66BB6A") }}">
-                            <table>
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <form method="post"
-                                              action="{{route('user.order.again', $order->id)}}">
-                                            {{csrf_field()}}
-                                            <input type="submit" class="btn btn-default"
-                                                   value="Заказать снова">
-                                        </form>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-            <div class="col-md-12 text-center">
-                {{$orders->links()}}
-            </div>
-        </div>
-
-        <div class="modal fade" id="secondMapModal" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" style="border-radius: 0;">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"
-                                style="color: #ffcb08;">&times;</button>
-                        <h4 class="modal-title">Карта</h4>
-                    </div>
-                    <div class="modal-body" style="height: 500px; padding: 0; background-color: #372e30;">
-                        <div id="secondMap" class="col-md-12" style="height: 500px;"></div>
-                    </div>
-                    <div class="modal-footer" style="background-color: #372e30;">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"
-                                style="background-color: #ffcb08; color: #0d3625;">Закрыт
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-    </div>
-
     <footer class="container-fluid text-center" style="background-color: #372e30; padding: 50px;">
         <div class="container">
             <div class="row">
@@ -433,7 +305,6 @@
         }
 
         var firstMap;
-        var secondMap;
         var startPoint = false;
         var endPoint = false;
         var path;
@@ -441,17 +312,6 @@
         ymaps.ready(init);
 
         function init() {
-            secondMap = new ymaps.Map("secondMap", {
-                center: [41.299496, 69.240073],
-                zoom: 13,
-                controls: []
-            }, {searchControlProvider: 'yandex#search'});
-
-            secondMap.controls.add('geolocationControl');
-            secondMap.controls.add('searchControl');
-            secondMap.controls.add('zoomControl');
-            secondMap.controls.get('searchControl').options.set('size', 'large');
-
             firstMap = new ymaps.Map("firstMap", {
                 center: [41.299496, 69.240073],
                 zoom: 13,
@@ -562,7 +422,6 @@
         var discount = 0;
         var car_price = 0;
         var persons = 0;
-        var unit = 0;
 
         function changeTarif() {
             tarif_index = document.getElementById('tarif_id').selectedIndex;
@@ -613,23 +472,8 @@
             document.getElementById('sum_id').value = price;
         }
 
-        function setPoints(point_a_1, point_a_2, point_b_1, point_b_2) {
-            var point_a = point_a_1 + "," + point_a_2;
-            var point_b = point_b_1 + "," + point_b_2;
-            secondMap.geoObjects.removeAll();
-            ymaps.route([point_a, point_b], {
-                mapStateAutoApply: true,
-                multiRoute: false
-            }).then(function (route) {
-                        secondMap.geoObjects.add(route);
-                    }, function (error) {
-                        alert("Error occurred: " + error.message);
-                    }
-            );
-        }
-
         window.onload = function () {
-            tarif_index = document.getElementById('tarif_id').selectedIndex = 0 ;
+            tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
             car_index = document.getElementById('car_id').selectedIndex = 0;
             changeTarif();
             changeCar();

@@ -95,7 +95,7 @@
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#order" style="color: #ffcb08;">СДЕЛАТЬ ЗАКАЗ</a></li>
-                <li><a href="#orders" style="color: #ffcb08;">ВСЕ ЗАКАЗЫ</a></li>
+                <li id="all_orders"><a href="#orders" style="color: #ffcb08;">ВСЕ ЗАКАЗЫ</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" id="dropdownItem" data-toggle="dropdown" role="button"
                        aria-expanded="false" style="color: #ffcb08;">
