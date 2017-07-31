@@ -320,9 +320,6 @@
                     <div class="page-header">
                         <h2>Поданные заказы</h2>
                     </div>
-                    <div class="col-md-12">
-                        <h3>Всего заказов: {{ $orders->total() }}</h3>
-                    </div>
                     @foreach($orders as $served_order)
                         @if($served_order->status != 0)
                             <div class="col-md-6">
@@ -399,7 +396,7 @@
                                             <tr>
                                                 <td>
                                                     <form method="post"
-                                                          action="{{route('operator.order.restore', $order->id)}}">
+                                                          action="{{route('operator.order.restore', $served_order->id)}}">
                                                         {{csrf_field()}}
                                                         <input type="submit" class="btn btn-primary"
                                                                value="Восстановить">
@@ -407,7 +404,7 @@
                                                 </td>
                                                 <td>
                                                     <form method="post"
-                                                          action="{{route('operator.order.delete', $order->id)}}">
+                                                          action="{{route('operator.order.delete', $served_order->id)}}">
                                                         {{csrf_field()}}
                                                         <input type="submit" class="btn btn-danger" value="Удалить">
                                                     </form>
