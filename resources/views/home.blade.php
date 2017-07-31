@@ -231,10 +231,11 @@
     </div>
 
     <div class="container-fluid" id="orders" style="background-color: white;">
-        <div class="container">
+        <div class="container" style="padding: 25px;">
             <div class="page-header">
                 <h2>Все мои заказы</h2>
             </div>
+            <h3>Всего заказов: {{$orders->count()}}</h3>
             @foreach($orders as $order)
                 <div class="col-md-6">
                     <div class="panel panel-default"
@@ -572,12 +573,14 @@
                 unit.readOnly = false;
                 price_for_unit = tarifs[tarif_index]['price_per_hour'];
                 min_price_unit = tarifs[tarif_index]['min_hour'];
+                document.getElementById('label_tarif').innerHTML = 'Срок аренды (час):';
             } else {
                 unit.min = tarifs[tarif_index]['min_distance'];
                 unit.value = tarifs[tarif_index]['min_distance'] > distance ? tarifs[tarif_index]['min_distance'] : distance;
                 unit.readOnly = true;
                 price_for_unit = tarifs[tarif_index]['price_per_distance'];
                 min_price_unit = tarifs[tarif_index]['min_distance'];
+                document.getElementById('label_tarif').innerHTML = 'Дистанция (км):';
             }
             min_price = tarifs[tarif_index]['price_minimum'];
             price_per_person = tarifs[tarif_index]['price_per_person'];
