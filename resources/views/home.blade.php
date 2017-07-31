@@ -562,7 +562,6 @@
         var discount = 0;
         var car_price = 0;
         var persons = 0;
-        var unit = 0;
 
         function changeTarif() {
             tarif_index = document.getElementById('tarif_id').selectedIndex;

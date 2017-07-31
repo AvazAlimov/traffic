@@ -205,7 +205,8 @@
                             <div class="col-md-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        Имя заказчика : {{ $order->name  }}
+                                        Идентификационный номер
+                                        заказа: {{ $order->id }}
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group col-md-12">
@@ -252,6 +253,10 @@
                                             <div class="col-md-8">{{ $order->address_B }}</div>
                                         </div>
                                         <div class="form-group col-md-12">
+                                            <div class="col-md-4"><strong>Имя заказчика:</strong></div>
+                                            <div class="col-md-8">{{ $order->name  }}</div>
+                                        </div>
+                                        <div class="form-group col-md-12">
                                             <div class="col-md-4"><strong>Телефон:</strong></div>
                                             <div class="col-md-8">{{ $order->phone }}</div>
                                         </div>
@@ -264,7 +269,7 @@
                                             <div class="col-md-8">
                                                 <button type="button" class="btn btn-default" data-toggle="modal"
                                                         data-target="#yourModal"
-                                                        onclick="setPoints({{$order->point_A}},{{$order->point_B}})">
+                                                        onclick="setPoints({{$order->point_A}} + '',{{$order->point_B}} + '')">
                                                     <i class="fa fa-compass"></i>
                                                 </button>
                                             </div>
@@ -325,7 +330,8 @@
                             <div class="col-md-6">
                                 <div class="panel panel-{{ $served_order->status == -1 ? "danger" : "success" }}">
                                     <div class="panel-heading">
-                                        Имя заказчика : {{ $served_order->name  }}
+                                        Идентификационный номер
+                                        заказа: {{ $served_order->id }}
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group col-md-12">
@@ -372,6 +378,10 @@
                                             <div class="col-md-8">{{ $served_order->address_B }}</div>
                                         </div>
                                         <div class="form-group col-md-12">
+                                            <div class="col-md-4"><strong>Имя заказчика:</strong></div>
+                                            <div class="col-md-8">{{ $served_order->name  }}</div>
+                                        </div>
+                                        <div class="form-group col-md-12">
                                             <div class="col-md-4"><strong>Телефон:</strong></div>
                                             <div class="col-md-8">{{ $served_order->phone }}</div>
                                         </div>
@@ -384,7 +394,7 @@
                                             <div class="col-md-8">
                                                 <button type="button" class="btn btn-default" data-toggle="modal"
                                                         data-target="#yourModal"
-                                                        onclick="setPoints({{$served_order->point_A}},{{$served_order->point_B}})">
+                                                        onclick="setPoints({{$served_order->point_A}} + '',{{$served_order->point_B}} + '')">
                                                     <i class="fa fa-compass"></i>
                                                 </button>
                                             </div>
