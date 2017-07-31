@@ -46,7 +46,7 @@ class HomeController extends Controller
             $car[$key->id] = $key->name;
         }
 
-        return view('home')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars)->withOrders($orders);
+        return view('home')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars)->withOrders($orders)->withOrder1(null);
     }
     public function orderSubmit(Request $request){
         $rules = [
@@ -88,6 +88,25 @@ class HomeController extends Controller
 
     public function orderAgain(Request $request, $id)
     {
+        $order = Order::findOrFail($id);
+        $tarifs = Tarif::all();
+        $tarif = array();
+        $orders = Order::where('user_type',1)->where('user_id',Auth::user()->id)->orderBy('id', 'desc')->paginate(4);
+
+        foreach ($tarifs as $tr) {
+            if ($tr->type == 0)
+                $tarif[$tr->id] = "Внутри города";
+            else
+                $tarif[$tr->id] = "За городом";
+        }
+
+        $cars = Automobile::all();
+        $car = array();
+        foreach ($cars as $key) {
+            $car[$key->id] = $key->name;
+        }
+
+        return view('home')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars)->withOrders($orders)->withOrder($order);
 
     }
 }

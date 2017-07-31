@@ -12,13 +12,10 @@
             </div>
             <div class="panel-body">
                 <div class="col-md-6">
-                    {{Form::open(['route' => ['user.order.submit'], 'method'=>'post'])}}
-                    {{csrf_field()}}
-
                     <div class="form-group col-md-12">
                         <label for="tarif" class="col-md-4">Тариф:</label>
                         <div class="col-md-8">
-                            {{Form::select('tarif', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
+                            {{Form::select('tarif', $tarif, isset($order) ? $order->tarif->id : key($tarif), ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
                         </div>
                     </div>
 
@@ -29,7 +26,7 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-4">Тип автомобиля:</label>
                         <div class="col-md-8">
-                            {{Form::select('car', $car, null, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
+                            {{Form::select('car', $car, isset($order) ? $order->automobile->id : key($car), ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
                         </div>
                     </div>
                     <div class="form-group col-md-12 text-center">
@@ -45,7 +42,7 @@
                     <div class="form-group col-md-12">
                         <label class="col-md-4">Количество грузчиков:</label>
                         <div class="col-md-8">
-                            {{Form::number('persons', 0, ['max' => 8, 'min'=>0, 'class'=>'form-control', 'id' =>'person_id', 'onchange' => 'personsChange()'])}}
+                            {{Form::number('persons', 0, isset($order) ? $order->persons : 0,['max' => 8, 'min'=>0, 'class'=>'form-control', 'id' =>'person_id', 'onchange' => 'personsChange()'])}}
                         </div>
                     </div>
                     <div class="form-group col-md-12">
@@ -307,7 +304,7 @@
                                 <div class="col-md-4"><strong>Показать на карте:</strong></div>
                                 <div class="col-md-8">
                                     <button type="button" class="btn btn-default" data-toggle="modal"
-                                            data-target="#yourModal"
+                                            data-target="#secondMapModal"
                                             onclick="setPoints({{$order->point_A}},{{$order->point_B}})">
                                         <i class="fa fa-compass"></i>
                                     </button>
@@ -338,6 +335,31 @@
                 {{$orders->links()}}
             </div>
         </div>
+
+        <div class="modal fade" id="secondMapModal" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="border-radius: 0;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                style="color: #ffcb08;">&times;</button>
+                        <h4 class="modal-title">Карта</h4>
+                    </div>
+                    <div class="modal-body" style="height: 500px; padding: 0; background-color: #372e30;">
+                        <div id="secondMap" class="col-md-12" style="height: 500px;"></div>
+                    </div>
+                    <div class="modal-footer" style="background-color: #372e30;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                style="background-color: #ffcb08; color: #0d3625;">Закрыт
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
     </div>
 
     <footer class="container-fluid text-center" style="background-color: #372e30; padding: 50px;">
@@ -411,6 +433,7 @@
         }
 
         var firstMap;
+        var secondMap;
         var startPoint = false;
         var endPoint = false;
         var path;
@@ -418,6 +441,17 @@
         ymaps.ready(init);
 
         function init() {
+            secondMap = new ymaps.Map("secondMap", {
+                center: [41.299496, 69.240073],
+                zoom: 13,
+                controls: []
+            }, {searchControlProvider: 'yandex#search'});
+
+            secondMap.controls.add('geolocationControl');
+            secondMap.controls.add('searchControl');
+            secondMap.controls.add('zoomControl');
+            secondMap.controls.get('searchControl').options.set('size', 'large');
+
             firstMap = new ymaps.Map("firstMap", {
                 center: [41.299496, 69.240073],
                 zoom: 13,
@@ -579,9 +613,25 @@
             document.getElementById('sum_id').value = price;
         }
 
+        function setPoints(point_a_1, point_a_2, point_b_1, point_b_2) {
+            var point_a = point_a_1 + "," + point_a_2;
+            var point_b = point_b_1 + "," + point_b_2;
+            secondMap.geoObjects.removeAll();
+            ymaps.route([point_a, point_b], {
+                mapStateAutoApply: true,
+                multiRoute: false
+            }).then(function (route) {
+                        secondMap.geoObjects.add(route);
+                    }, function (error) {
+                        alert("Error occurred: " + error.message);
+                    }
+            );
+        }
+
         window.onload = function () {
-            tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
-            car_index = document.getElementById('car_id').selectedIndex = 0;
+
+            /*tarif_index = document.getElementById('tarif_id').value = 0 ;
+            car_index = document.getElementById('car_id').value = 0;*/
             changeTarif();
             changeCar();
         }
