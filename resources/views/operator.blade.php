@@ -339,15 +339,16 @@
                     </form>
                     <form action="{{route('operator.search')}}" method="post">
                         {{csrf_field()}}
+
                         <ul class="input-group">
                             <span class="input-group-btn">
-
                               <button type="submit" name="filter" value="id" class="btn btn-default">
                                 Идентификатор
                               </button>
                              </span>
                         </ul>
                     </form>
+
                     <form action="{{route('operator.search')}}" method="post">
                         {{csrf_field()}}
                         <ul class="input-group">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Order;
 use Carbon\Carbon;
+use function foo\func;
 use Illuminate\Http\Request;
 use App\Automobile;
 use App\Tarif;
@@ -184,7 +185,6 @@ class OperatorController extends Controller
 
     public function search(Request $request)
     {
-
         $cars = Automobile::all();
         $car = array();
         foreach ($cars as $key) {
@@ -203,49 +203,62 @@ class OperatorController extends Controller
         $orders_wait = Order::where('status', 0)->paginate(8);
 
 
-        if (isset($request->search)) {
+        $orders = Order::where('status' != 0);
 
-            $orders = Order::where('status', '!=', 0)->with('automobile')
-                ->whereHas('automobile', function ($query) use ($request) {
-                $query->where('name', 'LIKE', "%$request->search%");})
+        if ($request->search != null || $request->search =="") {
+            $orders = Order::where('status', '!=', 0)->where(function($query) use ($request){
+                $query->orWhere('id', $request->search)
+                ->with('automobile')->whereHas('automobile', function ($query) use ($request) {
+                    $query->where('name', 'LIKE', "%$request->search%");
+                })
                 ->orWhere('name', 'LIKE', "%$request->search%")
                 ->orWhere('sum', 'LIKE', "%$request->search%")
                 ->orWhere('address_A', 'LIKE', "%$request->search%")
-                ->orWhere('address_B', 'LIKE', "%$request->search%")
-                ->paginate(8);
+                ->orWhere('address_B', 'LIKE', "%$request->search%");
+        });
+
         }
-
-
         if ($request->filter == "name") {
             if (Session::get('sort')) {
-                $orders = Order::where('status', '!=', 0)->orderBy('name', 'desc')->paginate(8);
+                $orders = $orders
+                    ->orderBy('name', 'desc');
                 Session::put('sort', false);
             } else {
-                $orders = Order::where('status', '!=', 0)->orderBy('name', 'asc')->paginate(8);
+                $orders = $orders
+                    ->orderBy('name', 'asc');
                 Session::put('sort', true);
             }
         }
         if ($request->filter == "sum") {
             if (Session::get('sort')) {
-                $orders = Order::where('status', '!=', 0)->orderBy('sum', 'desc')->paginate(8);
+                $orders = $orders
+                    ->orderBy('sum', 'desc');
                 Session::put('sort', false);
             } else {
-                $orders = Order::where('status', '!=', 0)->orderBy('sum', 'asc')->paginate(8);
+                $orders = $orders
+                    ->orderBy('sum', 'asc');
                 Session::put('sort', true);
             }
         }
         if ($request->filter == "id") {
 
             if (Session::get('sort')) {
-                $orders = Order::where('status', '!=', 0)->orderBy('id', 'desc')->paginate(8);
+                $orders = $orders
+                    ->orderBy('id', 'desc');
                 Session::put('sort', false);
             } else {
-                $orders = Order::where('status', '!=', 0)->orderBy('id', 'asc')->paginate(8);
+                $orders = $orders
+                    ->orderBy('id', 'asc');
                 Session::put('sort', true);
             }
         }
+        $orders = $orders->paginate(8);
 
-        return view('operator')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait);
+
+        return view('operator')
+            ->withCars($cars)->withTarifs($tarifs)->withCar($car)
+            ->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait);
 
     }
+
 }
