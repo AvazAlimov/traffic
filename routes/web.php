@@ -14,7 +14,7 @@
 Route::get('/', function () {
     $tarifs = App\Tarif::all();
     $tarif = array();
-    $orders = App\Order::where('user_type',1)->where('user_id',Auth::user()->id)->orderBy('id', 'desc')->paginate(4);
+    $orders = App\Order::where('user_type',1)->orderBy('id', 'desc')->paginate(4);
 
     foreach ($tarifs as $tr) {
         if ($tr->type == 0)
@@ -72,6 +72,8 @@ Route::prefix('operator')->group(function () {
         Route::post('/restore/{id}', 'OperatorController@orderRestore')->name('operator.order.restore');
         Route::get('/update/{id}/', 'OperatorController@orderUpdate')->name('operator.order.update');
         Route::post('/update/{id}', 'OperatorController@orderUpdateSubmit')->name('operator.order.update.submit');
+        Route::post('/search', 'OperatorController@search')->name('operator.search');
+
     });
 });
 

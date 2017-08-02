@@ -21,9 +21,13 @@
             <li data-toggle="tab"><a onclick="switchSection('section3')"><i class="fa fa-handshake-o"></i> Поданные
                     заказы</a></li>
         </ul>
+
+
     </nav>
     <div class="container" style="padding: 0 20px 20px 20px">
         <div class="row">
+
+
             <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section" style="display: block;">
                     <div class="page-header">
@@ -200,8 +204,8 @@
                     <div class="page-header">
                         <h2>Заказы</h2>
                     </div>
-                    @foreach($orders as $order)
-                        @if($order->status == 0)
+                    @foreach($orders_wait as $order)
+
                             <div class="col-md-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
@@ -318,15 +322,60 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
+
                     @endforeach
                 </div>
                 <div id="section3" class="section">
+                    <form action="{{route('operator.search')}}" method="post">
+                        {{csrf_field()}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="search" placeholder="Search ..."/>
+                            <span class="input-group-btn">
+                              <button type="submit" class="btn btn-default">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                              </button>
+                             </span>
+                        </div>
+                    </form>
+                    <form action="{{route('operator.search')}}" method="post">
+                        {{csrf_field()}}
+                        <ul class="input-group">
+                            <span class="input-group-btn">
+
+                              <button type="submit" name="filter" value="id" class="btn btn-default">
+                                Идентификатор
+                              </button>
+                             </span>
+                        </ul>
+                    </form>
+                    <form action="{{route('operator.search')}}" method="post">
+                        {{csrf_field()}}
+                        <ul class="input-group">
+                            <span class="input-group-btn">
+
+                              <button type="submit" name="filter" value="name" class="btn btn-default">
+                                Имя
+                              </button>
+                             </span>
+                        </ul>
+                    </form>
+                    <form action="{{route('operator.search')}}" method="post">
+                        {{csrf_field()}}
+                        <ul class="input-group">
+                            <span class="input-group-btn">
+
+                              <button type="submit" name="filter" value="sum" class="btn btn-default">
+                                Сум
+                              </button>
+                             </span>
+                        </ul>
+                    </form>
+
                     <div class="page-header">
                         <h2>Поданные заказы</h2>
                     </div>
                     @foreach($orders as $served_order)
-                        @if($served_order->status != 0)
+
                             <div class="col-md-6">
                                 <div class="panel panel-{{ $served_order->status == -1 ? "danger" : "success" }}">
                                     <div class="panel-heading">
@@ -425,7 +474,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
+
                     @endforeach
                     <div class="col-md-12">
                         {{ $orders->links() }}
@@ -544,20 +593,20 @@
 
             myMap.geoObjects.remove(path);
             ymaps.route([start.geometry.getCoordinates(), end.geometry.getCoordinates()],
-                    {
-                        mapStateAutoApply: true,
-                        multiRoute: false
-                    }).then(function (route) {
-                        path = route;
-                        distance = route.getLength();
-                        myMap.geoObjects.add(route);
-                        if (tarif_index === 1) {
-                            document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                            unitChange();
-                        }
-                    }, function (error) {
-                        alert("Error occurred: " + error.message);
+                {
+                    mapStateAutoApply: true,
+                    multiRoute: false
+                }).then(function (route) {
+                    path = route;
+                    distance = route.getLength();
+                    myMap.geoObjects.add(route);
+                    if (tarif_index === 1) {
+                        document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
+                        unitChange();
                     }
+                }, function (error) {
+                    alert("Error occurred: " + error.message);
+                }
             );
         }
 
@@ -634,13 +683,18 @@
             changeCar();
             personsChange();
             unitChange();
+
+
+
         };
 
         function switchSection(id) {
             var section = document.getElementsByClassName('section');
             for (var i = 0; i < section.length; i++)
                 section[i].style.display = "none";
+
             document.getElementById(id).style.display = "block";
+
         }
 
         function setPoints(point_a_1, point_a_2, point_b_1, point_b_2) {
@@ -651,10 +705,10 @@
                 mapStateAutoApply: true,
                 multiRoute: false
             }).then(function (route) {
-                        yourMap.geoObjects.add(route);
-                    }, function (error) {
-                        alert("Error occurred: " + error.message);
-                    }
+                    yourMap.geoObjects.add(route);
+                }, function (error) {
+                    alert("Error occurred: " + error.message);
+                }
             );
         }
     </script>
