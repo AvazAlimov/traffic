@@ -31,7 +31,8 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <img class="img-responsive" src="{{asset("resources/logo.png")}}" style="width: 32px; height: 32px;" alt>
+                    <img class="img-responsive" src="{{asset("resources/logo.png")}}" style="width: 32px; height: 32px;"
+                         alt>
                 </a>
             </div>
 
@@ -60,6 +61,16 @@
 
                             <ul class="dropdown-menu" role="menu">
                                 <li>
+                                    @if(Auth::guard('operator')->check())
+                                        <a href="{{ url('/operator') }}" role="button" aria-expanded="false">
+                                            Главная
+                                        </a>
+                                    @endif
+                                    @if(Auth::guard('admin')->check())
+                                        <a href="{{ url('/admin') }}" role="button" aria-expanded="false">
+                                            Главная
+                                        </a>
+                                    @endif
                                     <a href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
