@@ -46,7 +46,7 @@ class OperatorController extends Controller
 
         $orders = Order::where('status', '!=', 0)->paginate(6);
         $orders_wait = Order::where('status', 0)->paginate(8);
-        return view('operator')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait);
+        return view('operator')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait)->withSection(2);
 
     }
 
@@ -86,7 +86,7 @@ class OperatorController extends Controller
         $order->status = 1;
         $order->start_time = Carbon::parse($request->date . " " . $request->time, null);
         $order->save();
-        return redirect()->route('operator.dashboard');
+        return redirect()->back();
     }
 
     public function orderAccept(Request $request, $order_id, $operator_id)
@@ -95,7 +95,7 @@ class OperatorController extends Controller
         $order->operator_id = $operator_id;
         $order->status = 1;
         $order->save();
-        return redirect()->route('operator.dashboard');
+        return redirect()->back();
     }
 
     public function orderRefuse(Request $request, $order_id, $operator_id)
@@ -104,14 +104,14 @@ class OperatorController extends Controller
         $order->operator_id = $operator_id;
         $order->status = -1;
         $order->save();
-        return redirect()->route('operator.dashboard');
+        return redirect()->back();
     }
 
     public function orderDelete(Request $request, $order_id)
     {
         $order = Order::find($order_id);
         $order->delete();
-        return redirect()->route('operator.dashboard');
+        return redirect()->back();
     }
 
     public function orderUpdate($id)
@@ -135,7 +135,7 @@ class OperatorController extends Controller
         }
 
 
-        return view('operator.order')->withOrder($order)->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif);
+        return view('operator.order')->withOrder($order)->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif)->withSection(1);
     }
 
     public function orderUpdateSubmit(Request $request, $id)
@@ -185,7 +185,6 @@ class OperatorController extends Controller
 
     public function search(Request $request)
     {
-
         $cars = Automobile::all();
         $car = array();
         foreach ($cars as $key) {
@@ -258,8 +257,7 @@ class OperatorController extends Controller
 
         return view('operator')
             ->withCars($cars)->withTarifs($tarifs)->withCar($car)
-            ->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait)->withSection('section_3');
-
+            ->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait)->withSection(3);
     }
 
 }

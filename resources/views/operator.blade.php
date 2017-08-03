@@ -14,11 +14,11 @@
 @section('content')
     <nav class="navbar navbar-default" style="border-radius: 0; border-width: 0 0 thin 0;">
         <ul class="nav navbar-nav">
-            <li data-toggle="tab" class="active"><a onclick="switchSection('section1')"><i class="fa fa-columns"></i>
+            <li data-toggle="tab" class=" {{ $section == 1 ? "active" : "" }}"><a onclick="switchSection('section1')"><i class="fa fa-columns"></i>
                     Сделать заказ</a>
             </li>
-            <li data-toggle="tab"><a onclick="switchSection('section2')"><i class="fa fa-list-alt"></i> Заказы</a></li>
-            <li data-toggle="tab"><a onclick="switchSection('section3')"><i class="fa fa-handshake-o"></i> Поданные
+            <li data-toggle="tab" class=" {{ $section == 2 ? "active" : "" }}"><a onclick="switchSection('section2')"><i class="fa fa-list-alt"></i> Заказы</a></li>
+            <li data-toggle="tab" class=" {{ $section == 3 ? "active" : "" }}"><a onclick="switchSection('section3')"><i class="fa fa-handshake-o"></i> Поданные
                     заказы</a></li>
         </ul>
 
@@ -26,10 +26,8 @@
     </nav>
     <div class="container" style="padding: 0 20px 20px 20px">
         <div class="row">
-
-
             <div class="col-md-10 col-md-offset-1">
-                <div id="section1" class="section" style="display: block;">
+                <div id="section1" class="section" style="display: {{ $section == 1 ? "block" : "none" }};" >
                     <div class="page-header">
                         <h2>Сделать заказ</h2>
                     </div>
@@ -200,7 +198,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="section2" class="section">
+                <div id="section2" class="section" style="display: {{ $section == 2 ? "block" : "none" }};">
                     <div class="page-header">
                         <h2>Заказы</h2>
                     </div>
@@ -325,7 +323,7 @@
 
                     @endforeach
                 </div>
-                <div id="section3" class="section">
+                <div id="section3" class="section" style="display: {{ $section == 3 ? "block" : "none" }};">
                     <form action="{{route('operator.search')}}" method="post">
                         {{csrf_field()}}
                         <div class="input-group">
@@ -677,7 +675,6 @@
         }
 
         window.onload = function () {
-            alert({!!  "section_3"!!});
             tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
             car_index = document.getElementById('car_id').selectedIndex = 0;
             document.getElementById('person_id').value = 0;
@@ -685,8 +682,6 @@
             changeCar();
             personsChange();
             unitChange();
-
-            switchSection({!!$section or  "section_3" !!})
         };
 
         function switchSection(id) {
@@ -695,8 +690,6 @@
                 section[i].style.display = "none";
 
             document.getElementById(id).style.display = "block";
-
-
         }
 
         function setPoints(point_a_1, point_a_2, point_b_1, point_b_2) {
