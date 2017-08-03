@@ -311,7 +311,7 @@
                                                 </form>
                                             </td>
                                             <td>
-                                                <form method="post"
+                                                <form method="post" onsubmit="return confirm('Хотите удалить?');"
                                                       action="{{route('operator.order.delete', $order->id)}}">
                                                     {{csrf_field()}}
                                                     <input type="submit" class="btn btn-danger" value="Удалить">
@@ -368,7 +368,6 @@
                         <h2>Поданные заказы</h2>
                     </div>
                     @foreach($orders as $served_order)
-
                         <div class="col-md-6">
                             <div class="panel panel-{{ $served_order->status == -1 ? "danger" : "success" }}">
                                 <div class="panel-heading">
@@ -447,7 +446,7 @@
                                         <tbody>
                                         <tr>
                                             <td>
-                                                <form method="post"
+                                                <form method="post" onsubmit="return confirm('Восстановить?');"
                                                       action="{{route('operator.order.restore', $served_order->id)}}">
                                                     {{csrf_field()}}
                                                     <input type="submit" class="btn btn-primary"
@@ -455,7 +454,7 @@
                                                 </form>
                                             </td>
                                             <td>
-                                                <form method="post"
+                                                <form method="post" onsubmit="return confirm('Хотите удалить?');"
                                                       action="{{route('operator.order.delete', $served_order->id)}}">
                                                     {{csrf_field()}}
                                                     <input type="submit" class="btn btn-danger" value="Удалить">
