@@ -200,7 +200,7 @@ class OperatorController extends Controller
             else
                 $tarif[$tr->id] = "За городом";
         }
-        $orders_wait = Order::where('status', 0)->paginate(8);
+        $orders_wait = Order::where('status', 0);
 
 
         $orders = Order::where('status' != 0);

@@ -323,14 +323,13 @@
                                 </div>
                             </div>
                         </div>
-
                     @endforeach
                 </div>
                 <div id="section3" class="section" style="display: {{ $section == 3 ? "block" : "none" }};">
                     <form action="{{route('operator.search')}}" method="post">
                         {{csrf_field()}}
                         <div class="input-group">
-                            <input type="text" class="form-control" name="search" placeholder="Search ..."/>
+                            <input type="text" class="form-control" name="search" placeholder="Найти"/>
                             <span class="input-group-btn">
                               <button type="submit" class="btn btn-default">
                                 <i class="fa fa-search" aria-hidden="true"></i>
