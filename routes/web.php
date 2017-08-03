@@ -14,7 +14,6 @@
 Route::get('/', function () {
     $tarifs = App\Tarif::all();
     $tarif = array();
-    $orders = App\Order::where('user_type',1)->orderBy('id', 'desc')->paginate(4);
 
     foreach ($tarifs as $tr) {
         if ($tr->type == 0)
@@ -29,7 +28,7 @@ Route::get('/', function () {
         $car[$key->id] = $key->name;
     }
 
-    return view('welcome')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars)->withOrders($orders);
+    return view('welcome')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars);
 });
 
 Auth::routes();

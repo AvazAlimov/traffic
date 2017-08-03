@@ -63,7 +63,6 @@
             color: #ffcb08;
         }
     </style>
-
 </head>
 <body style="background-color: #ffcb08;">
 <nav class="navbar navbar-default navbar-fixed-top" style="margin: 0;">
