@@ -677,6 +677,7 @@
         }
 
         window.onload = function () {
+            alert({!!  "section_3"!!});
             tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
             car_index = document.getElementById('car_id').selectedIndex = 0;
             document.getElementById('person_id').value = 0;
@@ -685,8 +686,7 @@
             personsChange();
             unitChange();
 
-
-
+            switchSection({!!$section or  "section_3" !!})
         };
 
         function switchSection(id) {
@@ -695,6 +695,7 @@
                 section[i].style.display = "none";
 
             document.getElementById(id).style.display = "block";
+
 
         }
 

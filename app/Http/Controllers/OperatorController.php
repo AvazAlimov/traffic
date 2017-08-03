@@ -185,6 +185,7 @@ class OperatorController extends Controller
 
     public function search(Request $request)
     {
+
         $cars = Automobile::all();
         $car = array();
         foreach ($cars as $key) {
@@ -257,7 +258,7 @@ class OperatorController extends Controller
 
         return view('operator')
             ->withCars($cars)->withTarifs($tarifs)->withCar($car)
-            ->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait);
+            ->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait)->withSection('section_3');
 
     }
 
