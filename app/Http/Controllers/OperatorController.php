@@ -214,7 +214,8 @@ class OperatorController extends Controller
                 ->orWhere('name', 'LIKE', "%$request->search%")
                 ->orWhere('sum', 'LIKE', "%$request->search%")
                 ->orWhere('address_A', 'LIKE', "%$request->search%")
-                ->orWhere('address_B', 'LIKE', "%$request->search%");
+                ->orWhere('address_B', 'LIKE', "%$request->search%")
+                ->orWhere('phone', 'LIKE', "%$request->search%");
         });
 
         }

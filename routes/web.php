@@ -63,6 +63,7 @@ Route::prefix('operator')->group(function () {
     Route::post('/login', 'Auth\OperatorLoginController@login')->name('operator.login.submit');
     Route::get('/', 'OperatorController@index')->name('operator.dashboard');
     Route::get('/logout', 'Auth\OperatorLoginController@logout')->name('operator.logout');
+    Route::post('/','OperatorController@search')->name('operator.search');
 
     Route::prefix('order')->group(function () {
         Route::post('/submit', 'OperatorController@orderSubmit')->name('operator.order.submit');
@@ -73,7 +74,6 @@ Route::prefix('operator')->group(function () {
         Route::get('/update/{id}/', 'OperatorController@orderUpdate')->name('operator.order.update');
         Route::post('/update/{id}', 'OperatorController@orderUpdateSubmit')->name('operator.order.update.submit');
 
-        Route::post('/search','OperatorController@search')->name('operator.search');
     });
 });
 
