@@ -277,9 +277,7 @@
     <h1 style="color: #ffcb08; font-weight: bold;">TRAFFIC.UZ</h1>
     <hr id="main_hr">
     <p style="color: #ffcb08;">Самый крупный автопарк!</p>
-    <button class="btn" style="color: #372e30; background-color: #ffcb08; font-size: 18px;">
-        СДЕЛАТЬ ЗАКАЗ
-    </button>
+    <a href="#makeorder" class="btn" style="color: #372e30; background-color: #ffcb08; font-size: 24px;">СДЕЛАТЬ ЗАКАЗ</a>
 </div>
 
 <div class="container-fluid bg-yellow" id="makeorder">
