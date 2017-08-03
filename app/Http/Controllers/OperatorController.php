@@ -206,17 +206,21 @@ class OperatorController extends Controller
         $orders = Order::where('status' != 0);
 
         if ($request->search != null || $request->search =="") {
-            $orders = Order::where('status', '!=', 0)->where(function($query) use ($request){
-                $query->orWhere('id', $request->search)
-                ->with('automobile')->whereHas('automobile', function ($query) use ($request) {
-                    $query->where('name', 'LIKE', "%$request->search%");
-                })
-                ->orWhere('name', 'LIKE', "%$request->search%")
-                ->orWhere('sum', 'LIKE', "%$request->search%")
-                ->orWhere('address_A', 'LIKE', "%$request->search%")
-                ->orWhere('address_B', 'LIKE', "%$request->search%")
-                ->orWhere('phone', 'LIKE', "%$request->search%");
-        });
+            if(substr($request->search, 0, 1) == "#"){
+                $orders = Order::where('status', '!=', 0)->where('id',ltrim($request->search, '#'));
+            }else{
+                $orders = Order::where('status', '!=', 0)->where(function($query) use ($request){
+                    $query->orWhere('id', $request->search)
+                        ->with('automobile')->whereHas('automobile', function ($query) use ($request) {
+                            $query->where('name', 'LIKE', "%$request->search%");
+                        })
+                        ->orWhere('name', 'LIKE', "%$request->search%")
+                        ->orWhere('sum', 'LIKE', "%$request->search%")
+                        ->orWhere('address_A', 'LIKE', "%$request->search%")
+                        ->orWhere('address_B', 'LIKE', "%$request->search%")
+                        ->orWhere('phone', 'LIKE', "%$request->search%");
+                });
+            }
 
         }
         if ($request->filter == "name") {
