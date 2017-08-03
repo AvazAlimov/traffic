@@ -284,7 +284,7 @@
 
 <div class="container-fluid bg-yellow" id="makeorder">
     <div class="container">
-        {{Form::open(['route' => ['user.order.submit'], 'method'=>'post'])}}
+        {{Form::open(['route' => ['order.submit'], 'method'=>'post'])}}
         {{csrf_field()}}
         <div class="panel panel-default">
             <div class="panel-heading">
