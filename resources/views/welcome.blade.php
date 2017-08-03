@@ -386,10 +386,10 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    @if ($errors->has('point_A'))
+                    @if ($errors->has('point_A') || $errors->has('address_A'))
                         <div class="col-md-12">
                                             <span class="help-block">
-                                                <strong class="alert-danger">{{ $errors->first('point_A') }}</strong>
+                                                <strong class="alert-danger">{{ $errors->first('point_A')}}</strong>
                                             </span>
                         </div>
                     @endif
@@ -405,7 +405,7 @@
                             </button>
                         </div>
                     </div>
-                    @if ($errors->has('point_B'))
+                    @if ($errors->has('point_B') || $errors->has('address_B'))
                         <div class="col-md-12">
                                             <span class="help-block">
                                                 <strong class="alert-danger">{{ $errors->first('point_B') }}</strong>

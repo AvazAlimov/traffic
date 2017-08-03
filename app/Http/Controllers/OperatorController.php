@@ -55,7 +55,8 @@ class OperatorController extends Controller
         $rules = [
             'name' => 'required',
             'phone' => 'required',
-
+            'address_A' => 'required',
+            'address_B' => 'required',
             'point_A' => 'required',
             'point_B' => 'required',
         ];
@@ -143,7 +144,8 @@ class OperatorController extends Controller
         $rules = [
             'name' => 'required',
             'phone' => 'required',
-
+            'address_A' => 'required',
+            'address_B' => 'required',
             'point_A' => 'required',
             'point_B' => 'required',
         ];
