@@ -220,6 +220,40 @@
             background-color: #372e30;
             color: #ffcb08;
         }
+
+        #main_jumbotron {
+            background-image: url({{asset("resources/background.png")}});
+            background-size: cover;
+            background-position: center bottom;
+            padding: 100px 25px;
+            margin: 0;
+        }
+
+        .dotted {
+            padding: 2.25em 1.6875em;
+            background-image: -webkit-repeating-radial-gradient(center center, rgba(0, 0, 0, .05), rgba(0, 0, 0, .05) 1px, transparent 1px, transparent 100%);
+            background-image: -moz-repeating-radial-gradient(center center, rgba(0, 0, 0, .05), rgba(0, 0, 0, .05) 1px, transparent 1px, transparent 100%);
+            background-image: -ms-repeating-radial-gradient(center center, rgba(0, 0, 0, .05), rgba(0, 0, 0, .05) 1px, transparent 1px, transparent 100%);
+            background-image: repeating-radial-gradient(center center, rgba(0, 0, 0, .05), rgba(0, 0, 0, .05) 1px, transparent 1px, transparent 100%);
+            -webkit-background-size: 3px 3px;
+            -moz-background-size: 3px 3px;
+            background-size: 3px 3px;
+        }
+
+        @-webkit-keyframes pulsate {
+            0% {
+                -webkit-transform: scale(0.9, 0.9);
+                opacity: 0.9;
+            }
+            65% {
+                -webkit-transform: scale(1.0, 1.0);
+                opacity: 1.0;
+            }
+            100% {
+                -webkit-transform: scale(0.9, 0.9);
+                opacity: 0.9;
+            }
+        }
     </style>
 </head>
 
@@ -272,12 +306,15 @@
     </div>
 </nav>
 
-<div class="jumbotron text-center" style="background-color: #372e30; padding: 100px 25px; margin: 0;">
+<div id="main_jumbotron" class="jumbotron text-center">
     <img src="{{asset('resources/logo-yellow.png')}}" style="width: 128px; height: 128px;">
     <h1 style="color: #ffcb08; font-weight: bold;">TRAFFIC.UZ</h1>
     <hr id="main_hr">
     <p style="color: #ffcb08;">Самый крупный автопарк!</p>
-    <a href="#makeorder" class="btn" style="color: #372e30; background-color: #ffcb08; font-size: 24px;">СДЕЛАТЬ ЗАКАЗ</a>
+    <a href="#makeorder" class="btn"
+       style="color: #372e30; background-color: #ffcb08; font-size: 24px; -webkit-animation: pulsate 2.4s ease-out;
+    -webkit-animation-iteration-count: infinite; ">СДЕЛАТЬ
+        ЗАКАЗ</a>
 </div>
 
 <div class="container-fluid bg-yellow" id="makeorder">
@@ -509,8 +546,8 @@
     </div>
 </div>
 
-<div class="container-fluid text-center">
-    <div id="about" class="container">
+<div id="about" class="container-fluid text-center dotted">
+    <div class="container">
         <h2>8 причин заказывать грузоперевозки в «Траффик»</h2>
         <br>
         <div class="row slideanim">
@@ -554,57 +591,47 @@
     </div>
 </div>
 
-<div class="container-fluid text-center bg-yellow">
-    <div class="container" id="pricing">
+<div id="pricing" class="container-fluid text-center bg-yellow">
+    <div class="container">
         <div class="text-center">
             <h2>ТАРИФЫ</h2>
         </div>
         <div class="row slideanim">
-            <div class="col-sm-6 col-xs-12">
-                <div class="panel panel-default text-center">
-                    <div class="panel-heading">
-                        <h3 style="color: #ffcb08;">Внутри города</h3>
-                    </div>
-                    <div class="panel-body">
-                        <h4><strong>Цена за час:</strong> 50000 сум</h4>
-                        <h4><strong>Час по умолчанию:</strong> 1 час</h4>
-                        <h4><strong>Начальная цена:</strong> 100000 сум</h4>
-                        <h4><strong>Плата за обслуживание погрузчика:</strong> 30000 сум</h4>
-                        <h4><strong>Скидка:</strong> 15 %</h4>
-                    </div>
-                    <div class="panel-footer">
-                        <a href="#makeorder" class="btn" style="color: #ffcb08; font-size: 24px;">Заказать</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-xs-12">
-                <div class="panel panel-default text-center">
-                    <div class="panel-heading">
-                        <h3 style="color: #ffcb08;">За городом</h3>
-                    </div>
-                    <div class="panel-body">
-                        <h4><strong>Цена за км:</strong> 3000 сум</h4>
-                        <h4><strong>Км по умолчанию:</strong> 50 км</h4>
-                        <h4><strong>Начальная цена:</strong> 100000 сум</h4>
-                        <h4><strong>Плата за обслуживание погрузчика:</strong> 40000 сум</h4>
-                        <h4><strong>Скидка:</strong> 0 %</h4>
-                    </div>
-                    <div class="panel-footer">
-                        <a href="#makeorder" class="btn" style="color: #ffcb08; font-size: 24px;">Заказать</a>
+            @foreach($tarifs as $tariff)
+                <div class="col-sm-6 col-xs-12">
+                    <div class="panel panel-default text-center">
+                        <div class="panel-heading">
+                            <h3 style="color: #ffcb08;"> {{ $tariff->type == 0 ? "Внутри города" : "За городом" }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <h4>
+                                <strong>{{ $tariff->type == 0 ? "Цена за час:" : "Цена за км:" }}</strong> {{ $tariff->type == 0 ? $tariff->price_per_hour : $tariff->price_per_distance }}
+                                сум</h4>
+                            <h4>
+                                <strong>{{ $tariff->type == 0 ? "По умолчанию (час):" : "По умолчанию (км):" }}</strong> {{ $tariff->type == 0 ? $tariff->min_hour : $tariff->min_distance }}
+                            </h4>
+                            <h4><strong>Начальная цена:</strong> {{ $tariff->price_minimum  }} сум</h4>
+                            <h4><strong>Плата за обслуживание погрузчика:</strong> {{ $tariff->price_per_person  }} сум
+                            </h4>
+                            <h4><strong>Скидка:</strong> {{ $tariff->discard  }} %</h4>
+                        </div>
+                        <div class="panel-footer">
+                            <a href="#makeorder" class="btn" style="color: #ffcb08; font-size: 24px;">Заказать</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </div>
 
-<div id="contacts" class="container-fluid text-center">
+<div id="contacts" class="container-fluid text-center dotted">
     <div class="container">
         <div class="row slideanim">
             <h2>Телефоны колл-центра</h2>
             <img src="{{asset('resources/call.png')}}" alt="" style="width: 96px; height: 96px;">
-            <h2>+998 (90) 373-73-73</h2>
             <h2>+998 (71) 147-73-73</h2>
+            <h2>+998 (90) 373-73-73</h2>
             <h3>Звоните в любое время и когда угодно!</h3>
         </div>
     </div>
