@@ -326,6 +326,9 @@
                     @endforeach
                 </div>
                 <div id="section3" class="section" style="display: {{ $section == 3 ? "block" : "none" }};">
+                    <div class="page-header">
+                        <h2>Поданные заказы</h2>
+                    </div>
                     <form action="{{route('operator.search')}}" method="post">
                         {{csrf_field()}}
                         <div class="input-group">
@@ -338,7 +341,7 @@
                         </div>
                     </form>
                     <h3>Сортировать по:</h3>
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="margin-bottom: 24px;">
                         <form class="col-md-3" action="{{route('operator.search')}}" method="post">
                             {{csrf_field()}}
 
@@ -361,11 +364,13 @@
                                 Ценам
                             </button>
                         </form>
-                    </div>
-                    <br>
-
-                    <div class="page-header">
-                        <h2>Поданные заказы</h2>
+                        <form class="col-md-3" action="{{route('operator.search')}}" method="post">
+                            {{csrf_field()}}
+                            <button type="submit" name="filter" value="date" class="btn btn-default"
+                                    style="display: block; width: 100%;">
+                                Время подачи
+                            </button>
+                        </form>
                     </div>
                     @foreach($orders as $served_order)
                         <div class="col-md-6">

@@ -257,6 +257,18 @@ class OperatorController extends Controller
                 Session::put('sort', true);
             }
         }
+        if ($request->filter == "date") {
+
+            if (Session::get('sort')) {
+                $orders = $orders
+                    ->orderBy('start_time', 'desc');
+                Session::put('sort', false);
+            } else {
+                $orders = $orders
+                    ->orderBy('start_time', 'asc');
+                Session::put('sort', true);
+            }
+        }
         $orders = $orders->paginate(8);
 
 
