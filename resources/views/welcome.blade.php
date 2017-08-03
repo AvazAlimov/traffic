@@ -256,7 +256,7 @@
                 <li><a href="#makeorder" style="color: #ffcb08;">СДЕЛАТЬ ЗАКАЗ</a></li>
                 <li><a href="#about" class="active" style="color: #ffcb08;">О НАС</a></li>
                 <li><a href="#pricing" style="color: #ffcb08;">ТАРИФЫ</a></li>
-                <li><a href="#contacts" style="color: #ffcb08;">КОНТАКТЫ</a>
+                <li><a href="#contacts" style="color: #ffcb08;">КОНТАКТЫ</a></li>
                 @if(Auth::check())
                     <li><a href="{{ url('/home') }}" style="color: #ffcb08;"><i class="fa fa-home"
                                                                                 aria-hidden="true"></i> ГЛАВНАЯ</a></li>
@@ -282,8 +282,8 @@
     </button>
 </div>
 
-<div class="container-fluid bg-yellow">
-    <div class="container" id="makeorder">
+<div class="container-fluid bg-yellow" id="makeorder">
+    <div class="container">
         {{Form::open(['route' => ['user.order.submit'], 'method'=>'post'])}}
         {{csrf_field()}}
         <div class="panel panel-default">
@@ -511,7 +511,7 @@
     </div>
 </div>
 
-<div class="container-fluid text-center bg-yellow">
+<div class="container-fluid text-center">
     <div id="about" class="container">
         <h2>8 причин заказывать грузоперевозки в «Траффик»</h2>
         <br>
@@ -556,7 +556,7 @@
     </div>
 </div>
 
-<div class="container-fluid text-center">
+<div class="container-fluid text-center bg-yellow">
     <div class="container" id="pricing">
         <div class="text-center">
             <h2>ТАРИФЫ</h2>
@@ -575,7 +575,7 @@
                         <h4><strong>Скидка:</strong> 15 %</h4>
                     </div>
                     <div class="panel-footer">
-                        <button class="btn btn-lg" style="color: #ffcb08;">Заказать</button>
+                        <a href="#makeorder" class="btn" style="color: #ffcb08; font-size: 24px;">Заказать</a>
                     </div>
                 </div>
             </div>
@@ -592,7 +592,7 @@
                         <h4><strong>Скидка:</strong> 0 %</h4>
                     </div>
                     <div class="panel-footer">
-                        <button class="btn btn-lg" style="color: #ffcb08;">Заказать</button>
+                        <a href="#makeorder" class="btn" style="color: #ffcb08; font-size: 24px;">Заказать</a>
                     </div>
                 </div>
             </div>
@@ -600,7 +600,7 @@
     </div>
 </div>
 
-<div id="contacts" class="container-fluid text-center bg-yellow">
+<div id="contacts" class="container-fluid text-center">
     <div class="container">
         <div class="row slideanim">
             <h2>Телефоны колл-центра</h2>
@@ -899,5 +899,6 @@
         });
     });
 </script>
+
 </body>
 </html>
