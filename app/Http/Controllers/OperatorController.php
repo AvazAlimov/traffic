@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Order;
 use Carbon\Carbon;
-use function foo\func;
 use Illuminate\Http\Request;
 use App\Automobile;
 use App\Tarif;

@@ -543,7 +543,7 @@
         }
 
         function drawPath() {
-            if (startPoint === false || startPoint === false)
+            if (startPoint === false || endPoint === false)
                 return;
 
             firstMap.geoObjects.remove(path);

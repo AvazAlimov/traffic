@@ -1,4 +1,5 @@
 <!doctype html>
+<!--suppress ALL -->
 <html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="utf-8">
@@ -251,6 +252,19 @@
         .modal-header {
             background-color: #372e30;
             color: #ffcb08;
+        }
+
+        .carousel-control.right, .carousel-control.left {
+            background-image: none;
+            color: #372e30;
+        }
+
+        .carousel-indicators li {
+            border-color: #372e30;
+        }
+
+        .carousel-indicators li.active {
+            background-color: #372e30;
         }
 
         #main_jumbotron {
@@ -651,6 +665,50 @@
     </div>
 </div>
 
+<div class="container-fluid text-center bg-yellow">
+    <h2>Каталог</h2>
+    <div class="row slideanim">
+        <div id="myCarousel" class="carousel slide text-center" data-ride="carousel">
+
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+            </ol>
+
+            <div class="carousel-inner" role="listbox">
+                <div class="item active">
+                    <h4>"This company is the best. I am so happy with the result!"
+                        <br>
+                        <span>Michael Roe, Vice President, Comment Box</span>
+                    </h4>
+                </div>
+                <div class="item">
+                    <h4>"One word... WOW!!"
+                        <br>
+                        <span>John Doe, Salesman, Rep Inc</span>
+                    </h4>
+                </div>
+                <div class="item">
+                    <h4>"Could I... BE any more happy with this company?"
+                        <br>
+                        <span>Chandler Bing, Actor, Friends lot</span>
+                    </h4>
+                </div>
+            </div>
+
+            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+</div>
+
 <div id="contacts" class="container-fluid text-center dotted">
     <div class="container">
         <div class="row slideanim">
@@ -720,7 +778,23 @@
 
 <script>
     var baseUrl = '{{ URL::asset("") }}';
-    automobiles = {!! $cars !!};
+    var automobiles = {!! $cars !!};
+    var tarifs = {!! $tarifs !!};
+    var tarif_index = 0;
+    var car_index = 0;
+    var hour = 0;
+    var distance = 0;
+    var min_price = 0;
+    var price_for_unit;
+    var min_price_unit;
+    var price_per_person;
+    var discount = 0;
+    var car_price = 0;
+    var persons = 0;
+    var firstMap;
+    var startPoint = false;
+    var endPoint = false;
+    var path;
 
     function showAutoImage() {
         document.getElementById('car_image').src = baseUrl + "automobile/" + automobiles[document.getElementById('car_id').selectedIndex]['image'];
@@ -735,13 +809,6 @@
         document.getElementById('automobile_info').rows = rows + 4;
         document.getElementById('automobile_info').innerHTML = info;
     }
-
-    var firstMap;
-    var startPoint = false;
-    var endPoint = false;
-    var path;
-
-    ymaps.ready(init);
 
     function init() {
         firstMap = new ymaps.Map("firstMap", {
@@ -805,7 +872,7 @@
     }
 
     function drawPath() {
-        if (startPoint === false || startPoint === false)
+        if (startPoint === false || endPoint === false)
             return;
 
         firstMap.geoObjects.remove(path);
@@ -816,12 +883,12 @@
         }).then(function (route) {
                     path = route;
                     distance = (route.getLength() / 1000).toFixed(2);
+                    firstMap.geoObjects.add(route);
+                    path.getWayPoints().removeAll();
                     if (tarifs[tarif_index]['type'] === 1) {
                         document.getElementById('unit_id').value = distance;
                         calculatePrice();
                     }
-                    firstMap.geoObjects.add(route);
-                    path.getWayPoints().removeAll();
                 }, function (error) {
                     alert("Возникла ошибка: " + error.message);
                 }
@@ -841,19 +908,6 @@
         firstMap.geoObjects.remove(path);
         endPoint = false;
     }
-
-    var tarifs = {!! $tarifs !!};
-    var tarif_index = 0;
-    var car_index = 0;
-    var hour = 0;
-    var distance = 0;
-    var min_price = 0;
-    var price_for_unit;
-    var min_price_unit;
-    var price_per_person;
-    var discount = 0;
-    var car_price = 0;
-    var persons = 0;
 
     function changeTarif() {
         tarif_index = document.getElementById('tarif_id').selectedIndex;
@@ -905,6 +959,8 @@
         price -= (document.getElementById('sum_discount_id').value = (price * (discount / 100))).toFixed(0);
         document.getElementById('sum_id').value = price;
     }
+
+    ymaps.ready(init);
 
     window.onload = function () {
         tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
