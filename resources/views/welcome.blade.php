@@ -567,6 +567,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="firstMapModal" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" style="border-radius: 0;">
@@ -580,7 +581,7 @@
                 </div>
                 <div class="modal-footer" style="background-color: #372e30;">
                     <button type="button" class="btn btn-default" data-dismiss="modal"
-                            style="background-color: #ffcb08; color: #0d3625;">Закрыт
+                            style="background-color: #ffcb08; color: #0d3625;">ОК
                     </button>
                 </div>
             </div>
