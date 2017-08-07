@@ -1,6 +1,31 @@
 @extends('layouts.main')
 @section('styles')
+    <!--suppress ALL -->
+    <style>
+        @media (max-width: 978px) {
+            .panel-body {
+                padding: 0;
+            }
 
+            #submit_button {
+                margin: 16px;
+            }
+
+            hr {
+                display: none;
+            }
+
+            p {
+                font-size: 12px;
+            }
+
+            label {
+                margin: 0;
+                padding: 0;
+                font-size: 13px;
+            }
+        }
+    </style>
 @endsection
 @section('content')
     <div class="container" id="order" style="padding: 100px 15px;">
@@ -183,7 +208,7 @@
                     </div>
 
                     <div class="col-md-12">
-                        <button type="submit" class="btn btn-block"
+                        <button type="submit" class="btn btn-block" id="submit_button"
                                 style="background-color: #372e30; color: #ffcb08; font-size: 18px;">
                             ЗАКАЗАТЬ
                         </button>
@@ -412,7 +437,24 @@
 @section('scripts')
     <script>
         var baseUrl = '{{ URL::asset("") }}';
-        automobiles = {!! $cars !!};
+        var automobiles = {!! $cars !!};
+        var tarifs = {!! $tarifs !!};
+        var firstMap;
+        var secondMap;
+        var startPoint = false;
+        var endPoint = false;
+        var path;
+        var tarif_index = 0;
+        var car_index = 0;
+        var hour = 0;
+        var distance = 0;
+        var min_price = 0;
+        var price_for_unit;
+        var min_price_unit;
+        var price_per_person;
+        var discount = 0;
+        var car_price = 0;
+        var persons = 0;
 
         function showAutoImage() {
             document.getElementById('car_image').src = baseUrl + "automobile/" + automobiles[document.getElementById('car_id').selectedIndex]['image'];
@@ -427,14 +469,6 @@
             document.getElementById('automobile_info').rows = rows + 4;
             document.getElementById('automobile_info').innerHTML = info;
         }
-
-        var firstMap;
-        var secondMap;
-        var startPoint = false;
-        var endPoint = false;
-        var path;
-
-        ymaps.ready(init);
 
         function init() {
             secondMap = new ymaps.Map("secondMap", {
@@ -546,19 +580,6 @@
             endPoint = false;
         }
 
-        var tarifs = {!! $tarifs !!};
-        var tarif_index = 0;
-        var car_index = 0;
-        var hour = 0;
-        var distance = 0;
-        var min_price = 0;
-        var price_for_unit;
-        var min_price_unit;
-        var price_per_person;
-        var discount = 0;
-        var car_price = 0;
-        var persons = 0;
-
         function changeTarif() {
             tarif_index = document.getElementById('tarif_id').selectedIndex;
             var unit = document.getElementById('unit_id');
@@ -624,6 +645,8 @@
                     }
             );
         }
+
+        ymaps.ready(init);
 
         window.onload = function () {
             tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
