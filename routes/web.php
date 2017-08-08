@@ -56,6 +56,8 @@ Route::prefix('admin')->group(function () {
     Route::get('automobile/{id}', 'AutomobileController@showAutomobileForm')->name('automobile.show');
     Route::post('automobile/update{id}', 'AutomobileController@update')->name('automobile.update');
     Route::post('automobile/delete{id}', 'AutomobileController@delete')->name('automobile.delete');
+
+    Route::get('order/excel', 'AdminController@orderToExcel')->name('admin.order.excel');
 });
 
 Route::prefix('operator')->group(function () {

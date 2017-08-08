@@ -20,4 +20,11 @@ class Order extends Model
     {
         return $this->belongsTo('App\Operator', 'operator_id');
     }
+    public function getCarName(){
+        return $this->automobile->name;
+    }
+    public function getTarifName(){
+        return $this->tarif->type;
+    }
+
 }
