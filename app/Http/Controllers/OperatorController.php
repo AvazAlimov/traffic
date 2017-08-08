@@ -83,6 +83,7 @@ class OperatorController extends Controller
         $order->phone = $request->phone;
         $order->sum = $request->sum;
         $order->status = 1;
+        $order->operator_id = Auth::guard('operator')->user()->id;
         $order->start_time = Carbon::parse($request->date . " " . $request->time, null);
         $order->save();
         return redirect()->back();

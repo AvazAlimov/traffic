@@ -29,7 +29,7 @@ class AdminController extends Controller
         $automobiles = DB::table('automobiles')->get();
         $operators = DB::table('operators')->get();
         $tariffs = DB::table('tarifs')->get();
-        $orders = Order::where('status', '!=', 0);
+        $orders = Order::where('status', '!=', 0)->get();
 
         return view('admin')
             ->with('automobiles', $automobiles)

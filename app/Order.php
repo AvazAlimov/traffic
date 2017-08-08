@@ -15,4 +15,9 @@ class Order extends Model
     {
         return $this->belongsTo('App\Automobile', 'car_id');
     }
+
+    public function operator()
+    {
+        return $this->belongsTo('App\Operator', 'operator_id');
+    }
 }

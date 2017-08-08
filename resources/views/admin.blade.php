@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('head')
+    <!--suppress ALL -->
     <style>
         .section {
             display: none;
@@ -333,29 +334,48 @@
                 <div id="section4" class="section">
                     <div class="page-header">
                         <h2>Экспорт в Excel</h2>
+                        <h3>Всего: {{ $orders->count() }}</h3>
                     </div>
-                    <div class="table-responsive table-bordered">
+                    <div class="table-responsive">
                         <table class="table">
                             <thead>
-                                <tr>
-                                    <th>Идентификационный номер</th>
-                                    <th>Заказал</th>
-                                    <th>Тип автомобиля</th>
-                                    <th>Кол-во грузчиков</th>
-                                    <th>Время подачи</th>
-                                    <th>Час/Дистанция(км)</th>
-                                    <th>Откуда</th>
-                                    <th>Куда</th>
-                                    <th>Имя заказчика</th>
-                                    <th>Телефон</th>
-                                    <th>Цена</th>
-                                    <th>Обслужил</th>
-                                    <th>Создан</th>
-                                    <th>Обновлен</th>
-                                </tr>
+                            <tr>
+                                <th># Ид</th>
+                                <th>Заказал</th>
+                                <th>Тип автомобиля</th>
+                                <th>Кол-во грузчиков</th>
+                                <th>Время подачи</th>
+                                <th>Час/Дистанция(км)</th>
+                                <th>Откуда</th>
+                                <th>Куда</th>
+                                <th>Имя заказчика</th>
+                                <th>Телефон</th>
+                                <th>Цена</th>
+                                <th>Обслужил</th>
+                                <th>Создан</th>
+                                <th>Обновлен</th>
+                            </tr>
                             </thead>
                             <tbody>
-
+                            @foreach($orders as $order)
+                                <tr>
+                                    <td>{{ $order->id }}</td>
+                                    <td>{{ $order->user_type == 0 ? "Пользователь" : ($order->user_type == 1 ? "Юр-лицо" : "Оператор") }}
+                                    </td>
+                                    <td>{{ $order->automobile->name }}</td>
+                                    <td>{{ $order->persons }}</td>
+                                    <td>{{ $order->start_time }}</td>
+                                    <td>{{ $order->unit }}</td>
+                                    <td>{{ $order->address_A }}</td>
+                                    <td>{{ $order->address_B }}</td>
+                                    <td>{{ $order->name }}</td>
+                                    <td>{{ $order->phone }}</td>
+                                    <td>{{ $order->sum }}</td>
+                                    <td>{{ $order->operator != null ? $order->operator->username : "" }}</td>
+                                    <td>Создан</td>
+                                    <td>Обновлен</td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
