@@ -127,13 +127,13 @@
                     @endforeach
 
                     <div class="col-md-12">
-                    <form action="{{ route('operator.create') }}" method="GET">
-                        {{ csrf_field() }}
-                        <button type="submit" class="btn btn-primary pull-right">
-                            Добавить оператор
-                        </button>
-                    </form>
-                        </div>
+                        <form action="{{ route('operator.create') }}" method="GET">
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-primary pull-right">
+                                Добавить оператор
+                            </button>
+                        </form>
+                    </div>
                 </div>
                 <div id="section3" class="section">
                     <div class="page-header">
