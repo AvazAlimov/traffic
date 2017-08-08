@@ -23,7 +23,7 @@
                     Excel</a></li>
         </ul>
     </nav>
-    <div class="container" style="padding: 0 20px 20px 20px">
+    <div class="container-fluid" style="padding: 0 20px 20px 20px">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section" style="display: block;">
@@ -372,8 +372,8 @@
                                     <td>{{ $order->phone }}</td>
                                     <td>{{ $order->sum }}</td>
                                     <td>{{ $order->operator != null ? $order->operator->username : "" }}</td>
-                                    <td>Создан</td>
-                                    <td>Обновлен</td>
+                                    <td>{{ $order->created_at }}</td>
+                                    <td>{{ $order->updated_at }}</td>
                                 </tr>
                             @endforeach
                             </tbody>
