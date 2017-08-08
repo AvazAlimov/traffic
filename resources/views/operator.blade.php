@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('head')
+    <!--suppress ALL -->
     <style>
         .section {
             display: none;
@@ -206,8 +207,7 @@
                         <h2>Заказы</h2>
                     </div>
                     @foreach($orders_wait as $order)
-
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     Идентификационный номер
@@ -373,7 +373,7 @@
                         </form>
                     </div>
                     @foreach($orders as $served_order)
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="panel panel-{{ $served_order->status == -1 ? "danger" : "success" }}">
                                 <div class="panel-heading">
                                     Идентификационный номер
@@ -471,7 +471,6 @@
                                 </div>
                             </div>
                         </div>
-
                     @endforeach
                     <div class="col-md-12">
                         {{ $orders->links() }}
@@ -498,7 +497,6 @@
     </div>
     <script>
         var yourMap;
-
         var tarifs = {!! $tarifs !!};
         var cars = {!! $cars !!};
         var tarif_index = 0;

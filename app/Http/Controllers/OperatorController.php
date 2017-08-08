@@ -44,7 +44,7 @@ class OperatorController extends Controller
         }
 
         $orders = Order::where('status', '!=', 0)->paginate(6);
-        $orders_wait = Order::where('status', 0)->paginate(8);
+        $orders_wait = Order::where('status', 0)->get();
         return view('operator')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait)->withSection(2);
     }
 
@@ -207,11 +207,11 @@ class OperatorController extends Controller
 
         $orders = Order::where('status' != 0);
 
-        if ($request->search != null || $request->search =="") {
-            if(substr($request->search, 0, 1) == "#"){
-                $orders = Order::where('status', '!=', 0)->where('id',ltrim($request->search, '#'));
-            }else{
-                $orders = Order::where('status', '!=', 0)->where(function($query) use ($request){
+        if ($request->search != null || $request->search == "") {
+            if (substr($request->search, 0, 1) == "#") {
+                $orders = Order::where('status', '!=', 0)->where('id', ltrim($request->search, '#'));
+            } else {
+                $orders = Order::where('status', '!=', 0)->where(function ($query) use ($request) {
                     $query->orWhere('id', $request->search)
                         ->with('automobile')->whereHas('automobile', function ($query) use ($request) {
                             $query->where('name', 'LIKE', "%$request->search%");
