@@ -9,7 +9,7 @@ use App\Automobile;
 use App\Tarif;
 use Illuminate\Support\Facades\Session;
 use Validator;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class OperatorController extends Controller
 {
@@ -46,7 +46,6 @@ class OperatorController extends Controller
         $orders = Order::where('status', '!=', 0)->paginate(6);
         $orders_wait = Order::where('status', 0)->paginate(8);
         return view('operator')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait)->withSection(2);
-
     }
 
     public function orderSubmit(Request $request)
@@ -111,7 +110,8 @@ class OperatorController extends Controller
     {
         $order = Order::find($order_id);
         $order->delete();
-        return redirect()->back();
+
+        return redirect()->route('operator.dashboard');
     }
 
     public function orderUpdate($id)
@@ -181,6 +181,7 @@ class OperatorController extends Controller
         $order->status = 0;
         $order->operator_id = null;
         $order->save();
+
         return redirect()->route('operator.dashboard');
     }
 
@@ -277,5 +278,4 @@ class OperatorController extends Controller
             ->withCars($cars)->withTarifs($tarifs)->withCar($car)
             ->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait)->withSection(3);
     }
-
 }
