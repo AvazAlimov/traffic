@@ -18,6 +18,8 @@
             <li data-toggle="tab"><a onclick="switchSection('section2')"><i class="fa fa-users"></i> Операторы</a>
             </li>
             <li data-toggle="tab"><a onclick="switchSection('section3')"><i class="fa fa-money"></i> Цены</a></li>
+            <li data-toggle="tab"><a onclick="switchSection('section4')"><i class="fa fa-file-excel-o"></i> Экспорт в
+                    Excel</a></li>
         </ul>
     </nav>
     <div class="container" style="padding: 0 20px 20px 20px">
@@ -326,6 +328,36 @@
                                 </div>
                             @endif
                         @endforeach
+                    </div>
+                </div>
+                <div id="section4" class="section">
+                    <div class="page-header">
+                        <h2>Экспорт в Excel</h2>
+                    </div>
+                    <div class="table-responsive table-bordered">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Идентификационный номер</th>
+                                    <th>Заказал</th>
+                                    <th>Тип автомобиля</th>
+                                    <th>Кол-во грузчиков</th>
+                                    <th>Время подачи</th>
+                                    <th>Час/Дистанция(км)</th>
+                                    <th>Откуда</th>
+                                    <th>Куда</th>
+                                    <th>Имя заказчика</th>
+                                    <th>Телефон</th>
+                                    <th>Цена</th>
+                                    <th>Обслужил</th>
+                                    <th>Создан</th>
+                                    <th>Обновлен</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
