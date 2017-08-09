@@ -615,11 +615,11 @@
         <div class="row slideanim">
             <div class="col-sm-3">
                 <span class="fa fa-truck logo-small"></span>
-                <h4>Собственный автопарк более 3500 машин!</h4>
+                <h4>Широкий выбор автомобилей!</h4>
             </div>
             <div class="col-sm-3">
                 <span class="fa fa-credit-card logo-small"></span>
-                <h4>Удобные способы оплаты, рассрочка</h4>
+                <h4>Удобные способы оплаты</h4>
             </div>
             <div class="col-sm-3">
                 <span class="fa fa-address-card-o logo-small"></span>
@@ -1005,6 +1005,8 @@
         });
     });
 </script>
+
 <script src="{{ asset('js/app.js') }}"></script>
+
 </body>
 </html>
