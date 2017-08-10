@@ -8,7 +8,7 @@
     <title>Traffic.uz</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
@@ -56,7 +56,7 @@
         }
 
         body {
-            font: 400 15px Lato, sans-serif;
+            font-family: 'Open Sans' sans-serif;
             line-height: 1.8;
             color: #818181;
         }
@@ -172,7 +172,7 @@
             line-height: 1.42857143 !important;
             letter-spacing: 4px;
             border-radius: 0;
-            font-family: Montserrat, sans-serif;
+            font-family: 'Open Sans', sans-serif;
         }
 
         .navbar-default .navbar-toggle {
@@ -544,6 +544,10 @@
                     <button type="submit" class="btn btn-block" id="submit_button"
                             style="background-color: #372e30; color: #ffcb08; font-size: 18px;">
                         ЗАКАЗАТЬ
+                    </button>
+                    <button type="button" class="btn btn-block" id="submit_button" onclick="refresh()"
+                            style="background-color: #ffcb08; color: #372e30; font-size: 18px;">
+                        ОЧИСТИТЬ
                     </button>
                 </div>
             </div>
@@ -961,6 +965,16 @@
     }
 
     ymaps.ready(init);
+
+    function refresh() {
+        tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
+        car_index = document.getElementById('car_id').selectedIndex = 0;
+        changeTarif();
+        changeCar();
+        setStartPoint();
+        setEndPoint();
+        distance = 0;
+    }
 
     window.onload = function () {
         tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
