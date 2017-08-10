@@ -104,7 +104,7 @@
                     </li>
                     <li><a href="{{ url('/register') }}" style="color: #ffcb08;"><i class="fa fa-unlock-alt"
                                                                                     aria-hidden="true"></i>
-                            ЗАРЕГИСТРИРОВАТЬСЯ</a></li>
+                            РЕГИСТРАЦИЯ</a></li>
                 @endif
             </ul>
         </div>

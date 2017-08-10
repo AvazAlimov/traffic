@@ -344,7 +344,7 @@
                                                                                  aria-hidden="true"></i> ВОЙТИ</a></li>
                     <li><a href="{{ url('/register') }}" style="color: #ffcb08;"><i class="fa fa-unlock-alt"
                                                                                     aria-hidden="true"></i>
-                            ЗАРЕГИСТРИРОВАТЬСЯ</a></li>
+                            РЕГИСТРАЦИЯ</a></li>
                 @endif
             </ul>
         </div>
@@ -527,9 +527,9 @@
                 </div>
 
                 <div class="form-group col-md-12">
-                    <label class="col-md-3 col-xs-12">Цена:</label>
+                    <label class="col-md-3 col-xs-12" style="font-size: 24px; padding-top: 0;">Цена:</label>
                     <div class="col-md-8 col-xs-10">
-                        {{Form::number('sum',null, ['class'=>'form-control', 'id'=>'sum_id', 'readOnly'])}}
+                        {{Form::number('sum',null, ['class'=>'form-control', 'id'=>'sum_id', 'readOnly', 'style' => 'font-size: 24px; margin-top: 4px;'])}}
                     </div>
                     <label class="col-md-1 col-xs-2">
                         сум
