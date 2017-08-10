@@ -270,7 +270,8 @@
         }
 
         #main_jumbotron {
-            background-image: url({{asset("resources/background.png")}});
+            background-color: #372e30;
+            background-image: url({{asset("/resources/background.png")}});
             background-size: cover;
             background-position: center bottom;
             padding: 100px 25px;
@@ -301,6 +302,31 @@
                 -webkit-transform: scale(0.9, 0.9);
                 opacity: 0.9;
             }
+        }
+
+        .custom_thumbnail {
+            padding: 16px;
+            border-radius: 8px;
+            background-color: #fefefe;
+            box-shadow: 0 0 2px #444;
+        }
+
+        .row-centered {
+            text-align: center;
+        }
+
+        .col-centered {
+            display: inline-block;
+            float: none;
+            /* reset the text-align */
+            text-align: center;
+            /* inline-block space fix */
+            margin-right: -4px;
+        }
+
+        #makeorder {
+            {{--background-image: url("{{ asset('/resources/map.png') }}");--}}
+               background-size: cover;
         }
     </style>
 </head>
@@ -614,6 +640,7 @@
             </p>
         </div>
     </div>
+    <br>
     <div class="container text-center">
         <h2>8 причин заказывать грузоперевозки в «Траффик»</h2>
         <br>
@@ -656,56 +683,111 @@
         </div>
         <br>
     </div>
+    <br>
+    <div class="container text-center">
+        <h2>Автопарк</h2>
+        <br>
+        <div class="col-md-12">
+            @foreach($cars as $car)
+                @if(($loop->index % 4) == 0)
+                    <div class="row slideanim row-centered">
+                        @endif
+                        <div class="col-md-3 col-centered">
+                            <div class="custom_thumbnail">
+                                <img src="{{ asset("/automobile/".$car->image) }}" alt="{{ $car->name }}"
+                                     style="height: 70px;">
+                                <div class="caption">
+                                    <p style="font-size: 16px; margin-top: 6px;">
+                                        <strong>{{ $car->name }}</strong>
+                                    </p>
+                                    <p>
+                                        <strong>Цена: </strong>
+                                        {{ $car->price }} сум
+                                    </p>
+                                    <button class="btn" data-toggle="modal" data-target="#carModal"
+                                            style="background-color: #372e30; color: #ffcb08;"
+                                            onclick="showThumbAutoInfo({{ $loop->index }})">
+                                        Инфо
+                                    </button>
+                                </div>
+                            </div>
+                            <br>
+                        </div>
+                        @if(($loop->index % 4) == 3 && !$loop->last)
+                    </div>
+                @endif
+                @if($loop->last)
+        </div>
+        @endif
+        @endforeach
+    </div>
+</div>
 </div>
 
 <div id="pricing" class="container-fluid text-center bg-yellow">
-    <div class="text-center">
-        <h2>ТАРИФЫ</h2>
-    </div>
-    <div class="row slideanim">
-        @foreach($tarifs as $tariff)
-            <div class="col-sm-6 col-xs-12">
-                <div class="panel panel-default text-center">
-                    <div class="panel-heading">
-                        <h3 style="color: #ffcb08;"> {{ $tariff->type == 0 ? "Внутри города" : "За городом" }}</h3>
-                    </div>
-                    <div class="panel-body">
-                        <h4>
-                            <strong>{{ $tariff->type == 0 ? "Цена за час:" : "Цена за км:" }}</strong> {{ $tariff->type == 0 ? $tariff->price_per_hour : $tariff->price_per_distance }}
-                            сум</h4>
-                        <h4>
-                            <strong>{{ $tariff->type == 0 ? "По умолчанию (час):" : "По умолчанию (км):" }}</strong> {{ $tariff->type == 0 ? $tariff->min_hour : $tariff->min_distance }}
-                        </h4>
-                        <h4><strong>Начальная цена:</strong> {{ $tariff->price_minimum  }} сум</h4>
-                        <h4><strong>Плата за обслуживание погрузчика:</strong> {{ $tariff->price_per_person  }} сум
-                        </h4>
-                        <h4><strong>Скидка:</strong> {{ $tariff->discard  }} %</h4>
-                    </div>
-                    <div class="panel-footer">
-                        <a href="#makeorder" class="btn" style="color: #ffcb08; font-size: 24px;">Заказать</a>
+    <div class="container">
+
+        <div class="text-center">
+            <h2>ТАРИФЫ</h2>
+        </div>
+        <div class="row slideanim">
+            @foreach($tarifs as $tariff)
+                <div class="col-sm-6 col-xs-12">
+                    <div class="panel panel-default text-center">
+                        <div class="panel-heading">
+                            <h3 style="color: #ffcb08;"> {{ $tariff->type == 0 ? "Внутри города" : "За городом" }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <h4>
+                                <strong>{{ $tariff->type == 0 ? "Цена за час:" : "Цена за км:" }}</strong> {{ $tariff->type == 0 ? $tariff->price_per_hour : $tariff->price_per_distance }}
+                                сум</h4>
+                            <h4>
+                                <strong>{{ $tariff->type == 0 ? "По умолчанию (час):" : "По умолчанию (км):" }}</strong> {{ $tariff->type == 0 ? $tariff->min_hour : $tariff->min_distance }}
+                            </h4>
+                            <h4><strong>Начальная цена:</strong> {{ $tariff->price_minimum  }} сум</h4>
+                            <h4><strong>Плата за обслуживание
+                                    погрузчика:</strong> {{ $tariff->price_per_person  }} сум
+                            </h4>
+                            <h4><strong>Скидка:</strong> {{ $tariff->discard  }} %</h4>
+                        </div>
+                        <div class="panel-footer">
+                            <a href="#makeorder" class="btn"
+                               style="color: #ffcb08; font-size: 24px;">Заказать</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
     </div>
 </div>
 
 <div id="contacts" class="container-fluid text-center dotted">
-    <div class="container">
-        <div class="row slideanim">
-            <h2>Телефоны колл-центра</h2>
-            <img src="{{asset('resources/call.png')}}" alt="" style="width: 96px; height: 96px;">
-            <h2>+998 (71) 147-73-73</h2>
-            <h2>+998 (90) 373-73-73</h2>
-            <h3>Звоните в любое время и когда угодно!</h3>
+        <div class="col-md-6">
+            <div class="row slideanim">
+                <h2>Телефоны колл-центра</h2>
+                <img src="{{asset('resources/call.png')}}" alt="" style="width: 96px; height: 96px;">
+                <h2>+998 (71) 147-73-73</h2>
+                <h2>+998 (90) 373-73-73</h2>
+                <h4>Звоните в любое время и когда угодно!</h4>
+                <h2>НАШ АДРЕС</h2>
+                <h4>
+                    Sakichmon Street, Chorsu mavzesi, Шайхонтохурский район, Шайхантахурский район, Tashkent, 100000,
+                    Uzbekistan
+                </h4>
+            </div>
         </div>
-    </div>
+        <div class="col-md-6">
+            <div class="row slideanim">
+                <div id="thirdMap" class="col-md-12" style="height: 470px;"></div>
+            </div>
+        </div>
+    <br>
 </div>
 
 <footer class="container-fluid text-center" style="background-color: #372e30;">
     <a href="#" data-scroll-goto="0" data-section="top">
         <button class="btn"
-                style="margin-top: -150px; background-color: #372e30; width: 64px; height: 64px; border-radius: 32px; box-shadow: 0 0px 6px #ffcb08;">
+                style="margin-top: -150px; background-color: #372e30; width: 64px; height: 64px; border-radius: 32px; box-shadow: 0 2px 4px #ffcb08;">
             <i class="fa fa-angle-up" style="font-size: 24px; color: #ffcb08;"></i>
         </button>
     </a>
@@ -714,29 +796,16 @@
         <div class="row slideanim">
             <div class="col-md-12 col-sm-12">
                 <ul style="list-style-type: none; margin: 0; padding: 0;">
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-facebook" aria-hidden="true"
+                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-facebook"
+                                                                             aria-hidden="true"
                                                                              style="font-size: 32px; color: #ffcb08;"></i></a>
                     </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-twitter" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-rss" aria-hidden="true"
+                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-twitter"
+                                                                             aria-hidden="true"
                                                                              style="font-size: 32px; color: #ffcb08;"></i></a>
                     </li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-google-plus"
                                                                              aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-linkedin" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-skype" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-vimeo" aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
-                    </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-tumblr" aria-hidden="true"
                                                                              style="font-size: 32px; color: #ffcb08;"></i></a>
                     </li>
                 </ul>
@@ -791,7 +860,30 @@
         document.getElementById('automobile_info').innerHTML = info;
     }
 
+    function showThumbAutoInfo(value) {
+        var info = automobiles[value]['info'];
+        var rows = 0;
+        for (var i = 0; i < info.length; i++)
+            if (info[i] === '\n')
+                rows++;
+        document.getElementById('automobile_info').rows = rows + 4;
+        document.getElementById('automobile_info').innerHTML = info;
+    }
+
     function init() {
+        var address = new ymaps.Map("thirdMap", {
+            center: [41.323100, 69.230100],
+            zoom: 13,
+            controls: []
+        });
+        address.geoObjects.add(new ymaps.Placemark([41.323100, 69.230100], {
+            balloonContent: 'Наш Офис'
+        }, {
+            draggable: true,
+            preset: 'islands#redHomeIcon',
+            iconColor: '#F44336'
+        }));
+
         firstMap = new ymaps.Map("firstMap", {
             center: [41.299496, 69.240073],
             zoom: 13,
