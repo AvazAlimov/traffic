@@ -792,6 +792,7 @@
         </div>
     </div>
     <br>
+    <br>
 </div>
 
 <footer class="container-fluid text-center" style="background-color: #372e30;">
@@ -889,7 +890,6 @@
         address.geoObjects.add(new ymaps.Placemark([41.323100, 69.230100], {
             balloonContent: 'Наш Офис'
         }, {
-            draggable: true,
             preset: 'islands#redHomeIcon',
             iconColor: '#F44336'
         }));
