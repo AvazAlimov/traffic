@@ -335,8 +335,8 @@
         }
 
         #makeorder {
-            {{--background-image: url("{{ asset('/resources/map.png') }}");--}}
-                 background-size: cover;
+            background-image: url("{{ asset('/resources/map.svg') }}");
+            background-size: cover;
         }
     </style>
 </head>
