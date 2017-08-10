@@ -649,8 +649,9 @@
                 международными компаниями!
             </p>
         </div>
+
+        <hr class="col-md-12">
     </div>
-    <br>
     <div class="container text-center">
         <h2>8 причин заказывать грузоперевозки в «Траффик»</h2>
         <br>
@@ -692,8 +693,9 @@
             </div>
         </div>
         <br>
+
+        <hr class="col-md-12">
     </div>
-    <br>
     <div class="container text-center">
         <h2>Автопарк</h2>
         <br>
