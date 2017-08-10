@@ -502,7 +502,7 @@
                 <div class="form-group col-md-12">
                     <label class="col-md-3">Телефон:</label>
                     <div class="col-md-9">
-                        {{Form::text('phone','',['class'=>'form-control'])}}
+                        {{Form::text('phone','+998',['class'=>'form-control'])}}
                     </div>
                 </div>
 
@@ -1004,8 +1004,6 @@
         });
     });
 </script>
-
 <script src="{{ asset('js/app.js') }}"></script>
-
 </body>
 </html>
