@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Shrikhand" rel="stylesheet">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
@@ -56,7 +57,7 @@
         }
 
         body {
-            font-family: 'Open Sans' sans-serif;
+            font-family: 'Open Sans', sans-serif;
             line-height: 1.8;
             color: #818181;
         }
@@ -353,7 +354,7 @@
 
 <div id="main_jumbotron" class="jumbotron text-center">
     <img src="{{asset('resources/logo-yellow.png')}}" style="width: 128px; height: 128px;">
-    <h1 style="color: #ffcb08; font-weight: bold;">TRAFFIC.UZ</h1>
+    <h1 style="color: #ffcb08; font-family: 'Shrikhand', cursive;">TRAFFIC.UZ</h1>
     <hr id="main_hr">
     <p style="color: #ffcb08;">Самый крупный автопарк!</p>
     <a href="#makeorder" class="btn"
