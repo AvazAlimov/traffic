@@ -48,6 +48,15 @@
                 margin: 0;
                 padding: 0;
             }
+
+            .col-centered {
+                width: 100%;
+            }
+
+            #thirdMap, #mapContainer, #contacts {
+                margin: 0;
+                padding: 0;
+            }
         }
 
         .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a.active {
@@ -309,6 +318,7 @@
             border-radius: 8px;
             background-color: #fefefe;
             box-shadow: 0 0 2px #444;
+            width: 100%;
         }
 
         .row-centered {
@@ -326,7 +336,7 @@
 
         #makeorder {
             {{--background-image: url("{{ asset('/resources/map.png') }}");--}}
-               background-size: cover;
+                 background-size: cover;
         }
     </style>
 </head>
@@ -762,25 +772,25 @@
 </div>
 
 <div id="contacts" class="container-fluid text-center dotted">
-        <div class="col-md-6">
-            <div class="row slideanim">
-                <h2>Телефоны колл-центра</h2>
-                <img src="{{asset('resources/call.png')}}" alt="" style="width: 96px; height: 96px;">
-                <h2>+998 (71) 147-73-73</h2>
-                <h2>+998 (90) 373-73-73</h2>
-                <h4>Звоните в любое время и когда угодно!</h4>
-                <h2>НАШ АДРЕС</h2>
-                <h4>
-                    Sakichmon Street, Chorsu mavzesi, Шайхонтохурский район, Шайхантахурский район, Tashkent, 100000,
-                    Uzbekistan
-                </h4>
-            </div>
+    <div class="col-md-6">
+        <div class="row slideanim">
+            <h2>Телефоны колл-центра</h2>
+            <img src="{{asset('resources/call.png')}}" alt="" style="width: 96px; height: 96px;">
+            <h2>+998 (71) 147-73-73</h2>
+            <h2>+998 (90) 373-73-73</h2>
+            <h4>Звоните в любое время и когда угодно!</h4>
+            <h2>НАШ АДРЕС</h2>
+            <h4>
+                Улица Сакичмон, Шайхонтохурский район, Шайхантахурский район, Tashkent, 100000,
+                Uzbekistan
+            </h4>
         </div>
-        <div class="col-md-6">
-            <div class="row slideanim">
-                <div id="thirdMap" class="col-md-12" style="height: 470px;"></div>
-            </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row slideanim" id="mapContainer">
+            <div id="thirdMap" class="col-md-12" style="height: 470px;"></div>
         </div>
+    </div>
     <br>
 </div>
 
@@ -873,7 +883,7 @@
     function init() {
         var address = new ymaps.Map("thirdMap", {
             center: [41.323100, 69.230100],
-            zoom: 13,
+            zoom: 14,
             controls: []
         });
         address.geoObjects.add(new ymaps.Placemark([41.323100, 69.230100], {
