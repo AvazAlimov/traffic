@@ -245,6 +245,17 @@
             background-color: #ffcb08;
         }
 
+        hr {
+            display: block;
+            height: 1px;
+            border: 0;
+            background-color: #372e30;
+        }
+
+        p {
+            color: #372e30;
+        }
+
         label {
             padding-top: 6px;
         }
@@ -256,19 +267,6 @@
         .modal-header {
             background-color: #372e30;
             color: #ffcb08;
-        }
-
-        .carousel-control.right, .carousel-control.left {
-            background-image: none;
-            color: #372e30;
-        }
-
-        .carousel-indicators li {
-            border-color: #372e30;
-        }
-
-        .carousel-indicators li.active {
-            background-color: #372e30;
         }
 
         #main_jumbotron {
@@ -326,8 +324,8 @@
                                  style="width: 24px; height: 24px; margin-right: 12px;">
                         </td>
                         <td>
-                            <div style="color: #ffcb08;">
-                                Traffic.uz
+                            <div style="color: #ffcb08; font-family: 'Shrikhand', cursive;">
+                                T r a f f i c . u z
                             </div>
                         </td>
                     </tr>
@@ -580,8 +578,43 @@
     </div>
 </div>
 
-<div id="about" class="container-fluid text-center dotted">
-    <div class="container">
+<div id="about" class="container-fluid dotted">
+    <div class="container slideanim">
+        <h2 class="text-center">О НАС</h2>
+
+        <div class="col-md-4">
+            <h3><strong>КТО</strong> МЫ</h3>
+            <hr>
+            <p>
+                Компания SOS (Smart Outsourcing Solutions) занимается разработкой сайтов, мобильных приложений,
+                продвижением сайтов и дизайном рекламы. Компания сотрудничает со многими успешными отечественными
+                компаниями и предприятиями. Также налажено многогранное и успешное сотрудничество со многими зарубежными
+                компаниями из Австралии, США, ОАЭ и т.д.
+            </p>
+        </div>
+
+        <div class="col-md-4">
+            <h3><strong>ЧТО</strong> ДЕЛАЕМ</h3>
+            <hr>
+            <p>
+                Команда профессиональных, отважных и креативных специалистов, которая готова реализовать любые ваши
+                пожелания от разработки уникальных и неповторимых сайтов до создания бренда с дизайном упаковки,
+                логотипа и фирменного стиля, для повышения эффективности вашего бизнеса и значительного повышения ваших
+                продаж
+            </p>
+        </div>
+
+        <div class="col-md-4">
+            <h3><strong>НАША</strong> МИССИЯ</h3>
+            <hr>
+            <p>
+                Наша главная миссия: Стремительно развиваться в сфере интернет-технологий и занять лидирующие позиции на
+                рынке Узбекистана, параллельно добиваясь мирового успеха посредством сотрудничества с развитыми
+                международными компаниями!
+            </p>
+        </div>
+    </div>
+    <div class="container text-center">
         <h2>8 причин заказывать грузоперевозки в «Траффик»</h2>
         <br>
         <div class="row slideanim">
@@ -654,50 +687,6 @@
                 </div>
             </div>
         @endforeach
-    </div>
-</div>
-
-<div class="container-fluid text-center bg-yellow">
-    <h2>Каталог</h2>
-    <div class="row slideanim">
-        <div id="myCarousel" class="carousel slide text-center" data-ride="carousel">
-
-            <ol class="carousel-indicators">
-                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                <li data-target="#myCarousel" data-slide-to="1"></li>
-                <li data-target="#myCarousel" data-slide-to="2"></li>
-            </ol>
-
-            <div class="carousel-inner" role="listbox">
-                <div class="item active">
-                    <h4>"This company is the best. I am so happy with the result!"
-                        <br>
-                        <span>Michael Roe, Vice President, Comment Box</span>
-                    </h4>
-                </div>
-                <div class="item">
-                    <h4>"One word... WOW!!"
-                        <br>
-                        <span>John Doe, Salesman, Rep Inc</span>
-                    </h4>
-                </div>
-                <div class="item">
-                    <h4>"Could I... BE any more happy with this company?"
-                        <br>
-                        <span>Chandler Bing, Actor, Friends lot</span>
-                    </h4>
-                </div>
-            </div>
-
-            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
-        </div>
     </div>
 </div>
 
