@@ -710,7 +710,6 @@
             document.getElementById('sum_id').value = price;
         }
 
-
         function switchSection(id) {
             document.cookie = "operatorPage=" + id + ";";
             var section = document.getElementsByClassName('section');
@@ -748,6 +747,7 @@
                     }
             );
         }
+
         window.onload = function () {
             switchSection(getCookie("operatorPage"));
             var navs = document.getElementsByClassName("navs");
