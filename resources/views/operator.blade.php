@@ -1,7 +1,14 @@
 @extends('layouts.app')
 @section('head')
     <!--suppress ALL -->
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <style>
+        @media screen and (max-width: 770px) {
+            .navs {
+                left: 10px;
+            }
+        }
+
         .section {
             display: none;
         }
@@ -10,18 +17,17 @@
             margin: 0;
         }
     </style>
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 @endsection
 @section('content')
     <nav class="navbar navbar-default" style="border-radius: 0; border-width: 0 0 thin 0;">
         <ul class="nav navbar-nav">
-            <li data-toggle="tab" class=" {{ $section == 1 ? "active" : "" }}"><a onclick="switchSection('section1')"><i
+            <li data-toggle="tab" class="navs"><a onclick="switchSection('section1')"><i
                             class="fa fa-columns"></i>
                     Сделать заказ</a>
             </li>
-            <li data-toggle="tab" class=" {{ $section == 2 ? "active" : "" }}"><a onclick="switchSection('section2')"><i
+            <li data-toggle="tab" class="navs"><a onclick="switchSection('section2')"><i
                             class="fa fa-list-alt"></i> Заказы</a></li>
-            <li data-toggle="tab" class=" {{ $section == 3 ? "active" : "" }}"><a onclick="switchSection('section3')"><i
+            <li data-toggle="tab" class="navs"><a onclick="switchSection('section3')"><i
                             class="fa fa-handshake-o"></i> Поданные
                     заказы</a></li>
         </ul>

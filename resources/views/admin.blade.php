@@ -553,7 +553,7 @@
     <div id="loader"></div>
     <script>
         function switchSection(id) {
-            document.cookie = "page=" + id + ";";
+            document.cookie = "adminPage=" + id + ";";
             var section = document.getElementsByClassName('section');
             for (var i = 0; i < section.length; i++)
                 section[i].style.display = "none";
@@ -576,7 +576,7 @@
         }
 
         window.onload = function () {
-            switchSection(getCookie("page"));
+            switchSection(getCookie("adminPage"));
             var navs = document.getElementsByClassName("navs");
             navs[getCookie("page").replace("section", "") - 1].className = "navs active";
             document.getElementById("loader").style.display = "none";
