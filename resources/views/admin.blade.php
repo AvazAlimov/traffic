@@ -2,11 +2,16 @@
 @section('head')
     <!--suppress ALL -->
     <style>
+        .navs {
+            left: 10px;
+        }
+
         .section {
             display: none;
         }
 
         #navbar {
+            display: none;
             margin: 0;
         }
 
@@ -15,21 +20,60 @@
             border-left: solid 1px #aaa;
             border-bottom: solid 1px #aaa;
         }
+
+        #loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 1;
+            width: 150px;
+            height: 150px;
+            margin: -75px 0 0 -75px;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 @endsection
 @section('content')
-    <nav class="navbar navbar-default" style="border-radius: 0; border-width: 0 0 thin 0;">
+    <nav class="navbar navbar-default" id="navigation"
+         style="border-radius: 0; border-width: 0 0 thin 0; display: none;">
         <ul class="nav navbar-nav">
-            <li data-toggle="tab" class="active"><a onclick="switchSection('section1')"><i class="fa fa-car"></i>
+            <li data-toggle="tab" class="navs"><a onclick="switchSection('section1')"><i class="fa fa-car"></i>
                     Автомобили</a></li>
-            <li data-toggle="tab"><a onclick="switchSection('section2')"><i class="fa fa-users"></i> Операторы</a>
+            <li data-toggle="tab" class="navs"><a onclick="switchSection('section2')"><i class="fa fa-users"></i>
+                    Операторы</a>
             </li>
-            <li data-toggle="tab"><a onclick="switchSection('section3')"><i class="fa fa-money"></i> Цены</a></li>
-            <li data-toggle="tab"><a onclick="switchSection('section4')"><i class="fa fa-file-excel-o"></i> Экспорт в
+            <li data-toggle="tab" class="navs"><a onclick="switchSection('section3')"><i class="fa fa-money"></i>
+                    Цены</a></li>
+            <li data-toggle="tab" class="navs"><a onclick="switchSection('section4')"><i class="fa fa-file-excel-o"></i>
+                    Экспорт в
                     Excel</a></li>
         </ul>
     </nav>
-    <div class="container-fluid" style="padding: 0 20px 20px 20px">
+    <div class="container-fluid" id="container" style="padding: 0 20px 20px 20px; display: none;">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section" style="display: block;">
@@ -504,12 +548,39 @@
         </div>
     </div>
 
+    <div id="loader"></div>
     <script>
         function switchSection(id) {
+            document.cookie = "page=" + id + ";";
             var section = document.getElementsByClassName('section');
             for (var i = 0; i < section.length; i++)
                 section[i].style.display = "none";
             document.getElementById(id).style.display = "block";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "section1";
+        }
+
+        window.onload = function () {
+            switchSection(getCookie("page"));
+            var navs = document.getElementsByClassName("navs");
+            navs[getCookie("page").replace("section", "") - 1].className = "navs active";
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("navigation").style.display =
+                    document.getElementById("container").style.display =
+                            document.getElementById("navbar").style.display = "block";
         }
     </script>
 @endsection
