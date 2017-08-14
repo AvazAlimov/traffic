@@ -16,9 +16,9 @@ class CreateTaxiTarifTable extends Migration
         Schema::create('taxitarif', function (Blueprint $table) {
             $table->increments('id');
             $table->double('price_minimum');
-            $table->double('min_hour')->nullable();
+            $table->double('min_minute')->nullable();
             $table->double('min_distance')->nullable();
-            $table->double('price_per_hour')->nullable();
+            $table->double('price_per_minute')->nullable();
             $table->double('price_per_distance')->nullable();
             $table->integer('discard')->default(0);
             $table->timestamps();
