@@ -578,7 +578,7 @@
         window.onload = function () {
             switchSection(getCookie("adminPage"));
             var navs = document.getElementsByClassName("navs");
-            navs[getCookie("page").replace("section", "") - 1].className = "navs active";
+            navs[getCookie("adminPage").replace("section", "") - 1].className = "navs active";
             document.getElementById("loader").style.display = "none";
             document.getElementById("navigation").style.display =
                     document.getElementById("container").style.display =

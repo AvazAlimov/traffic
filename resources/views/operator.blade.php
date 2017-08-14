@@ -14,12 +14,48 @@
         }
 
         #navbar {
+            display: none;
             margin: 0;
+        }
+
+        #loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 1;
+            width: 150px;
+            height: 150px;
+            margin: -75px 0 0 -75px;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 @endsection
 @section('content')
-    <nav class="navbar navbar-default" style="border-radius: 0; border-width: 0 0 thin 0;">
+    <nav id="navigation" class="navbar navbar-default" style="display: none; border-radius: 0; border-width: 0 0 thin 0;">
         <ul class="nav navbar-nav">
             <li data-toggle="tab" class="navs"><a onclick="switchSection('section1')"><i
                             class="fa fa-columns"></i>
@@ -32,7 +68,7 @@
                     заказы</a></li>
         </ul>
     </nav>
-    <div class="container" style="padding: 0 20px 20px 20px">
+    <div id="container" class="container" style="padding: 0 20px 20px 20px">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section">
@@ -497,6 +533,8 @@
             </div>
         </div>
     </div>
+    <div id="loader"></div>
+
     <script>
         var yourMap;
         var tarifs = {!! $tarifs !!};
@@ -672,22 +710,28 @@
             document.getElementById('sum_id').value = price;
         }
 
-        window.onload = function () {
-            tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
-            car_index = document.getElementById('car_id').selectedIndex = 0;
-            document.getElementById('person_id').value = 0;
-            changeTarif();
-            changeCar();
-            personsChange();
-            unitChange();
-        };
 
         function switchSection(id) {
+            document.cookie = "operatorPage=" + id + ";";
             var section = document.getElementsByClassName('section');
             for (var i = 0; i < section.length; i++)
                 section[i].style.display = "none";
-
             document.getElementById(id).style.display = "block";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "section1";
         }
 
         function setPoints(point_a_1, point_a_2, point_b_1, point_b_2) {
@@ -704,5 +748,22 @@
                     }
             );
         }
+        window.onload = function () {
+            switchSection(getCookie("operatorPage"));
+            var navs = document.getElementsByClassName("navs");
+            navs[getCookie("operatorPage").replace("section", "") - 1].className = "navs active";
+            document.getElementById("loader").style.display = "none";
+            document.getElementById("navigation").style.display =
+                    document.getElementById("container").style.display =
+                            document.getElementById("navbar").style.display = "block";
+
+            tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
+            car_index = document.getElementById('car_id').selectedIndex = 0;
+            document.getElementById('person_id').value = 0;
+            changeTarif();
+            changeCar();
+            personsChange();
+            unitChange();
+        };
     </script>
 @endsection
