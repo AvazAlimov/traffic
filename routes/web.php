@@ -77,6 +77,10 @@ Route::prefix('operator')->group(function () {
         Route::post('/update/{id}', 'OperatorController@orderUpdateSubmit')->name('operator.order.update.submit');
 
     });
+
+    Route::prefix('taxiorder')->group(function () {
+        Route::post('/submit', 'OperatorController@taxiOrderSubmit')->name('operator.taxiorder.submit');
+    });
 });
 
 Route::post('tarif/update{id}', 'AdminController@updateTarif')->name('tarif.update');

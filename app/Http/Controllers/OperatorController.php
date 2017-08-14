@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Automobile;
 use App\Tarif;
+use App\TaxiTarif;
 use Illuminate\Support\Facades\Session;
 use Validator;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +36,7 @@ class OperatorController extends Controller
 
         $tarifs = Tarif::all();
         $tarif = array();
+        $taxitarif = TaxiTarif::first();
 
         foreach ($tarifs as $tr) {
             if ($tr->type == 0)
@@ -45,7 +47,13 @@ class OperatorController extends Controller
 
         $orders = Order::where('status', '!=', 0)->paginate(6);
         $orders_wait = Order::where('status', 0)->get();
-        return view('operator')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait);
+        return view('operator')->withCars($cars)
+            ->withTarifs($tarifs)
+            ->withCar($car)
+            ->withTarif($tarif)
+            ->withOrders($orders)
+            ->withOrders_wait($orders_wait)
+            ->with('taxitarif', $taxitarif);
     }
 
     public function orderSubmit(Request $request)
@@ -205,7 +213,6 @@ class OperatorController extends Controller
         }
         $orders_wait = Order::where('status', 0);
 
-
         $orders = Order::where('status' != 0);
 
         if ($request->search != null || $request->search == "") {
@@ -274,9 +281,31 @@ class OperatorController extends Controller
         }
         $orders = $orders->paginate(8);
 
-
         return view('operator')
             ->withCars($cars)->withTarifs($tarifs)->withCar($car)
             ->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait);
+    }
+
+    public function taxiOrderSubmit(Request $request)
+    {
+        $rules = [
+            'taxi_name' => 'required',
+            'taxi_phone' => 'required',
+            'taxi_address_A' => 'required',
+            'taxi_address_B' => 'required',
+            'taxi_point_A' => 'required',
+            'taxi_point_B' => 'required'
+        ];
+
+        $messages = [
+            'taxi_point_A.required' => 'Пункт А не выбран',
+            'taxi_point_B.required' => 'Пункт Б не выбран',
+            'taxi_name.required' => 'Введите имя',
+            'taxi_phone.required' => 'Введите телефон',
+        ];
+
+        Validator::make($request->all(), $rules, $messages)->validate();
+
+        return redirect()->back();
     }
 }
