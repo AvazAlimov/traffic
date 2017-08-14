@@ -45,7 +45,7 @@ class OperatorController extends Controller
 
         $orders = Order::where('status', '!=', 0)->paginate(6);
         $orders_wait = Order::where('status', 0)->get();
-        return view('operator')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait)->withSection(2);
+        return view('operator')->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait);
     }
 
     public function orderSubmit(Request $request)
@@ -136,7 +136,7 @@ class OperatorController extends Controller
         }
 
 
-        return view('operator.order')->withOrder($order)->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif)->withSection(1);
+        return view('operator.order')->withOrder($order)->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif);
     }
 
     public function orderUpdateSubmit(Request $request, $id)
@@ -277,6 +277,6 @@ class OperatorController extends Controller
 
         return view('operator')
             ->withCars($cars)->withTarifs($tarifs)->withCar($car)
-            ->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait)->withSection(3);
+            ->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait);
     }
 }

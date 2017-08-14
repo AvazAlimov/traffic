@@ -31,13 +31,11 @@
                             class="fa fa-handshake-o"></i> Поданные
                     заказы</a></li>
         </ul>
-
-
     </nav>
     <div class="container" style="padding: 0 20px 20px 20px">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-                <div id="section1" class="section" style="display: {{ $section == 1 ? "block" : "none" }};">
+                <div id="section1" class="section">
                     <div class="page-header">
                         <h2>Сделать заказ</h2>
                     </div>
@@ -185,10 +183,8 @@
                                 </div>
 
                             </div>
-
                             {{Form::close()}}
                         </div>
-
                         <div class="modal fade" id="myModal" role="dialog">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
@@ -208,7 +204,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="section2" class="section" style="display: {{ $section == 2 ? "block" : "none" }};">
+                <div id="section2" class="section">
                     <div class="page-header">
                         <h2>Заказы</h2>
                     </div>
@@ -331,7 +327,7 @@
                         </div>
                     @endforeach
                 </div>
-                <div id="section3" class="section" style="display: {{ $section == 3 ? "block" : "none" }};">
+                <div id="section3" class="section">
                     <div class="page-header">
                         <h2>Поданные заказы</h2>
                     </div>
