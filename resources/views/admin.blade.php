@@ -2,8 +2,10 @@
 @section('head')
     <!--suppress ALL -->
     <style>
-        .navs {
-            left: 10px;
+        @media screen and (max-width: 770px) {
+            .navs {
+                left: 10px;
+            }
         }
 
         .section {
