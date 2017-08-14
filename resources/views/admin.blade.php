@@ -148,6 +148,7 @@
                     <div class="page-header">
                         <h2>Цены</h2>
                     </div>
+                    <h3>Грузоперевозки</h3>
                     <div class="row">
                         @foreach ($tarifs as $tarif)
                             @if($tarif->type == 0)
@@ -335,6 +336,112 @@
                                 </div>
                             @endif
                         @endforeach
+                    </div>
+                    <br>
+                    <h3>Такси</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form class="for-horizontal"
+                                  action="{{ route('taxitarif.update', $taxiTarif->id)  }}" method="post">
+                                {{ csrf_field() }}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <strong>Единый тариф</strong>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group col-md-12">
+                                            <label for="price_per_distance" class="col-md-6 control-label">Цена за
+                                                км:</label>
+                                            <div class="col-md-5">
+                                                <input id="price_per_distance" type="number" min="0"
+                                                       class="form-control align-middle"
+                                                       name="price_per_distance"
+                                                       value="{{ $taxiTarif->price_per_distance }}" required>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <p>сум</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label for="min_distance" class="col-md-6 control-label">Км по
+                                                умолчанию:</label>
+                                            <div class="col-md-5">
+                                                <input id="min_distance" type="number" min="0"
+                                                       class="form-control align-middle"
+                                                       name="min_distance"
+                                                       value="{{ $taxiTarif->min_distance }}" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label for="price_per_minute" class="col-md-6 control-label">Цена за
+                                                минуту:</label>
+                                            <div class="col-md-5">
+                                                <input id="price_per_minute" type="number" min="0"
+                                                       class="form-control align-middle"
+                                                       name="price_per_minute"
+                                                       value="{{ $taxiTarif->price_per_minute }}" required>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <p>сум</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label for="min_minute" class="col-md-6 control-label">Минута по
+                                                умолчанию:</label>
+                                            <div class="col-md-5">
+                                                <input id="min_minute" type="number" min="0"
+                                                       class="form-control"
+                                                       name="min_minute"
+                                                       value="{{ $taxiTarif->min_minute }}" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label for="price_minimum" class="col-md-6 control-label">Начальная
+                                                цена:</label>
+                                            <div class="col-md-5">
+                                                <input id="price_minimum" type="number" min="0"
+                                                       class="form-control"
+                                                       name="price_minimum"
+                                                       value="{{ $taxiTarif->price_minimum }}" required>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <p>сум</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-md-12">
+                                            <label for="discard"
+                                                   class="col-md-6 control-label">Скидка:</label>
+                                            <div class="col-md-5">
+                                                <input id="discard" type="number" min="0"
+                                                       class="form-control"
+                                                       name="discard"
+                                                       value="{{ $tarif->discard }}" required>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <p>%</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer">
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                    <input type="submit" class="btn btn-primary"
+                                                           value="Обновить">
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div id="section4" class="section">

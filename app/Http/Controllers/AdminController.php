@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Tarif;
 use App\Order;
+use App\TaxiTarif;
 
 class AdminController extends Controller
 {
@@ -31,12 +32,14 @@ class AdminController extends Controller
         $operators = DB::table('operators')->get();
         $tariffs = DB::table('tarifs')->get();
         $orders = Order::where('status', '>', 0)->get();
+        $taxi_tarif = TaxiTarif::first();
 
         return view('admin')
             ->with('automobiles', $automobiles)
             ->with('operators', $operators)
             ->with('tarifs', $tariffs)
-            ->with('orders', $orders);
+            ->with('orders', $orders)
+            ->with('taxiTarif', $taxi_tarif);
     }
 
     public function updateTarif(Request $request, $id)
@@ -56,6 +59,19 @@ class AdminController extends Controller
         $tariff->discard = $request->discard;
         $tariff->save();
 
+        return redirect()->back();
+    }
+
+    public function updateTaxiTarif(Request $request, $id)
+    {
+        $taxitarif = TaxiTarif::find($id);
+        $taxitarif->price_per_minute = $request->price_per_minute;
+        $taxitarif->min_minute = $request->min_minute;
+        $taxitarif->price_per_distance = $request->price_per_distance;
+        $taxitarif->min_distance = $request->min_distance;
+        $taxitarif->price_minimum = $request->price_minimum;
+        $taxitarif->discard = $request->discard;
+        $taxitarif->save();
         return redirect()->back();
     }
 

@@ -80,3 +80,4 @@ Route::prefix('operator')->group(function () {
 });
 
 Route::post('tarif/update{id}', 'AdminController@updateTarif')->name('tarif.update');
+Route::post('taxitarif/update{id}', 'AdminController@updateTaxiTarif')->name('taxitarif.update');
