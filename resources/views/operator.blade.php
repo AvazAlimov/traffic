@@ -77,6 +77,7 @@
                     заказы</a></li>
         </ul>
     </nav>
+
     <div id="container" class="container" style="/*display: none;*/ padding: 0 20px 20px 20px">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
