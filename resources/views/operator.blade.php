@@ -22,7 +22,7 @@
         }
 
         #navbar {
-            /*display: none;*/
+            display: none;
             margin: 0;
         }
 
@@ -64,7 +64,7 @@
 @endsection
 @section('content')
     <nav id="navigation" class="navbar navbar-default"
-         style="/*display: none;*/ border-radius: 0; border-width: 0 0 thin 0;">
+         style="display: none; border-radius: 0; border-width: 0 0 thin 0;">
         <ul class="nav navbar-nav">
             <li data-toggle="tab" class="navs"><a onclick="switchSection('section1')"><i
                             class="fa fa-columns"></i>
@@ -78,7 +78,7 @@
         </ul>
     </nav>
 
-    <div id="container" class="container" style="/*display: none;*/ padding: 0 20px 20px 20px">
+    <div id="container" class="container" style="display: none; padding: 0 20px 20px 20px">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section">
@@ -662,7 +662,7 @@
             </div>
         </div>
     </div>
-    <!--div id="loader"></div-->
+    <div id="loader"></div>
 
     <script>
         var yourMap;
@@ -781,8 +781,6 @@
             });
         }
 
-        ymaps.ready(init);
-
         function setStart() {
             myMap.geoObjects.remove(start);
             myMap.geoObjects.remove(path);
@@ -876,6 +874,8 @@
                     }
             );
         }
+
+        ymaps.ready(init);
 
         window.onload = function () {
             switchSection(getCookie("operatorPage"));
