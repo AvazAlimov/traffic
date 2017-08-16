@@ -58,6 +58,9 @@ Route::prefix('admin')->group(function () {
     Route::post('automobile/delete{id}', 'AutomobileController@delete')->name('automobile.delete');
 
     Route::get('order/excel', 'AdminController@orderToExcel')->name('admin.order.excel');
+
+    Route::post('tarif/update{id}', 'AdminController@updateTarif')->name('tarif.update');
+    Route::post('taxitarif/update{id}', 'AdminController@updateTaxiTarif')->name('taxitarif.update');
 });
 
 Route::prefix('operator')->group(function () {
@@ -67,6 +70,7 @@ Route::prefix('operator')->group(function () {
     Route::get('/logout', 'Auth\OperatorLoginController@logout')->name('operator.logout');
     Route::post('/','OperatorController@search')->name('operator.search');
 
+
     Route::prefix('order')->group(function () {
         Route::post('/submit', 'OperatorController@orderSubmit')->name('operator.order.submit');
         Route::post('/accept/{order_id}/{operator_id}', 'OperatorController@orderAccept')->name('operator.order.accept');
@@ -75,13 +79,20 @@ Route::prefix('operator')->group(function () {
         Route::post('/restore/{id}', 'OperatorController@orderRestore')->name('operator.order.restore');
         Route::get('/update/{id}/', 'OperatorController@orderUpdate')->name('operator.order.update');
         Route::post('/update/{id}', 'OperatorController@orderUpdateSubmit')->name('operator.order.update.submit');
+        Route::post('/','OperatorController@taxiSearch')->name('operator.taxi.search');
 
     });
 
     Route::prefix('taxiorder')->group(function () {
         Route::post('/submit', 'OperatorController@taxiOrderSubmit')->name('operator.taxiorder.submit');
+        Route::post('/accept/{taxi_order_id}/{operator_id}', 'OperatorController@taxiOrderAccept')->name('operator.taxiorder.accept');
+        Route::post('/refuse/{taxi_order_id}/{operator_id}', 'OperatorController@taxiOrderRefuse')->name('operator.taxiorder.refuse');
+        Route::post('/delete/{taxi_order_id}', 'OperatorController@taxiOrderDelete')->name('operator.taxiorder.delete');
+        Route::post('/restore/{id}', 'OperatorController@taxiOrderRestore')->name('operator.taxiorder.restore');
+        Route::get('/update/{id}/', 'OperatorController@taxiOrderUpdate')->name('operator.taxiorder.update');
+        Route::post('/update/{id}', 'OperatorController@taxiOrderUpdateSubmit')->name('operator.taxiorder.update.submit');
+        Route::post('/','OperatorController@taxiSearch')->name('operator.taxi.search');
     });
+
 });
 
-Route::post('tarif/update{id}', 'AdminController@updateTarif')->name('tarif.update');
-Route::post('taxitarif/update{id}', 'AdminController@updateTaxiTarif')->name('taxitarif.update');

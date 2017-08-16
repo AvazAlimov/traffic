@@ -17,6 +17,7 @@ class CreateTaxiorderTable extends Migration
             $table->increments('id');
             $table->tinyInteger('user_type');
             $table->integer('user_id')->nullable();
+            $table->integer('tarif_id');
             $table->double('minute')->default(0);
             $table->double('distance');
             $table->string('point_A');

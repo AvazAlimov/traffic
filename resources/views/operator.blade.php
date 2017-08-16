@@ -85,9 +85,22 @@
             <li data-toggle="tab" class="navs">
                 <a onclick="switchSection('section3')">
                     <i class="fa fa-handshake-o"></i>
+                    Заказы Taxi
+                </a>
+            </li>
+            <li data-toggle="tab" class="navs">
+                <a onclick="switchSection('section4')">
+                    <i class="fa fa-handshake-o"></i>
                     Поданные заказы
                 </a>
             </li>
+            <li data-toggle="tab" class="navs">
+                <a onclick="switchSection('section5')">
+                    <i class="fa fa-handshake-o"></i>
+                    Поданные заказы Такси
+                </a>
+            </li>
+
         </ul>
     </nav>
 
@@ -95,6 +108,9 @@
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section">
+                    <div class="has-success" style="display: {{ Session::has('message') ? 'block' : 'none' }};">
+                        <h3>{{Session::get('message')}}</h3>
+                    </div>
                     <div class="page-header">
                         <h2>Сделать заказ</h2>
                     </div>
@@ -119,6 +135,7 @@
                                 <div class="panel-body tab-content">
                                     <div class="tab-pane active" id="trucking">
                                         <form action="{{ route('operator.order.submit') }}" method="post">
+                                            {{csrf_field()}}
                                             <div class="form-group col-md-12">
                                                 <label for="trucking_tariff_id" class="col-md-3">
                                                     Выберите тариф:
@@ -126,12 +143,13 @@
                                                 <div class="col-md-9">
                                                     <select name="tariff_id" id="trucking_tariff_id"
                                                             class="form-control" onchange="changeTariff()">
-                                                        <option>{{ $tariff[0] }}</option>
-                                                        <option>{{ $tariff[1] }}</option>
+                                                        @foreach($tariff as $index=>$tarif)
+                                                            <option value="{{$index}}">{{ $tarif}}</option>
+                                                        @endforeach
+
                                                     </select>
                                                 </div>
                                             </div>
-
                                             <div class="form-group col-md-12">
                                                 <label for="trucking_automobile_id" class="col-md-3">
                                                     Выберите автомобиль:
@@ -139,25 +157,23 @@
                                                 <div class="col-md-9">
                                                     <select name="automobile_id" id="trucking_automobile_id"
                                                             class="form-control" onchange="changeAutomobile()">
-                                                        @foreach($automobile as $auto)
-                                                            <option>{{ $auto }}</option>
+                                                        @foreach($automobile as $index => $auto)
+                                                            <option value="{{$index}}">{{ $auto }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                             </div>
-
                                             <div class="form-group col-md-12">
                                                 <label for="trucking_loaders" class="col-md-3">
                                                     Количество грузчиков:
                                                 </label>
                                                 <div class="col-md-2">
                                                     <input type="number" name="loaders" class="form-control"
-                                                           id="trucking_loaders" min="0" value="0"
+                                                           id="trucking_loaders" min="0" max="8" value="0"
                                                            onchange="calculateTruckingPrice()">
                                                 </div>
                                                 <label class="col-md-1">человек</label>
                                             </div>
-
                                             <div class="form-group col-md-12" id="trucking_hour_wrapper">
                                                 <label for="trucking_hour" class="col-md-3">
                                                     Срок аренды:
@@ -174,7 +190,6 @@
                                                 </div>
                                                 <label class="col-md-1">час</label>
                                             </div>
-
                                             <div class="form-group col-md-12" id="trucking_distance_wrapper">
                                                 <label for="trucking_distance" class="col-md-3">
                                                     Дистанция:
@@ -185,11 +200,9 @@
                                                 </div>
                                                 <label class="col-md-1">километр</label>
                                             </div>
-
                                             <div class="col-md-12">
                                                 <hr>
                                             </div>
-
                                             <div class="form-group col-md-12">
                                                 <label for="trucking_start" class="col-md-3">
                                                     Время подачи:
@@ -204,7 +217,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-12 {{ ($errors->has('address_a') || $errors->has('point_a')) ? ' has-error' : '' }}">
                                                 <label for="trucking_address_a" class="col-md-3">
                                                     Откуда:
                                                 </label>
@@ -220,7 +233,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-12 {{ ($errors->has('address_b') || $errors->has('point_b')) ? ' has-error' : '' }}">
                                                 <label for="trucking_address_b" class="col-md-3">
                                                     Куда:
                                                 </label>
@@ -235,11 +248,10 @@
                                                     </button>
                                                 </div>
                                             </div>
-
                                             <input type="hidden" name="point_a" id="trucking_point_a">
                                             <input type="hidden" name="point_b" id="trucking_point_b">
 
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-12 {{ $errors->has('name') ? ' has-error' : '' }}" >
                                                 <label for="trucking_name" class="col-md-3">
                                                     Имя заказчика:
                                                 </label>
@@ -249,7 +261,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-12 {{ $errors->has('phone') ? ' has-error' : '' }}">
                                                 <label for="trucking_phone" class="col-md-3">
                                                     Телефон заказчика:
                                                 </label>
@@ -303,6 +315,7 @@
 
                                     <div class="tab-pane" id="taxi">
                                         <form action="{{ route('operator.taxiorder.submit') }}" method="post">
+                                            {{csrf_field()}}
                                             <div class="form-group col-md-12">
                                                 <label for="taxi_minute" class="col-md-3">
                                                     Время ожидание:
@@ -349,7 +362,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-12 {{ ($errors->has('address_a') || $errors->has('point_a')) ? ' has-error' : '' }}">
                                                 <label for="taxi_address_a" class="col-md-3">
                                                     Откуда:
                                                 </label>
@@ -365,7 +378,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-12 {{ ($errors->has('address_b') || $errors->has('point_b')) ? ' has-error' : '' }}">
                                                 <label for="taxi_address_b" class="col-md-3">
                                                     Куда:
                                                 </label>
@@ -384,7 +397,7 @@
                                             <input type="hidden" name="point_a" id="taxi_point_a">
                                             <input type="hidden" name="point_b" id="taxi_point_b">
 
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-12 {{ $errors->has('name') ? ' has-error' : '' }}">
                                                 <label for="taxi_name" class="col-md-3">
                                                     Имя заказчика:
                                                 </label>
@@ -394,7 +407,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-12 {{ $errors->has('phone') ? ' has-error' : '' }}">
                                                 <label for="taxi_phone" class="col-md-3">
                                                     Телефон заказчика:
                                                 </label>
@@ -593,6 +606,116 @@
                 </div>
                 <div id="section3" class="section">
                     <div class="page-header">
+                        <h2>Заказы Такси</h2>
+                    </div>
+                    @foreach($taxi_orders_wait as $order)
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    Идентификационный номер
+                                    заказа: {{ $order->id }}
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Время подачи:</strong></div>
+                                        <div class="col-md-8">{{ $order->start_time }}</div>
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4">
+                                            <strong>Время ожидания (мин):</strong>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ $order->minute }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4">
+                                            <strong>Дистанция (км):</strong>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ $order->distance }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Откуда:</strong></div>
+                                        <div class="col-md-8">{{ $order->address_A }}</div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Куда:</strong></div>
+                                        <div class="col-md-8">{{ $order->address_B }}</div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Имя заказчика:</strong></div>
+                                        <div class="col-md-8">{{ $order->name  }}</div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Телефон:</strong></div>
+                                        <div class="col-md-8">{{ $order->phone }}</div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Цена:</strong></div>
+                                        <div class="col-md-8">{{ $order->price }} сум</div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Показать на карте:</strong></div>
+                                        <div class="col-md-8">
+                                            <button type="button" class="btn btn-default" data-toggle="modal"
+                                                    data-target="#yourModal"
+                                                    onclick="setPoints({{$order->point_A}} + '',{{$order->point_B}} + '')">
+                                                <i class="fa fa-compass"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <table>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <form method="post"
+                                                      action="{{route('operator.taxiorder.accept',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
+                                              )}}">
+                                                    {{csrf_field()}}
+                                                    <input type="submit" class="btn btn-success form-group"
+                                                           value="Принять">
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form method="post"
+                                                      action="{{route('operator.taxiorder.refuse',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
+                                              )}}">
+                                                    {{csrf_field()}}
+                                                    <input type="submit" class="btn btn-warning form-group"
+                                                           value="Отказать">
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form method="get"
+                                                      action="{{route('operator.taxiorder.update',['id'=>$order->id])}}">
+                                                    {{csrf_field()}}
+                                                    <input type="submit" class="btn btn-primary form-group"
+                                                           value="Изменить">
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form method="post" onsubmit="return confirm('Хотите удалить?');"
+                                                      action="{{route('operator.taxiorder.delete', $order->id)}}">
+                                                    {{csrf_field()}}
+                                                    <input type="submit" class="btn btn-danger" value="Удалить">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div id="section4" class="section">
+                    <div class="page-header">
                         <h2>Поданные заказы</h2>
                     </div>
                     <form action="{{route('operator.search')}}" method="post">
@@ -742,6 +865,145 @@
                         {{ $orders->links() }}
                     </div>
                 </div>
+                <div id="section5" class="section">
+                    <div class="page-header">
+                        <h2>Поданные заказы</h2>
+                    </div>
+                    <form action="{{route('operator.taxi.search')}}" method="post">
+                        {{csrf_field()}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="search" placeholder="Найти"/>
+                            <span class="input-group-btn">
+                              <button type="submit" class="btn btn-default">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                              </button>
+                             </span>
+                        </div>
+                    </form>
+                    <h3>Сортировать по:</h3>
+                    <div class="col-md-12" style="margin-bottom: 24px;">
+                        <form class="col-md-3" action="{{route('operator.taxi.search')}}" method="post">
+                            {{csrf_field()}}
+
+                            <button type="submit" name="filter" value="id" class="btn btn-default"
+                                    style="display: block; width: 100%;">
+                                Ид номеру
+                            </button>
+                        </form>
+                        <form class="col-md-3" action="{{route('operator.taxi.search')}}" method="post">
+                            {{csrf_field()}}
+                            <button type="submit" name="filter" value="name" class="btn btn-default"
+                                    style="display: block; width: 100%;">
+                                Именам
+                            </button>
+                        </form>
+                        <form class="col-md-3" action="{{route('operator.taxi.search')}}" method="post">
+                            {{csrf_field()}}
+                            <button type="submit" name="filter" value="sum" class="btn btn-default"
+                                    style="display: block; width: 100%;">
+                                Ценам
+                            </button>
+                        </form>
+                        <form class="col-md-3" action="{{route('operator.taxi.search')}}" method="post">
+                            {{csrf_field()}}
+                            <button type="submit" name="filter" value="date" class="btn btn-default"
+                                    style="display: block; width: 100%;">
+                                Время подачи
+                            </button>
+                        </form>
+                    </div>
+                    @foreach($taxi_orders as $served_order)
+                        <div class="col-md-12">
+                            <div class="panel panel-{{ $served_order->status == -1 ? "danger" : "success" }}">
+                                <div class="panel-heading">
+                                    Идентификационный номер
+                                    заказа: {{ $served_order->id }}
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Время подачи:</strong></div>
+                                        <div class="col-md-8">{{ $served_order->start_time }}</div>
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4">
+                                            <strong>Время ожидания (мин):</strong>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ $served_order->minute }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4">
+                                            <strong>Дистанчия (км)</strong>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ $served_order->distance }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Откуда:</strong></div>
+                                        <div class="col-md-8">{{ $served_order->address_A }}</div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Куда:</strong></div>
+                                        <div class="col-md-8">{{ $served_order->address_B }}</div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Имя заказчика:</strong></div>
+                                        <div class="col-md-8">{{ $served_order->name  }}</div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Телефон:</strong></div>
+                                        <div class="col-md-8">{{ $served_order->phone }}</div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Цена:</strong></div>
+                                        <div class="col-md-8">{{ $served_order->price }} сум</div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Показать на карте:</strong></div>
+                                        <div class="col-md-8">
+                                            <button type="button" class="btn btn-default" data-toggle="modal"
+                                                    data-target="#yourModal"
+                                                    onclick="setPoints({{$served_order->point_A}} + '',{{$served_order->point_B}} + '')">
+                                                <i class="fa fa-compass"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <table>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <form method="post" onsubmit="return confirm('Восстановить?');"
+                                                      action="{{route('operator.order.restore', $served_order->id)}}">
+                                                    {{csrf_field()}}
+                                                    <input type="submit" class="btn btn-primary"
+                                                           value="Восстановить">
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form method="post" onsubmit="return confirm('Хотите удалить?');"
+                                                      action="{{route('operator.order.delete', $served_order->id)}}">
+                                                    {{csrf_field()}}
+                                                    <input type="submit" class="btn btn-danger" value="Удалить">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    <div class="col-md-12">
+                        {{ $taxi_orders->links() }}
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="modal fade" id="yourModal" role="dialog">

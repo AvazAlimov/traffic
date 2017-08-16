@@ -30,4 +30,7 @@ class Operator extends Authenticatable
     public function order(){
         return $this->hasMany('App\Order');
     }
+    public function taxiorder(){
+        return $this->hasMany('App\TaxiOrder');
+    }
 }
