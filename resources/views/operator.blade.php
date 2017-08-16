@@ -1,14 +1,21 @@
 @extends('layouts.app')
 @section('head')
-    <!--suppress ALL -->
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-    <style>
+    <link rel="stylesheet" href="{{ asset("css/bootstrap-datetimepicker.css") }}">
+    <!--suppress CssUnusedSymbol -->
+    <style xmlns:v-bind="http://www.w3.org/1999/xhtml">
         label {
             margin-top: 6px;
         }
 
-        .error {
-            color: red;
+        #container {
+            display: none;
+            padding: 0 0 20px 0;
+        }
+
+        #navigation {
+            display: none;
+            border-radius: 0;
+            border-width: 0 0 thin 0;
         }
 
         @media screen and (max-width: 770px) {
@@ -31,8 +38,6 @@
             left: 50%;
             top: 50%;
             z-index: 1;
-            width: 150px;
-            height: 150px;
             margin: -75px 0 0 -75px;
             border: 16px solid #f3f3f3;
             border-radius: 50%;
@@ -63,22 +68,30 @@
     </style>
 @endsection
 @section('content')
-    <nav id="navigation" class="navbar navbar-default"
-         style="display: none; border-radius: 0; border-width: 0 0 thin 0;">
+    <nav id="navigation" class="navbar navbar-default">
         <ul class="nav navbar-nav">
-            <li data-toggle="tab" class="navs"><a onclick="switchSection('section1')"><i
-                            class="fa fa-columns"></i>
-                    Сделать заказ</a>
+            <li data-toggle="tab" class="navs">
+                <a onclick="switchSection('section1')">
+                    <i class="fa fa-columns"></i>
+                    Сделать заказ
+                </a>
             </li>
-            <li data-toggle="tab" class="navs"><a onclick="switchSection('section2')"><i
-                            class="fa fa-list-alt"></i> Заказы</a></li>
-            <li data-toggle="tab" class="navs"><a onclick="switchSection('section3')"><i
-                            class="fa fa-handshake-o"></i> Поданные
-                    заказы</a></li>
+            <li data-toggle="tab" class="navs">
+                <a onclick="switchSection('section2')">
+                    <i class="fa fa-list-alt"></i>
+                    Заказы
+                </a>
+            </li>
+            <li data-toggle="tab" class="navs">
+                <a onclick="switchSection('section3')">
+                    <i class="fa fa-handshake-o"></i>
+                    Поданные заказы
+                </a>
+            </li>
         </ul>
     </nav>
 
-    <div id="container" class="container" style="display: none; padding: 0 20px 20px 20px">
+    <div id="container" class="container">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section">
@@ -86,271 +99,357 @@
                         <h2>Сделать заказ</h2>
                     </div>
                     <div class="container-fluid">
-                        <div class="row">
-                            <h3>Грузоперевозки</h3>
-                            <div class="col-md-12">
-                                {{Form::open(['route' => ['operator.order.submit'], 'method' => 'post'])}}
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">Заказ</div>
-                                    <div class="panel-body">
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-3">Тариф</label>
-                                            <div class="col-md-9">
-                                                {{Form::select('tarif', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-3">Тип автомобиля</label>
-                                            <div class="col-md-9">
-                                                {{Form::select('car', $car, null, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-3">Количество грузчиков</label>
-                                            <div class="col-md-9">
-                                                {{Form::number('persons', 0, ['max' => 8, 'min'=>0, 'class'=>'form-control', 'id' =>'person_id', 'onchange' => 'personsChange()'])}}
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <label for="date_id" class="col-md-3">Время подачи</label>
-                                            <div class="col-md-6">
-                                                <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
-                                                       name="date"
-                                                       class="form-control"
-                                                       id="date_id">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="time"
-                                                       value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}"
-                                                       name="time"
-                                                       class="form-control" id="date_id">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <label for="unit_id" id="label_tarif" class="col-md-3">Срок аренды
-                                                (час)</label>
-                                            <div class="col-md-9">
-                                                <input name="unit" type="number" step="0.01"
-                                                       value="{{ $tarifs[0]->min_hour  }}" min="0.0"
-                                                       class="form-control" required id="unit_id"
-                                                       onchange="unitChange()">
-                                            </div>
-                                        </div>
-
-                                        @if ($errors->has('point_A') || $errors->has('address_A'))
-                                            <div class="col-md-4">
-                                            <span class="help-block">
-                                                <strong class="alert-danger">{{ $errors->first('point_A') }}</strong>
-                                            </span>
-                                            </div>
-                                        @endif
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-3">Откуда</label>
-                                            <div class="col-md-8">
-                                                {{Form::text('address_A',null, ['class'=>'form-control', 'id'=>'address_a'])}}
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button type="button" class="btn btn-default" data-toggle="modal"
-                                                        data-target="#myModal"
-                                                        onclick="setStart()"><i class="fa fa-compass"></i></button>
-                                            </div>
-                                        </div>
-
-                                        @if ($errors->has('point_B') || $errors->has('address_B'))
-                                            <div class="col-md-4">
-                                            <span class="help-block">
-                                                <strong class="alert-danger">{{ $errors->first('point_B') }}</strong>
-                                            </span>
-                                            </div>
-                                        @endif
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-3">Куда</label>
-                                            <div class="col-md-8">
-                                                {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b'])}}
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button type="button" class="btn btn-default" data-toggle="modal"
-                                                        data-target="#myModal"
-                                                        onclick="setEnd()"><i class="fa fa-compass"></i></button>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            {{Form::hidden('point_A',null, ['id'=>'point_a', 'class'=>'form-control'])}}
-                                        </div>
-                                        <div class="col-md-4">
-                                            {{Form::hidden('point_B',null,['id'=>'point_b', 'class'=>'form-control'])}}
-                                        </div>
-
-                                        @if ($errors->has('name'))
-                                            <div class="col-md-4">
-                                            <span class="help-block">
-                                                <strong class="alert-danger">{{ $errors->first('name') }}</strong>
-                                            </span>
-                                            </div>
-                                        @endif
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-3">Имя заказчика</label>
-                                            <div class="col-md-9">
-                                                {{Form::text('name',null,['class'=>'form-control'])}}
-                                            </div>
-                                        </div>
-                                        @if ($errors->has('phone'))
-                                            <div class="col-md-4">
-                                            <span class="help-block">
-                                                <strong class="alert-danger">{{ $errors->first('phone') }}</strong>
-                                            </span>
-                                            </div>
-                                        @endif
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-3">Телефон</label>
-                                            <div class="col-md-9">
-                                                {{Form::text('phone','+998',['class'=>'form-control'])}}
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <label for="discount_id" class="col-md-3">Скидка %</label>
-                                            <div class="col-md-9">
-                                                {{Form::number('discount', $tarifs[0]->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            <label class="col-md-3">Цена</label>
-                                            <div class="col-md-9">
-                                                {{Form::number('sum',null, ['class'=>'form-control', 'id'=>'sum_id'])}}
-                                            </div>
-                                        </div>
+                        <div class="row col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        Заказать
+                                    </h3>
+                                    <div class="btn-group btn-group-xs btn-toggle">
+                                        <button class="btn active btn-default" data-toggle="tab"
+                                                data-target="#trucking">
+                                            Грузоперевозку
+                                        </button>
+                                        <button class="btn btn-default" data-toggle="tab"
+                                                data-target="#taxi">
+                                            Такси
+                                        </button>
                                     </div>
-
-                                    <div class="panel-footer">
-                                        <input type="submit" class="btn btn-success" value="Заказать">
-                                    </div>
-
                                 </div>
-                                {{Form::close()}}
-                            </div>
-                        </div>
+                                <div class="panel-body tab-content">
+                                    <div class="tab-pane active" id="trucking">
+                                        <form action="{{ route('operator.order.submit') }}" method="post">
+                                            <div class="form-group col-md-12">
+                                                <label for="trucking_tariff_id" class="col-md-3">
+                                                    Выберите тариф:
+                                                </label>
+                                                <div class="col-md-9">
+                                                    <select name="tariff_id" id="trucking_tariff_id"
+                                                            class="form-control" onchange="changeTariff()">
+                                                        <option>{{ $tariff[0] }}</option>
+                                                        <option>{{ $tariff[1] }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
 
-                        <div class="row">
-                            <h3>Такси</h3>
-                            <div class="col-md-12">
-                                <form action="{{ route('operator.taxiorder.submit') }}" method="post">
-                                    {{ csrf_field() }}
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">Заказ</div>
-                                        <div class="panel-body">
-                                            @if ($errors->has('taxi_point_A') || $errors->has('taxi_address_A'))
-                                                <div class="col-md-12 error">
-                                                    <label class="col-md-12">Пункт А не выбран</label>
-                                                </div>
-                                            @endif
                                             <div class="form-group col-md-12">
-                                                <label class="col-md-3">Откуда:</label>
+                                                <label for="trucking_automobile_id" class="col-md-3">
+                                                    Выберите автомобиль:
+                                                </label>
+                                                <div class="col-md-9">
+                                                    <select name="automobile_id" id="trucking_automobile_id"
+                                                            class="form-control" onchange="changeAutomobile()">
+                                                        @foreach($automobile as $auto)
+                                                            <option>{{ $auto }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="trucking_loaders" class="col-md-3">
+                                                    Количество грузчиков:
+                                                </label>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="loaders" class="form-control"
+                                                           id="trucking_loaders" min="0" value="0"
+                                                           onchange="calculateTruckingPrice()">
+                                                </div>
+                                                <label class="col-md-1">человек</label>
+                                            </div>
+
+                                            <div class="form-group col-md-12" id="trucking_hour_wrapper">
+                                                <label for="trucking_hour" class="col-md-3">
+                                                    Срок аренды:
+                                                </label>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="hour" id="trucking_hour"
+                                                           class="form-control" min="{{ $tariffs[0]->type == 0
+                                                           ? $tariffs[0]->min_hour
+                                                           : ($tariffs[1]->type == 0 ? $tariffs[1]->min_hour : 0) }}"
+                                                           value="{{ $tariffs[0]->type == 0
+                                                           ? $tariffs[0]->min_hour
+                                                           : ($tariffs[1]->type == 0 ? $tariffs[1]->min_hour : 0) }}"
+                                                           onchange="calculateTruckingPrice()">
+                                                </div>
+                                                <label class="col-md-1">час</label>
+                                            </div>
+
+                                            <div class="form-group col-md-12" id="trucking_distance_wrapper">
+                                                <label for="trucking_distance" class="col-md-3">
+                                                    Дистанция:
+                                                </label>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="distance" id="trucking_distance" step="2"
+                                                           class="form-control" min="0" value="0" readonly>
+                                                </div>
+                                                <label class="col-md-1">километр</label>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <hr>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="trucking_start" class="col-md-3">
+                                                    Время подачи:
+                                                </label>
+                                                <div class="col-md-3">
+                                                    <input type="text" name="start"
+                                                           value="{{ \Carbon\Carbon::now()
+                                                           ->setTimezone('Asia/Tashkent')
+                                                           ->format("Y-m-d H:i") }}"
+                                                           class="form-control form_datetime"
+                                                           id="trucking_start" readonly>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="trucking_address_a" class="col-md-3">
+                                                    Откуда:
+                                                </label>
                                                 <div class="col-md-8">
-                                                    <input name="taxi_address_A" type="text" class="form-control">
+                                                    <input type="text" name="address_a" class="form-control"
+                                                           id="trucking_address_a">
                                                 </div>
                                                 <div class="col-md-1">
                                                     <button type="button" class="btn btn-default" data-toggle="modal"
-                                                            data-target="#myModal"><i class="fa fa-compass"></i>
+                                                            data-target="#mainModal">
+                                                        <i class="fa fa-map-marker"></i>
                                                     </button>
                                                 </div>
                                             </div>
-                                            @if ($errors->has('taxi_point_B') || $errors->has('taxi_address_B'))
-                                                <div class="col-md-12 error">
-                                                    <label class="col-md-12">Пункт B не выбран</label>
-                                                </div>
-                                            @endif
+
                                             <div class="form-group col-md-12">
-                                                <label class="col-md-3">Куда:</label>
+                                                <label for="trucking_address_b" class="col-md-3">
+                                                    Куда:
+                                                </label>
                                                 <div class="col-md-8">
-                                                    <input name="taxi_address_B" type="text" class="form-control">
+                                                    <input type="text" name="address_b" class="form-control"
+                                                           id="trucking_address_b">
                                                 </div>
                                                 <div class="col-md-1">
                                                     <button type="button" class="btn btn-default" data-toggle="modal"
-                                                            data-target="#myModal"><i class="fa fa-compass"></i>
+                                                            data-target="#mainModal">
+                                                        <i class="fa fa-map-marker"></i>
                                                     </button>
                                                 </div>
                                             </div>
-                                            <input type="hidden" name="taxi_point_A">
-                                            <input type="hidden" name="taxi_point_B">
+
+                                            <input type="hidden" name="point_a" id="trucking_point_a">
+                                            <input type="hidden" name="point_b" id="trucking_point_b">
+
                                             <div class="form-group col-md-12">
-                                                <label class="col-md-3">Время подачи:</label>
-                                                <div class="col-md-6">
-                                                    <input type="date"
-                                                           value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
-                                                           name="taxi_date" class="form-control">
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <input type="taxi_time"
-                                                           value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}"
-                                                           name="time" class="form-control">
+                                                <label for="trucking_name" class="col-md-3">
+                                                    Имя заказчика:
+                                                </label>
+                                                <div class="col-md-9">
+                                                    <input type="text" name="name" id="trucking_name"
+                                                           class="form-control">
                                                 </div>
                                             </div>
+
                                             <div class="form-group col-md-12">
-                                                <label class="col-md-3">Время ожидания (мин):</label>
-                                                <div class="col-md-3">
-                                                    <input type="number" class="form-control" name="taxi_minute"
-                                                           min="{{ $taxitarif->min_minute }}"
-                                                           value="{{ $taxitarif->min_minute }}">
+                                                <label for="trucking_phone" class="col-md-3">
+                                                    Телефон заказчика:
+                                                </label>
+                                                <div class="col-md-9">
+                                                    <input type="text" name="phone" id="trucking_phone"
+                                                           class="form-control" value="+998">
                                                 </div>
-                                                <label class="col-md-3">Дистанция (км):</label>
-                                                <div class="col-md-3">
-                                                    <input type="number" class="form-control" name="taxi_distance"
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="trucking_discard" class="col-md-3">
+                                                    Скидка:
+                                                </label>
+                                                <div class="col-md-2">
+                                                    <input type="number" id="trucking_discard" class="form-control"
                                                            readonly>
                                                 </div>
-                                            </div>
-                                            @if ($errors->has('taxi_name'))
-                                                <div class="col-md-12 error">
-                                                    <label class="col-md-12">Введите имя</label>
+                                                <label class="col-md-1">%</label>
+                                                <label for="trucking_discard_sum" class="col-md-2 text-right">
+                                                    Цена скидки:
+                                                </label>
+                                                <div class="col-md-3">
+                                                    <input type="number" id="trucking_discard_sum" class="form-control"
+                                                           readonly>
                                                 </div>
-                                            @endif
+                                                <label class="col-md-1">сум</label>
+                                            </div>
+
                                             <div class="form-group col-md-12">
-                                                <label class="col-md-3">Имя заказчика:</label>
-                                                <div class="col-md-9">
-                                                    <input type="text" name="taxi_name" class="form-control">
+                                                <label for="trucking_price" class="col-md-3">
+                                                    Итоговая цена:
+                                                </label>
+                                                <div class="col-md-3">
+                                                    <input type="number" id="trucking_price" class="form-control"
+                                                           name="price">
                                                 </div>
+                                                <label class="col-md-1">сум</label>
                                             </div>
-                                            @if ($errors->has('taxi_phone'))
-                                                <div class="col-md-12 error">
-                                                    <label class="col-md-12">Введите телефон номер</label>
-                                                </div>
-                                            @endif
-                                            <div class="form-group col-md-12">
-                                                <label class="col-md-3">Телефон:</label>
-                                                <div class="col-md-9">
-                                                    <input type="text" name="taxi_phone" class="form-control"
-                                                           value="+998">
-                                                </div>
+
+                                            <div class="col-md-12">
+                                                <hr>
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <label class="col-md-3">Скидка (%):</label>
-                                                <div class="col-md-9">
-                                                    <input type="number" name="taxi_discard" class="form-control"
-                                                           readonly
-                                                           value="{{ $taxitarif->discard }}">
-                                                </div>
+
+                                            <div class="col-md-12">
+                                                <button type="submit" class="btn btn-success btn-block">
+                                                    Заказать
+                                                </button>
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <label class="col-md-3">Цена (cyм):</label>
-                                                <div class="col-md-9">
-                                                    <input type="number" name="taxi_price" class="form-control"
-                                                           value="{{ $taxitarif->price_minimum }}">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel-footer">
-                                            <input type="submit" class="btn btn-success" value="Заказать">
-                                        </div>
+                                        </form>
                                     </div>
-                                </form>
+
+                                    <div class="tab-pane" id="taxi">
+                                        <form action="{{ route('operator.taxiorder.submit') }}" method="post">
+                                            <div class="form-group col-md-12">
+                                                <label for="taxi_minute" class="col-md-3">
+                                                    Время ожидание:
+                                                </label>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="minute" class="form-control"
+                                                           id="taxi_minute" onchange="calculateTaxiPrice()"
+                                                           min="{{ $taxi_tariff->min_minute }}"
+                                                           value="{{ $taxi_tariff->min_minute }}">
+                                                </div>
+                                                <label class="col-md-1">
+                                                    минут
+                                                </label>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="taxi_distance" class="col-md-3">
+                                                    Дистанция:
+                                                </label>
+                                                <div class="col-md-2">
+                                                    <input type="number" name="distance" class="form-control"
+                                                           id="taxi_distance" min="0" step="2" value="0" readonly>
+                                                </div>
+                                                <label class="col-md-1">
+                                                    км
+                                                </label>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <hr>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="taxi_start" class="col-md-3">
+                                                    Время подачи:
+                                                </label>
+                                                <div class="col-md-3">
+                                                    <input type="text" name="start"
+                                                           value="{{ \Carbon\Carbon::now()
+                                                           ->setTimezone('Asia/Tashkent')
+                                                           ->format("Y-m-d H:i") }}"
+                                                           class="form-control form_datetime"
+                                                           id="taxi_start" readonly>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="taxi_address_a" class="col-md-3">
+                                                    Откуда:
+                                                </label>
+                                                <div class="col-md-8">
+                                                    <input type="text" name="address_a" class="form-control"
+                                                           id="taxi_address_a">
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                            data-target="#mainModal">
+                                                        <i class="fa fa-map-marker"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="taxi_address_b" class="col-md-3">
+                                                    Куда:
+                                                </label>
+                                                <div class="col-md-8">
+                                                    <input type="text" name="address_b" class="form-control"
+                                                           id="taxi_address_b">
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                                            data-target="#mainModal">
+                                                        <i class="fa fa-map-marker"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <input type="hidden" name="point_a" id="taxi_point_a">
+                                            <input type="hidden" name="point_b" id="taxi_point_b">
+
+                                            <div class="form-group col-md-12">
+                                                <label for="taxi_name" class="col-md-3">
+                                                    Имя заказчика:
+                                                </label>
+                                                <div class="col-md-9">
+                                                    <input type="text" name="name" id="taxi_name"
+                                                           class="form-control">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="taxi_phone" class="col-md-3">
+                                                    Телефон заказчика:
+                                                </label>
+                                                <div class="col-md-9">
+                                                    <input type="text" name="phone" id="taxi_phone"
+                                                           class="form-control" value="+998">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="taxi_discard" class="col-md-3">
+                                                    Скидка:
+                                                </label>
+                                                <div class="col-md-2">
+                                                    <input type="number" id="taxi_discard" class="form-control"
+                                                           readonly value="{{ $taxi_tariff->discard }}">
+                                                </div>
+                                                <label class="col-md-1">%</label>
+                                                <label for="taxi_discard_sum" class="col-md-2 text-right">
+                                                    Цена скидки:
+                                                </label>
+                                                <div class="col-md-3">
+                                                    <input type="number" id="taxi_discard_sum" class="form-control"
+                                                           readonly>
+                                                </div>
+                                                <label class="col-md-1">сум</label>
+                                            </div>
+
+                                            <div class="form-group col-md-12">
+                                                <label for="taxi_price" class="col-md-3">
+                                                    Итоговая цена:
+                                                </label>
+                                                <div class="col-md-3">
+                                                    <input type="number" id="taxi_price" class="form-control"
+                                                           name="price">
+                                                </div>
+                                                <label class="col-md-1">сум</label>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <hr>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <button type="submit" class="btn btn-success btn-block">
+                                                    Заказать
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="modal fade" id="myModal" role="dialog">
+                        <div class="modal fade" id="mainModal" role="dialog">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -358,7 +457,7 @@
                                         <h4 class="modal-title">УКАЖИТЕ АДРЕС</h4>
                                     </div>
                                     <div class="modal-body" style="height: 500px; padding: 0;">
-                                        <div id="map" class="col-md-12" style="height: 500px;"></div>
+                                        <div id="navigationMap" class="col-md-12" style="height: 500px;"></div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Сохранить
@@ -662,180 +761,20 @@
             </div>
         </div>
     </div>
+
     <div id="loader"></div>
-
+@endsection
+@section('scripts')
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <script src="{{ asset("js/bootstrap-datetimepicker.js") }}"></script>
+    <!--suppress JSUnresolvedVariable, JSUnresolvedFunction -->
     <script>
-        var yourMap;
-        var tarifs = {!! $tarifs !!};
-        var cars = {!! $cars !!};
-        var tarif_index = 0;
-        var car_index = 0;
-        var persons_price = 0;
-        var unit = 0;
-        var discount = 0;
+        //----- Page Scripts Start -----//
+        $(".btn-group > .btn").click(function () {
+            $(this).addClass("active").siblings().removeClass("active");
+        });
 
-        var myMap;
-        var start = false;
-        var end = false;
-        var distance = 0;
-        var path;
-
-        function init() {
-            yourMap = new ymaps.Map("yourMap", {
-                center: [41.299496, 69.240073],
-                zoom: 13,
-                controls: []
-            }, {searchControlProvider: 'yandex#search'});
-            yourMap.controls.add('geolocationControl');
-            yourMap.controls.add('searchControl');
-            yourMap.controls.add('zoomControl');
-            yourMap.controls.get('searchControl').options.set('size', 'large');
-
-            myMap = new ymaps.Map("map", {
-                center: [41.299496, 69.240073],
-                zoom: 13,
-                controls: []
-            }, {searchControlProvider: 'yandex#search'});
-            myMap.controls.add('geolocationControl');
-            myMap.controls.add('searchControl');
-            myMap.controls.add('zoomControl');
-            myMap.controls.get('searchControl').options.set('size', 'large');
-
-            myMap.events.add('click', function (event) {
-                var coords = event.get('coords');
-                if (start === false) {
-                    start = new ymaps.Placemark(coords, {
-                        balloonContent: 'Point A'
-                    }, {
-                        draggable: true,
-                        preset: 'islands#icon',
-                        iconColor: '#F44336'
-                    });
-                    myMap.geoObjects.add(start);
-                    start.events.add('dragend', function (e) {
-                        setCoordinates();
-                    });
-                }
-                else {
-                    if (end === false) {
-                        end = new ymaps.Placemark(coords, {
-                            balloonContent: 'Point B'
-                        }, {
-                            draggable: true,
-                            preset: 'islands#icon',
-                            iconColor: '#2196F3'
-                        });
-                        myMap.geoObjects.add(end);
-                        end.events.add('dragend', function (e) {
-                            setCoordinates();
-                        });
-                    }
-                    else {
-                        end.geometry.setCoordinates(coords);
-                    }
-                }
-                setCoordinates();
-            });
-        }
-
-        function setCoordinates() {
-            if (start != false) {
-                document.getElementById('point_a').value = start.geometry.getCoordinates();
-                getAddress('address_a', start.geometry.getCoordinates());
-            }
-
-            if (end != false) {
-                document.getElementById('point_b').value = end.geometry.getCoordinates();
-                getAddress('address_b', end.geometry.getCoordinates());
-            }
-
-            if (start === false || end === false)
-                return;
-
-            if (path === null)
-                return;
-
-            myMap.geoObjects.remove(path);
-            ymaps.route([start.geometry.getCoordinates(), end.geometry.getCoordinates()],
-                    {
-                        mapStateAutoApply: true,
-                        multiRoute: false
-                    }).then(function (route) {
-                        path = route;
-                        distance = route.getLength();
-                        myMap.geoObjects.add(route);
-                        if (tarif_index === 1) {
-                            document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                            unitChange();
-                        }
-                    }, function (error) {
-                        alert("Error occurred: " + error.message);
-                    }
-            );
-        }
-
-        function getAddress(id, coords) {
-            ymaps.geocode(coords).then(function (res) {
-                var firstGeoObject = res.geoObjects.get(0);
-                document.getElementById(id).value = firstGeoObject.getAddressLine();
-            });
-        }
-
-        function setStart() {
-            myMap.geoObjects.remove(start);
-            myMap.geoObjects.remove(path);
-            start = false;
-        }
-
-        function changeTarif() {
-            tarif_index = document.getElementById('tarif_id').selectedIndex;
-            if (tarif_index === 0) {
-                document.getElementById('label_tarif').innerHTML = "Срок аренды (час)";
-                document.getElementById('unit_id').min = tarifs[tarif_index]['min_hour'];
-                document.getElementById('unit_id').value = tarifs[tarif_index]['min_hour'];
-                document.getElementById('unit_id').readOnly = false;
-            }
-            else {
-                document.getElementById('label_tarif').innerHTML = "Дистанция";
-                document.getElementById('unit_id').min = tarifs[tarif_index]['min_distance'];
-                if (distance === 0)
-                    document.getElementById('unit_id').value = tarifs[tarif_index]['min_distance'];
-                else
-                    document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                document.getElementById('unit_id').readOnly = true;
-            }
-            discount = document.getElementById('discount_id').value = tarifs[tarif_index]['discard'];
-            calculatePrice();
-        }
-
-        function changeCar() {
-            car_index = document.getElementById('car_id').selectedIndex;
-            calculatePrice();
-        }
-
-        function personsChange() {
-            persons_price = document.getElementById('person_id').value * tarifs[tarif_index]['price_per_person'];
-            calculatePrice();
-        }
-
-        function unitChange() {
-            if (document.getElementById('unit_id').value < 0)
-                changeTarif();
-            if (tarif_index === 0)
-                unit = (document.getElementById('unit_id').value - tarifs[tarif_index]['min_hour']) * tarifs[tarif_index]['price_per_hour'];
-            else
-                unit = (document.getElementById('unit_id').value - tarifs[tarif_index]['min_distance']) * tarifs[tarif_index]['price_per_distance'];
-            calculatePrice();
-        }
-
-        function calculatePrice() {
-            var price = tarifs[tarif_index]['price_minimum'];
-            price += cars[car_index]['price'];
-            price += persons_price;
-            price += unit;
-            price -= price * discount / 100;
-            document.getElementById('sum_id').value = price;
-        }
+        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
 
         function switchSection(id) {
             document.cookie = "operatorPage=" + id + ";";
@@ -845,11 +784,11 @@
             document.getElementById(id).style.display = "block";
         }
 
-        function getCookie(cname) {
-            var name = cname + "=";
-            var ca = document.cookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
+        function getCookie(key) {
+            var name = key + "=";
+            var values = document.cookie.split(';');
+            for (var i = 0; i < values.length; i++) {
+                var c = values[i];
                 while (c.charAt(0) == ' ') {
                     c = c.substring(1);
                 }
@@ -859,23 +798,164 @@
             }
             return "section1";
         }
+        //----- Page Scripts End -----//
 
-        function setPoints(point_a_1, point_a_2, point_b_1, point_b_2) {
-            var point_a = point_a_1 + "," + point_a_2;
-            var point_b = point_b_1 + "," + point_b_2;
-            yourMap.geoObjects.removeAll();
-            ymaps.route([point_a, point_b], {
+
+        //----- Maps Scripts Start -----//
+        var navigationMap;
+        var startPoint = false;
+        var endPoint = false;
+        var distance = 0;
+        var path;
+
+        function initMaps() {
+            navigationMap = new ymaps.Map("navigationMap", {
+                center: [41.299496, 69.240073],
+                zoom: 13,
+                controls: []
+            }, {searchControlProvider: 'yandex#search'});
+
+            navigationMap.controls.add('geolocationControl');
+            navigationMap.controls.add('searchControl');
+            navigationMap.controls.add('zoomControl');
+            navigationMap.controls.get('searchControl').options.set('size', 'large');
+
+            navigationMap.events.add('click', function (event) {
+                var coords = event.get('coords');
+                if (startPoint === false) {
+                    startPoint = new ymaps.Placemark(coords, {balloonContent: 'Пункт А'}, {
+                        draggable: true,
+                        preset: 'islands#redHomeIcon',
+                        iconColor: '#F44336'
+                    });
+                    navigationMap.geoObjects.add(startPoint);
+
+                    startPoint.events.add('dragend', function () {
+                        setPoint(startPoint);
+                    });
+
+                    setPoint(startPoint);
+                    return;
+                }
+                if (endPoint === false) {
+                    endPoint = new ymaps.Placemark(coords, {balloonContent: 'Пункт А'}, {
+                        draggable: true,
+                        preset: 'islands#redGovernmentIcon',
+                        iconColor: '#F44336'
+                    });
+                    navigationMap.geoObjects.add(endPoint);
+
+                    endPoint.events.add('dragend', function () {
+                        setPoint(endPoint);
+                    });
+
+                    setPoint(endPoint);
+                }
+            })
+        }
+
+        function setPoint(placemark) {
+            var coords = placemark.geometry.getCoordinates();
+            ymaps.geocode(coords).then(function (res) {
+                var firstGeoObject = res.geoObjects.get(0);
+                if (placemark === startPoint) {
+                    document.getElementById("trucking_address_a").value = firstGeoObject.getAddressLine();
+                    document.getElementById("taxi_address_a").value = firstGeoObject.getAddressLine();
+                    document.getElementById("trucking_point_a").value = coords;
+                    document.getElementById("taxi_point_a").value = coords;
+                }
+                if (placemark === endPoint) {
+                    document.getElementById("trucking_address_b").value = firstGeoObject.getAddressLine();
+                    document.getElementById("taxi_address_b").value = firstGeoObject.getAddressLine();
+                    document.getElementById("trucking_point_b").value = coords;
+                    document.getElementById("taxi_point_b").value = coords;
+                }
+            });
+            drawPath();
+        }
+
+        function drawPath() {
+            if (startPoint === false || endPoint === false)
+                return;
+
+            navigationMap.geoObjects.remove(path);
+
+            ymaps.route([startPoint.geometry.getCoordinates(), endPoint.geometry.getCoordinates()], {
                 mapStateAutoApply: true,
                 multiRoute: false
             }).then(function (route) {
-                        yourMap.geoObjects.add(route);
+                        path = route;
+                        distance = (route.getLength() / 1000).toFixed(2);
+                        navigationMap.geoObjects.add(route);
+                        path.getWayPoints().removeAll();
+                        document.getElementById("trucking_distance").value = distance;
+                        document.getElementById("taxi_distance").value = distance;
+                        calculateTruckingPrice();
+                        calculateTaxiPrice();
                     }, function (error) {
-                        alert("Error occurred: " + error.message);
+                        alert("Возникла ошибка: " + error.message);
                     }
             );
         }
 
-        ymaps.ready(init);
+        ymaps.ready(initMaps);
+        //----- Maps Scripts End -----//
+
+        //----- Trucking Calculation Scripts Start -----//
+        var arrays = [{!! $tariffs !!}];
+        arrays.push({!! $automobiles !!});
+        var tariff_index = document.getElementById("trucking_tariff_id").selectedIndex = 0;
+        var car_index = document.getElementById("trucking_automobile_id").selectedIndex = 0;
+
+        function changeTariff() {
+            tariff_index = document.getElementById("trucking_tariff_id").selectedIndex;
+            if (tariff_index === 0) {
+                document.getElementById("trucking_hour_wrapper").style.display = "block";
+                document.getElementById("trucking_distance_wrapper").style.display = "none";
+            } else {
+                document.getElementById("trucking_hour_wrapper").style.display = "none";
+                document.getElementById("trucking_distance_wrapper").style.display = "block";
+            }
+            document.getElementById("trucking_discard").value = arrays[0][tariff_index]['discard'];
+            calculateTruckingPrice();
+        }
+
+        function changeAutomobile() {
+            car_index = document.getElementById("trucking_automobile_id").selectedIndex;
+            calculateTruckingPrice();
+        }
+
+        function calculateTruckingPrice() {
+            var price = arrays[0][tariff_index]['price_minimum'];
+            price += arrays[1][car_index]['price'];
+            price += arrays[0][tariff_index]['price_per_person'] * document.getElementById("trucking_loaders").value;
+            if (arrays[0][tariff_index]['type'] === 0 &&
+                    (document.getElementById("trucking_hour").value > arrays[0][tariff_index]['min_hour']))
+                price += arrays[0][tariff_index]['price_per_hour'] * (document.getElementById("trucking_hour").value -
+                        arrays[0][tariff_index]['min_hour']);
+            else if (document.getElementById("trucking_distance").value > arrays[0][tariff_index]['min_distance'])
+                price += arrays[0][tariff_index]['price_per_distance'] *
+                        (document.getElementById("trucking_distance").value - arrays[0][tariff_index]['min_distance']);
+            document.getElementById("trucking_discard_sum").value = price * arrays[0][tariff_index]['discard'] / 100;
+            document.getElementById("trucking_price").value = price - (price * arrays[0][tariff_index]['discard'] / 100);
+        }
+        //----- Trucking Calculation Scripts End -----//
+
+        //----- Taxi Calculation Scripts Start -----//
+        var taxiTariff = [{!! $taxi_tariff !!}];
+
+        function calculateTaxiPrice() {
+            var price = taxiTariff[0]['price_minimum'];
+            if (document.getElementById("taxi_minute").value > taxiTariff[0]['min_minute'])
+                price += taxiTariff[0]['price_per_minute'] *
+                        (document.getElementById("taxi_minute").value - taxiTariff[0]['min_minute']);
+            if(document.getElementById("taxi_distance").value > taxiTariff[0]['min_distance'])
+                price += taxiTariff[0]['price_per_distance'] *
+                        (document.getElementById("taxi_distance").value - taxiTariff[0]['min_distance']);
+            document.getElementById("taxi_discard_sum").value = price * taxiTariff[0]['discard'] / 100;
+            document.getElementById("taxi_price").value = price - (price * taxiTariff[0]['discard'] / 100);
+        }
+        //----- Taxi Calculation Scripts End -----//
 
         window.onload = function () {
             switchSection(getCookie("operatorPage"));
@@ -885,14 +965,9 @@
             document.getElementById("navigation").style.display =
                     document.getElementById("container").style.display =
                             document.getElementById("navbar").style.display = "block";
-
-            tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
-            car_index = document.getElementById('car_id').selectedIndex = 0;
-            document.getElementById('person_id').value = 0;
-            changeTarif();
-            changeCar();
-            personsChange();
-            unitChange();
+            changeTariff();
+            changeAutomobile();
+            calculateTaxiPrice();
         };
     </script>
 @endsection

@@ -9,7 +9,7 @@ use App\Automobile;
 use App\Tarif;
 use App\TaxiTarif;
 use Illuminate\Support\Facades\Session;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
 class OperatorController extends Controller
@@ -19,6 +19,7 @@ class OperatorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public static $sort = null;
 
     public function __construct()
@@ -28,32 +29,31 @@ class OperatorController extends Controller
 
     public function index()
     {
-        $cars = Automobile::all();
-        $car = array();
-        foreach ($cars as $key) {
-            $car[$key->id] = $key->name;
-        }
-
-        $tarifs = Tarif::all();
-        $tarif = array();
-        $taxitarif = TaxiTarif::first();
-
-        foreach ($tarifs as $tr) {
-            if ($tr->type == 0)
-                $tarif[$tr->id] = "Внутри города";
-            else
-                $tarif[$tr->id] = "За городом";
-        }
-
+        $automobiles = Automobile::all();
+        $automobile = array();
+        $tariffs = Tarif::all();
+        $tariff = array();
+        $taxi_tariff = TaxiTarif::first();
         $orders = Order::where('status', '!=', 0)->paginate(6);
         $orders_wait = Order::where('status', 0)->get();
-        return view('operator')->withCars($cars)
-            ->withTarifs($tarifs)
-            ->withCar($car)
-            ->withTarif($tarif)
+
+        foreach ($automobiles as $key)
+            $automobile[$key->id] = $key->name;
+        foreach ($tariffs as $tr)
+            if ($tr->type == 0)
+                $tariff[$tr->id] = "Внутри города";
+            else
+                $tariff[$tr->id] = "За городом";
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        return view('operator')
+            ->withTariffs($tariffs)
+            ->withTariff($tariff)
+            ->withAutomobiles($automobiles)
+            ->withAutomobile($automobile)
             ->withOrders($orders)
             ->withOrders_wait($orders_wait)
-            ->with('taxitarif', $taxitarif);
+            ->with('taxi_tariff', $taxi_tariff);
     }
 
     public function orderSubmit(Request $request)
@@ -74,6 +74,7 @@ class OperatorController extends Controller
             'phone.required' => 'Введите телефон',
         ];
 
+        /** @noinspection PhpUndefinedMethodInspection */
         Validator::make($request->all(), $rules, $messages)->validate();
 
         $order = new Order;
@@ -133,18 +134,24 @@ class OperatorController extends Controller
             $car[$key->id] = $key->name;
         }
 
-        $tarifs = Tarif::all();
-        $tarif = array();
+        $tariffs = Tarif::all();
+        $tariff = array();
 
-        foreach ($tarifs as $tr) {
+        foreach ($tariffs as $tr) {
             if ($tr->type == 0)
-                $tarif[$tr->id] = "Внутри города";
+                $tariff[$tr->id] = "Внутри города";
             else
-                $tarif[$tr->id] = "За городом";
+                $tariff[$tr->id] = "За городом";
         }
 
 
-        return view('operator.order')->withOrder($order)->withCars($cars)->withTarifs($tarifs)->withCar($car)->withTarif($tarif);
+        /** @noinspection PhpUndefinedMethodInspection */
+        return view('operator.order')
+            ->withOrder($order)
+            ->withCars($cars)
+            ->withTarifs($tariffs)
+            ->withCar($car)
+            ->withTarif($tariff);
     }
 
     public function orderUpdateSubmit(Request $request, $id)
@@ -165,6 +172,7 @@ class OperatorController extends Controller
             'phone.required' => 'Введите телефон',
         ];
 
+        /** @noinspection PhpUndefinedMethodInspection */
         Validator::make($request->all(), $rules, $messages)->validate();
 
         $order = Order::findOrFail($id);
@@ -202,14 +210,14 @@ class OperatorController extends Controller
             $car[$key->id] = $key->name;
         }
 
-        $tarifs = Tarif::all();
-        $tarif = array();
+        $tariffs = Tarif::all();
+        $tariff = array();
 
-        foreach ($tarifs as $tr) {
+        foreach ($tariffs as $tr) {
             if ($tr->type == 0)
-                $tarif[$tr->id] = "Внутри города";
+                $tariff[$tr->id] = "Внутри города";
             else
-                $tarif[$tr->id] = "За городом";
+                $tariff[$tr->id] = "За городом";
         }
         $orders_wait = Order::where('status', 0);
 
@@ -220,8 +228,10 @@ class OperatorController extends Controller
                 $orders = Order::where('status', '!=', 0)->where('id', ltrim($request->search, '#'));
             } else {
                 $orders = Order::where('status', '!=', 0)->where(function ($query) use ($request) {
+                    /** @noinspection PhpUndefinedMethodInspection */
                     $query->orWhere('id', $request->search)
                         ->with('automobile')->whereHas('automobile', function ($query) use ($request) {
+                            /** @noinspection PhpUndefinedMethodInspection */
                             $query->where('name', 'LIKE', "%$request->search%");
                         })
                         ->orWhere('name', 'LIKE', "%$request->search%")
@@ -234,77 +244,73 @@ class OperatorController extends Controller
 
         }
         if ($request->filter == "name") {
+            /** @noinspection PhpUndefinedMethodInspection */
             if (Session::get('sort')) {
                 $orders = $orders
                     ->orderBy('name', 'desc');
+                /** @noinspection PhpUndefinedMethodInspection */
                 Session::put('sort', false);
             } else {
                 $orders = $orders
                     ->orderBy('name', 'asc');
+                /** @noinspection PhpUndefinedMethodInspection */
                 Session::put('sort', true);
             }
         }
         if ($request->filter == "sum") {
+            /** @noinspection PhpUndefinedMethodInspection */
             if (Session::get('sort')) {
                 $orders = $orders
                     ->orderBy('sum', 'desc');
+                /** @noinspection PhpUndefinedMethodInspection */
                 Session::put('sort', false);
             } else {
                 $orders = $orders
                     ->orderBy('sum', 'asc');
+                /** @noinspection PhpUndefinedMethodInspection */
                 Session::put('sort', true);
             }
         }
         if ($request->filter == "id") {
 
+            /** @noinspection PhpUndefinedMethodInspection */
             if (Session::get('sort')) {
                 $orders = $orders
                     ->orderBy('id', 'desc');
+                /** @noinspection PhpUndefinedMethodInspection */
                 Session::put('sort', false);
             } else {
                 $orders = $orders
                     ->orderBy('id', 'asc');
+                /** @noinspection PhpUndefinedMethodInspection */
                 Session::put('sort', true);
             }
         }
         if ($request->filter == "date") {
 
+            /** @noinspection PhpUndefinedMethodInspection */
             if (Session::get('sort')) {
                 $orders = $orders
                     ->orderBy('start_time', 'desc');
+                /** @noinspection PhpUndefinedMethodInspection */
                 Session::put('sort', false);
             } else {
                 $orders = $orders
                     ->orderBy('start_time', 'asc');
+                /** @noinspection PhpUndefinedMethodInspection */
                 Session::put('sort', true);
             }
         }
         $orders = $orders->paginate(8);
 
+        /** @noinspection PhpUndefinedMethodInspection */
         return view('operator')
-            ->withCars($cars)->withTarifs($tarifs)->withCar($car)
-            ->withTarif($tarif)->withOrders($orders)->withOrders_wait($orders_wait);
+            ->withCars($cars)->withTarifs($tariffs)->withCar($car)
+            ->withTarif($tariff)->withOrders($orders)->withOrders_wait($orders_wait);
     }
 
     public function taxiOrderSubmit(Request $request)
     {
-        $rules = [
-            'taxi_name' => 'required',
-            'taxi_phone' => 'required',
-            'taxi_address_A' => 'required',
-            'taxi_address_B' => 'required',
-            'taxi_point_A' => 'required',
-            'taxi_point_B' => 'required'
-        ];
-
-        $messages = [
-            'taxi_point_A.required' => 'Пункт А не выбран',
-            'taxi_point_B.required' => 'Пункт Б не выбран',
-            'taxi_name.required' => 'Введите имя',
-            'taxi_phone.required' => 'Введите телефон',
-        ];
-
-        Validator::make($request->all(), $rules, $messages)->validate();
 
         return redirect()->back();
     }

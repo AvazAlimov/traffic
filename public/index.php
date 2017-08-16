@@ -49,10 +49,13 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
+/** @noinspection PhpUndefinedMethodInspection */
 $response = $kernel->handle(
     $request = Illuminate\Http\Request::capture()
 );
 
+/** @noinspection PhpUndefinedMethodInspection */
 $response->send();
 
+/** @noinspection PhpUndefinedMethodInspection */
 $kernel->terminate($request, $response);
