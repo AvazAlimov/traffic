@@ -111,6 +111,7 @@ class OperatorController extends Controller
         $order->operator_id = Auth::guard('operator')->user()->id;
 
         $order->save();
+        /** @noinspection PhpUndefinedMethodInspection */
         Session::flash('message', 'Ваш заказ успешно создано');
         return redirect()->back();
     }
@@ -373,6 +374,7 @@ class OperatorController extends Controller
         $order->operator_id = Auth::guard('operator')->user()->id;
 
         $order->save();
+        /** @noinspection PhpUndefinedMethodInspection */
         Session::flash('message', 'Ваш заказ успешно создано');
         return redirect()->back();
     }
@@ -447,6 +449,7 @@ class OperatorController extends Controller
         $order->price = $request->price;
         $order->save();
 
+        /** @noinspection PhpUndefinedMethodInspection */
         Session::flash('message', 'Заказ изменен');
         return redirect()->route('operator.dashboard');
     }
