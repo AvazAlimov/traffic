@@ -229,12 +229,12 @@ class OperatorController extends Controller
             else
                 $tariff[$tr->id] = "За городом";
         }
-
         $orders_wait = Order::where('status', 0);
-        $orders = Order::where('status' != 0);
+        $orders = Order::where('status','!=', 0);
 
         $taxi_tariff = TaxiTarif::first();
         $taxi_orders = TaxiOrder::where('status', '!=', 0)->paginate(6);
+
         $taxi_orders_wait = TaxiOrder::where('status', 0)->get();
 
         if ($request->search != null || $request->search == "") {
