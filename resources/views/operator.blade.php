@@ -108,7 +108,8 @@
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section">
-                    <div class="has-success" style="display: {{ Illuminate\Support\Facades\Session::has('message') ? 'block' : 'none' }};">
+                    <div class="has-success"
+                         style="display: {{ Illuminate\Support\Facades\Session::has('message') ? 'block' : 'none' }};">
                         <h3>{{Illuminate\Support\Facades\Session::get('message')}}</h3>
                     </div>
                     <div class="page-header">
@@ -565,7 +566,7 @@
                                         <tr>
                                             <td>
                                                 <form method="post"
-                                                      action="{{route('operator.order.accept',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
+                                                      action="{{route('operator.order.accept',['order_id' => $order->id, 'operator_id' => Illuminate\Support\Facades\Auth::guard('operator')->user()->id]
                                               )}}">
                                                     {{csrf_field()}}
                                                     <input type="submit" class="btn btn-success form-group"
@@ -574,7 +575,7 @@
                                             </td>
                                             <td>
                                                 <form method="post"
-                                                      action="{{route('operator.order.refuse',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
+                                                      action="{{route('operator.order.refuse',['order_id' => $order->id, 'operator_id' => Illuminate\Support\Facades\Auth::guard('operator')->user()->id]
                                               )}}">
                                                     {{csrf_field()}}
                                                     <input type="submit" class="btn btn-warning form-group"
@@ -675,7 +676,7 @@
                                         <tr>
                                             <td>
                                                 <form method="post"
-                                                      action="{{route('operator.taxiorder.accept',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
+                                                      action="{{route('operator.taxiorder.accept',['order_id' => $order->id, 'operator_id' => Illuminate\Support\Facades\Auth::guard('operator')->user()->id]
                                               )}}">
                                                     {{csrf_field()}}
                                                     <input type="submit" class="btn btn-success form-group"
@@ -684,7 +685,7 @@
                                             </td>
                                             <td>
                                                 <form method="post"
-                                                      action="{{route('operator.taxiorder.refuse',['order_id' => $order->id, 'operator_id' => Auth::guard('operator')->user()->id]
+                                                      action="{{route('operator.taxiorder.refuse',['order_id' => $order->id, 'operator_id' => Illuminate\Support\Facades\Auth::guard('operator')->user()->id]
                                               )}}">
                                                     {{csrf_field()}}
                                                     <input type="submit" class="btn btn-warning form-group"
