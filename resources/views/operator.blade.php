@@ -108,8 +108,8 @@
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div id="section1" class="section">
-                    <div class="has-success" style="display: {{ Session::has('message') ? 'block' : 'none' }};">
-                        <h3>{{Session::get('message')}}</h3>
+                    <div class="has-success" style="display: {{ Illuminate\Support\Facades\Session::has('message') ? 'block' : 'none' }};">
+                        <h3>{{Illuminate\Support\Facades\Session::get('message')}}</h3>
                     </div>
                     <div class="page-header">
                         <h2>Сделать заказ</h2>
@@ -251,7 +251,7 @@
                                             <input type="hidden" name="point_a" id="trucking_point_a">
                                             <input type="hidden" name="point_b" id="trucking_point_b">
 
-                                            <div class="form-group col-md-12 {{ $errors->has('name') ? ' has-error' : '' }}" >
+                                            <div class="form-group col-md-12 {{ $errors->has('name') ? ' has-error' : '' }}">
                                                 <label for="trucking_name" class="col-md-3">
                                                     Имя заказчика:
                                                 </label>
@@ -967,7 +967,8 @@
                                         <div class="col-md-8">
                                             <button type="button" class="btn btn-default" data-toggle="modal"
                                                     data-target="#yourModal"
-                                                    onclick="setPoints({{$served_order->point_A}} + '',{{$served_order->point_B}} + '')">
+                                                    onclick="setPoints({{$served_order->point_A}} + ''
+                                                            ,{{$served_order->point_B}} + '')">
                                                 <i class="fa fa-compass"></i>
                                             </button>
                                         </div>
@@ -1003,7 +1004,6 @@
                         {{ $taxi_orders->links() }}
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="modal fade" id="yourModal" role="dialog">
@@ -1211,7 +1211,7 @@
             if (document.getElementById("taxi_minute").value > taxiTariff[0]['min_minute'])
                 price += taxiTariff[0]['price_per_minute'] *
                         (document.getElementById("taxi_minute").value - taxiTariff[0]['min_minute']);
-            if(document.getElementById("taxi_distance").value > taxiTariff[0]['min_distance'])
+            if (document.getElementById("taxi_distance").value > taxiTariff[0]['min_distance'])
                 price += taxiTariff[0]['price_per_distance'] *
                         (document.getElementById("taxi_distance").value - taxiTariff[0]['min_distance']);
             document.getElementById("taxi_discard_sum").value = price * taxiTariff[0]['discard'] / 100;
