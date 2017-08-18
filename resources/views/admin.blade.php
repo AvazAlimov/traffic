@@ -492,7 +492,7 @@
                 </div>
                 <div id="section4" class="section">
                     <div class="page-header">
-                        <h2>Экспорт в Excel</h2>
+                        <h2>Экспорт в Excel - Грузоперевозки</h2>
                     </div>
                     <div class="panel panel-default">
                         <div class="panel-heading">Всего принятых заказов {{ $orders->count() }}</div>
@@ -527,6 +527,58 @@
                                             <td>{{ $order->persons }}</td>
                                             <td>{{ $order->start_time }}</td>
                                             <td>{{ $order->unit }}</td>
+                                            <td>{{ $order->address_A }}</td>
+                                            <td>{{ $order->address_B }}</td>
+                                            <td>{{ $order->name }}</td>
+                                            <td>{{ $order->phone }}</td>
+                                            <td>{{ $order->sum }}</td>
+                                            <td>{{ $order->operator != null ? $order->operator->username : "" }}</td>
+                                            <td>{{ $order->created_at }}</td>
+                                            <td>{{ $order->updated_at }}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <a type="button" class="btn btn-success" href="{{ route('admin.order.excel') }}">Скачать</a>
+                        </div>
+                    </div>
+                    <div class="page-header">
+                        <h2>Экспорт в Excel - Такси</h2>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Всего принятых заказов {{ $taxi_orders->count() }}</div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr style="white-space: nowrap;">
+                                        <th># Ид</th>
+                                        <th>Заказал</th>
+                                        <th>Время ожидания (мин)</th>
+                                        <th>Дистанция (км)</th>
+                                        <th>Время подачи</th>
+                                        <th>Откуда</th>
+                                        <th>Куда</th>
+                                        <th>Имя заказчика</th>
+                                        <th>Телефон</th>
+                                        <th>Цена</th>
+                                        <th>Обслужил</th>
+                                        <th>Создан</th>
+                                        <th>Обновлен</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($taxi_orders as $order)
+                                        <tr style="white-space: nowrap;">
+                                            <td>{{ $order->id }}</td>
+                                            <td>{{ $order->user_type == 0 ? "Пользователь" : ($order->user_type == 1 ? "Юр-лицо" : "Оператор") }}
+                                            </td>
+                                            <td>{{ $order->minute }}</td>
+                                            <td>{{ $order->distance }}</td>
+                                            <td>{{ $order->start_time }}</td>
                                             <td>{{ $order->address_A }}</td>
                                             <td>{{ $order->address_B }}</td>
                                             <td>{{ $order->name }}</td>
