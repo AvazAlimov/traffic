@@ -55,14 +55,15 @@ class OperatorController extends Controller
         return view('operator')
             ->withTariffs($tariffs)
             ->withTariff($tariff)
+            ->withTaxi_tariff($taxi_tariff)
             ->withAutomobiles($automobiles)
             ->withAutomobile($automobile)
             ->withOrders($orders)
             ->withOrders_wait($orders_wait)
-            ->with('taxi_tariff', $taxi_tariff)
             ->withTaxi_orders_wait($taxi_orders_wait)
             ->withTaxi_orders($taxi_orders);
     }
+
     public function orderSubmit(Request $request)
     {
         $rules = [
@@ -573,6 +574,4 @@ class OperatorController extends Controller
             ->withTaxi_orders_wait($taxi_orders_wait)
             ->withTaxi_orders($orders);
     }
-
-
 }

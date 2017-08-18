@@ -26,6 +26,12 @@
             .navs {
                 left: 10px;
             }
+            .dropdown {
+                left: 10px;
+            }
+            .page-header {
+                text-align: center;
+            }
         }
 
         .section {
@@ -501,7 +507,7 @@
                 </div>
                 <div id="section2" class="section">
                     <div class="page-header">
-                        <h2>Заказы</h2>
+                        <h2>Заказы на грузоперевозки</h2>
                     </div>
                     @foreach($orders_wait as $order)
                         <div class="col-md-12">
