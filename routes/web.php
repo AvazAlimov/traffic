@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,15 +10,18 @@
 |
 */
 
-Route::get('/', function () {
-    $tarifs = App\Tarif::all();
-    $tarif = array();
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
-    foreach ($tarifs as $tr) {
+Route::get('/', function () {
+    $tariffs = App\Tarif::all();
+    $tariff = array();
+
+    foreach ($tariffs as $tr) {
         if ($tr->type == 0)
-            $tarif[$tr->id] = "Внутри города";
+            $tariff[$tr->id] = "Внутри города";
         else
-            $tarif[$tr->id] = "За городом";
+            $tariff[$tr->id] = "За городом";
     }
 
     $cars = App\Automobile::all();
@@ -28,9 +30,8 @@ Route::get('/', function () {
         $car[$key->id] = $key->name;
     }
 
-    return view('welcome')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars);
+    return view('welcome')->withTarif($tariff)->withCar($car)->withTarifs($tariffs)->withCars($cars);
 });
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
