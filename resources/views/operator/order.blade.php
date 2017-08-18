@@ -175,7 +175,7 @@
                             </label>
                             <div class="col-md-3">
                                 <input type="number" id="trucking_price" class="form-control"
-                                       name="price">
+                                       name="price" value="{{ $order->sum }}">
                             </div>
                             <label class="col-md-1">сум</label>
                         </div>
