@@ -586,45 +586,41 @@
                                     </div>
                                 </div>
                                 <div class="panel-footer">
-                                    <table>
-                                        <tbody>
-                                        <tr>
-                                            <td>
-                                                <form method="post"
-                                                      action="{{route('operator.order.accept',['order_id' => $order->id, 'operator_id' => Illuminate\Support\Facades\Auth::guard('operator')->user()->id]
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <form method="post"
+                                                  action="{{route('operator.order.accept',['order_id' => $order->id, 'operator_id' => Illuminate\Support\Facades\Auth::guard('operator')->user()->id]
                                               )}}">
-                                                    {{csrf_field()}}
-                                                    <input type="submit" class="btn btn-success form-group"
-                                                           value="Принять">
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form method="post"
-                                                      action="{{route('operator.order.refuse',['order_id' => $order->id, 'operator_id' => Illuminate\Support\Facades\Auth::guard('operator')->user()->id]
+                                                {{csrf_field()}}
+                                                <input type="submit" class="btn btn-block btn-success form-group"
+                                                       value="Принять">
+                                            </form>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <form method="post"
+                                                  action="{{route('operator.order.refuse',['order_id' => $order->id, 'operator_id' => Illuminate\Support\Facades\Auth::guard('operator')->user()->id]
                                               )}}">
-                                                    {{csrf_field()}}
-                                                    <input type="submit" class="btn btn-warning form-group"
-                                                           value="Отказать">
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form method="get"
-                                                      action="{{route('operator.order.update',['id'=>$order->id])}}">
-                                                    {{csrf_field()}}
-                                                    <input type="submit" class="btn btn-primary form-group"
-                                                           value="Изменить">
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form method="post" onsubmit="return confirm('Хотите удалить?');"
-                                                      action="{{route('operator.order.delete', $order->id)}}">
-                                                    {{csrf_field()}}
-                                                    <input type="submit" class="btn btn-danger" value="Удалить">
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                                {{csrf_field()}}
+                                                <input type="submit" class="btn btn-block btn-warning form-group"
+                                                       value="Отказать">
+                                            </form>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <form method="get"
+                                                  action="{{route('operator.order.update',['id'=>$order->id])}}">
+                                                {{csrf_field()}}
+                                                <input type="submit" class="btn btn-block btn-primary form-group"
+                                                       value="Изменить">
+                                            </form>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <form method="post" onsubmit="return confirm('Хотите удалить?');"
+                                                  action="{{route('operator.order.delete', $order->id)}}">
+                                                {{csrf_field()}}
+                                                <input type="submit" class="btn btn-block btn-danger" value="Удалить">
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
