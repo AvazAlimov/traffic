@@ -538,7 +538,10 @@
                                     </div>
                                     <div class="form-group col-md-12">
                                         <div class="col-md-4"><strong>Время подачи:</strong></div>
-                                        <div class="col-md-8">{{ $order->start_time }}</div>
+                                        <div class="col-md-8">
+                                            {{ DateTime::createFromFormat('Y-m-d H:i:s',
+                                            $order->start_time)->format('Y-m-d H:i') }}
+                                        </div>
                                     </div>
 
                                     <div class="form-group col-md-12">
@@ -639,27 +642,20 @@
                                 </div>
                                 <div class="panel-body">
                                     <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Время ожидание:</strong></div>
+                                        <div class="col-md-8">{{ $order->minute }} мин</div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-4"><strong>Дистанция:</strong></div>
+                                        <div class="col-md-8">{{ $order->distance }} км</div>
+                                    </div>
+                                    <div class="form-group col-md-12">
                                         <div class="col-md-4"><strong>Время подачи:</strong></div>
-                                        <div class="col-md-8">{{ $order->start_time }}</div>
-                                    </div>
-
-                                    <div class="form-group col-md-12">
-                                        <div class="col-md-4">
-                                            <strong>Время ожидания (мин):</strong>
-                                        </div>
                                         <div class="col-md-8">
-                                            {{ $order->minute }}
+                                            {{ DateTime::createFromFormat('Y-m-d H:i:s',
+                                            $order->start_time)->format('Y-m-d H:i') }}
                                         </div>
                                     </div>
-                                    <div class="form-group col-md-12">
-                                        <div class="col-md-4">
-                                            <strong>Дистанция (км):</strong>
-                                        </div>
-                                        <div class="col-md-8">
-                                            {{ $order->distance }}
-                                        </div>
-                                    </div>
-
                                     <div class="form-group col-md-12">
                                         <div class="col-md-4"><strong>Откуда:</strong></div>
                                         <div class="col-md-8">{{ $order->address_A }}</div>
@@ -692,45 +688,41 @@
                                     </div>
                                 </div>
                                 <div class="panel-footer">
-                                    <table>
-                                        <tbody>
-                                        <tr>
-                                            <td>
-                                                <form method="post"
-                                                      action="{{route('operator.taxiorder.accept',['order_id' => $order->id, 'operator_id' => Illuminate\Support\Facades\Auth::guard('operator')->user()->id]
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <form method="post"
+                                                  action="{{route('operator.taxiorder.accept',['order_id' => $order->id, 'operator_id' => Illuminate\Support\Facades\Auth::guard('operator')->user()->id]
                                               )}}">
-                                                    {{csrf_field()}}
-                                                    <input type="submit" class="btn btn-success form-group"
-                                                           value="Принять">
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form method="post"
-                                                      action="{{route('operator.taxiorder.refuse',['order_id' => $order->id, 'operator_id' => Illuminate\Support\Facades\Auth::guard('operator')->user()->id]
+                                                {{csrf_field()}}
+                                                <input type="submit" class="btn btn-block btn-success form-group"
+                                                       value="Принять">
+                                            </form>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <form method="post"
+                                                  action="{{route('operator.taxiorder.refuse',['order_id' => $order->id, 'operator_id' => Illuminate\Support\Facades\Auth::guard('operator')->user()->id]
                                               )}}">
-                                                    {{csrf_field()}}
-                                                    <input type="submit" class="btn btn-warning form-group"
-                                                           value="Отказать">
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form method="get"
-                                                      action="{{route('operator.taxiorder.update',['id'=>$order->id])}}">
-                                                    {{csrf_field()}}
-                                                    <input type="submit" class="btn btn-primary form-group"
-                                                           value="Изменить">
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form method="post" onsubmit="return confirm('Хотите удалить?');"
-                                                      action="{{route('operator.taxiorder.delete', $order->id)}}">
-                                                    {{csrf_field()}}
-                                                    <input type="submit" class="btn btn-danger" value="Удалить">
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                                {{csrf_field()}}
+                                                <input type="submit" class="btn btn-block btn-warning form-group"
+                                                       value="Отказать">
+                                            </form>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <form method="get"
+                                                  action="{{route('operator.taxiorder.update',['id'=>$order->id])}}">
+                                                {{csrf_field()}}
+                                                <input type="submit" class="btn btn-block btn-primary form-group"
+                                                       value="Изменить">
+                                            </form>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <form method="post" onsubmit="return confirm('Хотите удалить?');"
+                                                  action="{{route('operator.taxiorder.delete', $order->id)}}">
+                                                {{csrf_field()}}
+                                                <input type="submit" class="btn btn-block btn-danger" value="Удалить">
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
