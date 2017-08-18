@@ -94,16 +94,16 @@ class OperatorController extends Controller
 
         $order->persons = $request->loaders;
         $tarif = Tarif::findOrFail($request->tariff_id);
-        if($tarif->type == 0)
+        if ($tarif->type == 0)
             $order->unit = $request->hour;
         else
-            $order->unit =$request->distance;
+            $order->unit = $request->distance;
 
         $order->address_A = $request->address_a;
         $order->address_B = $request->address_b;
         $order->point_A = $request->point_a;
         $order->point_B = $request->point_b;
-        $order->start_time=date('Y-m-d H:i:s', strtotime($request->start));
+        $order->start_time = date('Y-m-d H:i:s', strtotime($request->start));
 
         $order->name = $request->name;
         $order->phone = $request->phone;
@@ -116,6 +116,7 @@ class OperatorController extends Controller
         Session::flash('message', 'Ваш заказ успешно создано');
         return redirect()->back();
     }
+
     public function orderAccept(Request $request, $order_id, $operator_id)
     {
         $order = Order::find($order_id);
@@ -124,6 +125,7 @@ class OperatorController extends Controller
         $order->save();
         return redirect()->back();
     }
+
     public function orderRefuse(Request $request, $order_id, $operator_id)
     {
         $order = Order::find($order_id);
@@ -132,6 +134,7 @@ class OperatorController extends Controller
         $order->save();
         return redirect()->back();
     }
+
     public function orderDelete(Request $request, $order_id)
     {
         $order = Order::find($order_id);
@@ -139,14 +142,15 @@ class OperatorController extends Controller
 
         return redirect()->route('operator.dashboard');
     }
+
     public function orderUpdate($id)
     {
         $order = Order::findOrFail($id);
 
-        $cars = Automobile::all();
-        $car = array();
-        foreach ($cars as $key) {
-            $car[$key->id] = $key->name;
+        $automobiles = Automobile::all();
+        $automobile = array();
+        foreach ($automobiles as $key) {
+            $automobile[$key->id] = $key->name;
         }
 
         $tariffs = Tarif::all();
@@ -159,15 +163,15 @@ class OperatorController extends Controller
                 $tariff[$tr->id] = "За городом";
         }
 
-
         /** @noinspection PhpUndefinedMethodInspection */
         return view('operator.order')
             ->withOrder($order)
-            ->withCars($cars)
-            ->withTarifs($tariffs)
-            ->withCar($car)
-            ->withTarif($tariff);
+            ->withTariffs($tariffs)
+            ->withTariff($tariff)
+            ->withAutomobiles($automobiles)
+            ->withAutomobile($automobile);
     }
+
     public function orderUpdateSubmit(Request $request, $id)
     {
         $rules = [
@@ -206,6 +210,7 @@ class OperatorController extends Controller
 
         return redirect()->route('operator.dashboard');
     }
+
     public function orderRestore(Request $request, $id)
     {
         $order = Order::find($id);
@@ -215,6 +220,7 @@ class OperatorController extends Controller
 
         return redirect()->route('operator.dashboard');
     }
+
     public function search(Request $request)
     {
         $cars = Automobile::all();
@@ -231,7 +237,7 @@ class OperatorController extends Controller
                 $tariff[$tr->id] = "За городом";
         }
         $orders_wait = Order::where('status', 0)->get();
-        $orders = Order::where('status','!=', 0);
+        $orders = Order::where('status', '!=', 0);
 
         $taxi_tariff = TaxiTarif::first();
         $taxi_orders = TaxiOrder::where('status', '!=', 0)->paginate(6);
@@ -379,6 +385,7 @@ class OperatorController extends Controller
         Session::flash('message', 'Ваш заказ успешно создано');
         return redirect()->back();
     }
+
     public function taxiOrderAccept(Request $request, $taxi_order_id, $operator_id)
     {
         $order = TaxiOrder::find($taxi_order_id);
@@ -387,6 +394,7 @@ class OperatorController extends Controller
         $order->save();
         return redirect()->back();
     }
+
     public function taxiOrderRefuse(Request $request, $taxi_order_id, $operator_id)
     {
         $order = TaxiOrder::find($taxi_order_id);
@@ -395,12 +403,14 @@ class OperatorController extends Controller
         $order->save();
         return redirect()->back();
     }
+
     public function taxiOrderDelete(Request $request, $taxi_order_id)
     {
         $order = TaxiOrder::find($taxi_order_id);
         $order->delete();
         return redirect()->route('operator.dashboard');
     }
+
     public function taxiOrderUpdate($id)
     {
         $taxi_order = TaxiOrder::findOrFail($id);
@@ -411,6 +421,7 @@ class OperatorController extends Controller
             ->withOrder($taxi_order)
             ->withTaxi_tarif($taxi_tariff);
     }
+
     public function taxiOrderUpdateSubmit(Request $request, $id)
     {
         $rules = [
@@ -453,6 +464,7 @@ class OperatorController extends Controller
         Session::flash('message', 'Заказ изменен');
         return redirect()->route('operator.dashboard');
     }
+
     public function taxiOrderRestore(Request $request, $id)
     {
         $order = TaxiOrder::find($id);
@@ -461,6 +473,7 @@ class OperatorController extends Controller
         $order->save();
         return redirect()->route('operator.dashboard');
     }
+
     public function taxiSearch(Request $request)
     {
         $taxi_tariff = TaxiTarif::first();
@@ -492,14 +505,14 @@ class OperatorController extends Controller
             } else {
                 $orders = TaxiOrder::where('status', '!=', 0)
                     ->where(function ($query) use ($request) {
-                    /** @noinspection PhpUndefinedMethodInspection */
-                    $query->orWhere('id', $request->search)
-                        ->orWhere('name', 'LIKE', "%$request->search%")
-                        ->orWhere('price', 'LIKE', "%$request->search%")
-                        ->orWhere('address_A', 'LIKE', "%$request->search%")
-                        ->orWhere('address_B', 'LIKE', "%$request->search%")
-                        ->orWhere('phone', 'LIKE', "%$request->search%");
-                });
+                        /** @noinspection PhpUndefinedMethodInspection */
+                        $query->orWhere('id', $request->search)
+                            ->orWhere('name', 'LIKE', "%$request->search%")
+                            ->orWhere('price', 'LIKE', "%$request->search%")
+                            ->orWhere('address_A', 'LIKE', "%$request->search%")
+                            ->orWhere('address_B', 'LIKE', "%$request->search%")
+                            ->orWhere('phone', 'LIKE', "%$request->search%");
+                    });
             }
         }
         if ($request->filter == "name") {

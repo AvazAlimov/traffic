@@ -1,367 +1,403 @@
 @extends('layouts.app')
 @section('head')
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <!--suppress JSUnresolvedVariable, JSUnresolvedFunction -->
+    <link rel="stylesheet" href="{{ asset("css/bootstrap-datetimepicker.css") }}">
+    <style>
+        label {
+            margin-top: 5px;
+        }
+    </style>
 @endsection
 @section('content')
-    <div class="container-fluid">
-        <div class="col-md-8 col-md-offset-2">
-            {{Form::model($order, ['route' => ['operator.order.update.submit', $order->id], 'method' => 'post'])}}
+    <div class="container">
+        <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Order</div>
+                <div class="panel-heading">
+                    Идентификационный номер: {{ $order->id }}
+                </div>
                 <div class="panel-body">
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2"> Tarif</label>
-                        <div class="col-md-10">
-                            {{Form::select('tarif', $tarif,$order->tarif->id, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
+                    <form action="{{ route('operator.order.update.submit', $order->id) }}" method="post">
+                        <div class="form-group col-md-12">
+                            <label for="trucking_tariff_id" class="col-md-3">
+                                Выберите тариф:
+                            </label>
+                            <div class="col-md-9">
+                                <select name="tariff_id" id="trucking_tariff_id"
+                                        class="form-control" onchange="changeTariff()">
+                                    @foreach($tariff as $index=>$tarif)
+                                        <option value="{{ $index }}">{{ $tarif }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2"> Car</label>
-                        <div class="col-md-10">
-                            {{Form::select('car', $car, $order->automobile->id,['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
+                        <div class="form-group col-md-12">
+                            <label for="trucking_automobile_id" class="col-md-3">
+                                Выберите автомобиль:
+                            </label>
+                            <div class="col-md-9">
+                                <select name="automobile_id" id="trucking_automobile_id"
+                                        class="form-control" onchange="changeAutomobile()">
+                                    @foreach($automobile as $index => $auto)
+                                        <option value="{{$index}}">{{ $auto }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2">Persons</label>
-                        <div class="col-md-10">
-                            {{Form::number('persons', null,['max' => 8, 'min'=>0, 'class'=>'form-control', 'id' =>'person_id', 'onchange' => 'personsChange()'])}}
+                        <div class="form-group col-md-12">
+                            <label for="trucking_loaders" class="col-md-3">
+                                Количество грузчиков:
+                            </label>
+                            <div class="col-md-2">
+                                <input type="number" name="loaders" class="form-control"
+                                       id="trucking_loaders" min="0" max="8" value="{{ $order->persons }}"
+                                       onchange="calculateTruckingPrice()">
+                            </div>
+                            <label class="col-md-1">человек</label>
                         </div>
-                    </div>
+                        <div class="form-group col-md-12" id="trucking_hour_wrapper">
+                            <label for="trucking_hour" class="col-md-3">
+                                Срок аренды:
+                            </label>
+                            <div class="col-md-2">
+                                <input type="number" name="hour" id="trucking_hour"
+                                       class="form-control" min="{{ $tariffs[0]->type == 0
+                                                           ? $tariffs[0]->min_hour
+                                                           : ($tariffs[1]->type == 0 ? $tariffs[1]->min_hour : 0) }}"
+                                       value="{{ $tariffs[0]->type == 0
+                                                           ? $tariffs[0]->min_hour
+                                                           : ($tariffs[1]->type == 0 ? $tariffs[1]->min_hour : 0) }}"
+                                       onchange="calculateTruckingPrice()">
+                            </div>
+                            <label class="col-md-1">час</label>
+                        </div>
+                        <div class="form-group col-md-12" id="trucking_distance_wrapper">
+                            <label for="trucking_distance" class="col-md-3">
+                                Дистанция:
+                            </label>
+                            <div class="col-md-2">
+                                <input type="number" name="distance" id="trucking_distance" step="2"
+                                       class="form-control" min="0" value="0" readonly>
+                            </div>
+                            <label class="col-md-1">километр</label>
+                        </div>
+                        <div class="col-md-12">
+                            <hr>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="trucking_start" class="col-md-3">
+                                Время подачи:
+                            </label>
+                            <div class="col-md-3">
+                                <input type="text" name="start"
+                                       value="{{ DateTime::createFromFormat('Y-m-d H:i:s', $order->start_time)
+                                       ->format('Y-m-d H:i') }}"
+                                       class="form-control form_datetime"
+                                       id="trucking_start" readonly>
+                            </div>
+                        </div>
 
-                    <div class="form-group col-md-12">
-                        <label for="date_id" class="col-md-2"> Start Time</label>
-                        <div class="col-md-7">
-                            <input type="date" value="{{ Carbon\Carbon::parse($order->start_time)->format('Y-m-d')}}"
-                                   name="date" class="form-control"
-                                   id="date_id">
+                        <div class="form-group col-md-12 {{ ($errors->has('address_a') || $errors->has('point_a')) ? ' has-error' : '' }}">
+                            <label for="trucking_address_a" class="col-md-3">
+                                Откуда:
+                            </label>
+                            <div class="col-md-8">
+                                <input type="text" name="address_a" class="form-control"
+                                       id="trucking_address_a">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-default" data-toggle="modal"
+                                        data-target="#mainModal" onclick="setStartPoint()">
+                                    <i class="fa fa-map-marker"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <input type="time"
-                                   value="{{Carbon\Carbon::parse($order->start_time)->format('H:i') }}" name="time"
-                                   class="form-control" id="date_id">
-                        </div>
-                    </div>
 
-                    <div class="form-group col-md-12">
-                        <label for="unit_id" id="label_tarif" class="col-md-2">Unit</label>
-                        <div class="col-md-10">
-                            <input name="unit" type="number" step="0.01" value="{{ $order->unit  }}" min="0.0"
-                                   class="form-control" required id="unit_id" onchange="unitChange()">
+                        <div class="form-group col-md-12 {{ ($errors->has('address_b') || $errors->has('point_b')) ? ' has-error' : '' }}">
+                            <label for="trucking_address_b" class="col-md-3">
+                                Куда:
+                            </label>
+                            <div class="col-md-8">
+                                <input type="text" name="address_b" class="form-control"
+                                       id="trucking_address_b">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-default" data-toggle="modal"
+                                        data-target="#mainModal" onclick="setEndPoint()">
+                                    <i class="fa fa-map-marker"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                        <input type="hidden" name="point_a" id="trucking_point_a">
+                        <input type="hidden" name="point_b" id="trucking_point_b">
 
-                    @if ($errors->has('point_A') || $errors->has('address_A'))
-                        <div class="col-md-4">
-                            <span class="help-block">
-                                       <strong class="alert-danger">{{ $errors->first('point_A') }}</strong>
-                            </span>
+                        <div class="form-group col-md-12 {{ $errors->has('name') ? ' has-error' : '' }}">
+                            <label for="trucking_name" class="col-md-3">
+                                Имя заказчика:
+                            </label>
+                            <div class="col-md-9">
+                                <input type="text" name="name" id="trucking_name"
+                                       class="form-control" value="{{ $order->name }}">
+                            </div>
                         </div>
-                    @endif
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2"> From </label>
-                        <div class="col-md-9">
-                            {{Form::text('address_A',$order->address_A, ['class'=>'form-control', 'id'=>'address_a'])}}
-                        </div>
-                        <div class="col-md-1">
-                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"
-                                    onclick="setStart()"><i class="fa fa-compass"></i></button>
-                        </div>
-                    </div>
 
-                    @if ($errors->has('point_B') || $errors->has('address_B'))
-                        <div class="col-md-4">
-                            <span class="help-block">
-                                        <strong class="alert-danger">{{ $errors->first('point_B') }}</strong>
-                            </span>
+                        <div class="form-group col-md-12 {{ $errors->has('phone') ? ' has-error' : '' }}">
+                            <label for="trucking_phone" class="col-md-3">
+                                Телефон заказчика:
+                            </label>
+                            <div class="col-md-9">
+                                <input type="text" name="phone" id="trucking_phone"
+                                       class="form-control" value="{{ $order->phone }}">
+                            </div>
                         </div>
-                    @endif
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2"> To </label>
-                        <div class="col-md-9">
-                            {{Form::text('address_B',$order->address_B, ['class'=>'form-control', 'id'=>'address_b'])}}
-                        </div>
-                        <div class="col-md-1">
-                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"
-                                    onclick="setEnd()"><i class="fa fa-compass"></i></button>
-                        </div>
-                    </div>
 
-                    <div class="col-md-4">
-                        {{Form::hidden('point_A',$order->point_A, ['id'=>'point_a', 'class'=>'form-control'])}}
-                    </div>
-                    <div class="col-md-4">
-                        {{Form::hidden('point_B',$order->point_B,['id'=>'point_b', 'class'=>'form-control'])}}
-                    </div>
-
-
-                    <div class="form-group col-md-12">
-                        <label for="discount_id" class="col-md-2">Discount</label>
-                        <div class="col-md-10">
-                            {{Form::number('discount', $order->tarif->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
+                        <div class="form-group col-md-12">
+                            <label for="trucking_discard" class="col-md-3">
+                                Скидка:
+                            </label>
+                            <div class="col-md-2">
+                                <input type="number" id="trucking_discard" class="form-control"
+                                       readonly>
+                            </div>
+                            <label class="col-md-1">%</label>
+                            <label for="trucking_discard_sum" class="col-md-2 text-right">
+                                Цена скидки:
+                            </label>
+                            <div class="col-md-3">
+                                <input type="number" id="trucking_discard_sum" class="form-control"
+                                       readonly>
+                            </div>
+                            <label class="col-md-1">сум</label>
                         </div>
-                    </div>
 
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2">Price</label>
-                        <div class="col-md-10">
-                            {{Form::number('sum',$order->sum, ['class'=>'form-control', 'id'=>'sum_id'])}}
+                        <div class="form-group col-md-12">
+                            <label for="trucking_price" class="col-md-3">
+                                Итоговая цена:
+                            </label>
+                            <div class="col-md-3">
+                                <input type="number" id="trucking_price" class="form-control"
+                                       name="price">
+                            </div>
+                            <label class="col-md-1">сум</label>
                         </div>
-                    </div>
 
+                        <div class="col-md-12">
+                            <hr>
+                        </div>
 
-                    @if ($errors->has('name'))
-                        <div class="col-md-4">
-                            <span class="help-block">
-                                <strong class="alert-danger">{{ $errors->first('name') }}</strong>
-                            </span>
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-success btn-block">
+                                Изменить
+                            </button>
                         </div>
-                    @endif
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2"> Name</label>
-                        <div class="col-md-10">
-                            {{Form::text('name',$order->name,['class'=>'form-control'])}}
-                        </div>
-                    </div>
-                    @if ($errors->has('phone'))
-                        <div class="col-md-4">
-                            <span class="help-block">
-                                <strong class="alert-danger">{{ $errors->first('phone') }}</strong>
-                            </span>
-                        </div>
-                    @endif
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2"> Phone</label>
-                        <div class="col-md-10">
-                            {{Form::text('phone',$order->phone,['class'=>'form-control'])}}
-                        </div>
-                    </div>
-
+                    </form>
                 </div>
-
-                <div class="panel-footer">
-                    <input type="submit" class="btn btn-success" value="Done">
-                </div>
-
             </div>
+        </div>
 
-            {{Form::close()}}
+        <div class="modal fade" id="mainModal" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">УКАЖИТЕ АДРЕС</h4>
+                    </div>
+                    <div class="modal-body" style="height: 500px; padding: 0;">
+                        <div id="navigationMap" class="col-md-12" style="height: 500px;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Сохранить
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="modal fade" id="myModal" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">УКАЖИТЕ АДРЕС</h4>
-                </div>
-                <div class="modal-body" style="height: 500px; padding: 0;">
-                    <div id="map" class="col-md-12" style="height: 500px;"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Сохранить</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+@endsection
+@section('scripts')
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <script src="{{ asset("js/bootstrap-datetimepicker.js") }}"></script>
     <script>
-        var tarifs = {!! $tarifs !!};
-        var cars = {!! $cars !!};
-        var tarif_index = 0;
-        var car_index = 0;
-        var persons_price = 0;
-        var unit = 0;
-        var discount = 0;
+        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
 
-        var myMap;
-        var start = false;
-        var end = false;
+        //----- Maps Scripts Start -----//
+        var navigationMap;
+        var startPoint = false;
+        var endPoint = false;
         var distance = 0;
         var path;
 
-        function init() {
-            myMap = new ymaps.Map("map", {
+        function initMaps() {
+            navigationMap = new ymaps.Map("navigationMap", {
                 center: [41.299496, 69.240073],
                 zoom: 13,
                 controls: []
             }, {searchControlProvider: 'yandex#search'});
-            myMap.controls.add('geolocationControl');
-            myMap.controls.add('searchControl');
-            myMap.controls.add('zoomControl');
-            myMap.controls.get('searchControl').options.set('size', 'large');
 
-            myMap.events.add('click', function (event) {
+            navigationMap.controls.add('geolocationControl');
+            navigationMap.controls.add('searchControl');
+            navigationMap.controls.add('zoomControl');
+            navigationMap.controls.get('searchControl').options.set('size', 'large');
+
+            startPoint = new ymaps.Placemark([{!! $order->point_A !!}], {
+                balloonContent: 'Пункт А'
+            }, {
+                draggable: true,
+                preset: 'islands#redHomeIcon',
+                iconColor: '#F44336'
+            });
+
+            endPoint = new ymaps.Placemark([{!! $order->point_B !!}], {
+                balloonContent: 'Пункт Б'
+            }, {
+                draggable: true,
+                preset: 'islands#redGovernmentIcon',
+                iconColor: '#F44336'
+            });
+
+            navigationMap.geoObjects.add(startPoint);
+            navigationMap.geoObjects.add(endPoint);
+            setPoint(startPoint);
+            setPoint(endPoint);
+
+            navigationMap.events.add('click', function (event) {
                 var coords = event.get('coords');
-                if (start === false) {
-                    start = new ymaps.Placemark(coords, {
-                        balloonContent: 'Point A'
-                    }, {
+                if (startPoint === false) {
+                    startPoint = new ymaps.Placemark(coords, {balloonContent: 'Пункт А'}, {
                         draggable: true,
-                        preset: 'islands#icon',
+                        preset: 'islands#redHomeIcon',
                         iconColor: '#F44336'
                     });
-                    myMap.geoObjects.add(start);
-                    start.events.add('dragend', function (e) {
-                        setCoordinates();
+                    navigationMap.geoObjects.add(startPoint);
+
+                    startPoint.events.add('dragend', function () {
+                        setPoint(startPoint);
                     });
+
+                    setPoint(startPoint);
+                    return;
                 }
-                else {
-                    if (end === false) {
-                        end = new ymaps.Placemark(coords, {
-                            balloonContent: 'Point B'
-                        }, {
-                            draggable: true,
-                            preset: 'islands#icon',
-                            iconColor: '#2196F3'
-                        });
-                        myMap.geoObjects.add(end);
-                        end.events.add('dragend', function (e) {
-                            setCoordinates();
-                        });
-                    }
-                    else {
-                        end.geometry.setCoordinates(coords);
-                    }
+                if (endPoint === false) {
+                    endPoint = new ymaps.Placemark(coords, {balloonContent: 'Пункт А'}, {
+                        draggable: true,
+                        preset: 'islands#redGovernmentIcon',
+                        iconColor: '#F44336'
+                    });
+                    navigationMap.geoObjects.add(endPoint);
+
+                    endPoint.events.add('dragend', function () {
+                        setPoint(endPoint);
+                    });
+
+                    setPoint(endPoint);
                 }
-                setCoordinates();
-            });
-
-            start = new ymaps.Placemark(document.getElementById('point_a').value, {
-                balloonContent: 'Point A'
-            }, {
-                draggable: true,
-                preset: 'islands#icon',
-                iconColor: '#F44336'
-            });
-            myMap.geoObjects.add(start);
-
-            end = new ymaps.Placemark(document.getElementById('point_b').value, {
-                balloonContent: 'Point B'
-            }, {
-                draggable: true,
-                preset: 'islands#icon',
-                iconColor: '#F44336'
-            });
-            myMap.geoObjects.add(end);
-
-            ymaps.route([start.geometry.getCoordinates(), end.geometry.getCoordinates()],
-                    {
-                        mapStateAutoApply: true,
-                        multiRoute: false
-                    }).then(function (route) {
-                        path = route;
-                        distance = route.getLength();
-                        myMap.geoObjects.add(route);
-                        if (tarif_index === 1) {
-                            document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                            unitChange();
-                        }
-                    }, function (error) {
-                        alert("Error occurred: " + error.message);
-                    }
-            );
+            })
         }
 
-        function setCoordinates() {
-            if (start != false) {
-                document.getElementById('point_a').value = start.geometry.getCoordinates();
-                getAddress('address_a', start.geometry.getCoordinates());
-            }
-
-            if (end != false) {
-                document.getElementById('point_b').value = end.geometry.getCoordinates();
-                getAddress('address_b', end.geometry.getCoordinates());
-            }
-
-            if (start === false || end === false)
-                return;
-
-            if (path === null)
-                return;
-
-            myMap.geoObjects.remove(path);
-            ymaps.route([start.geometry.getCoordinates(), end.geometry.getCoordinates()],
-                    {
-                        mapStateAutoApply: true,
-                        multiRoute: false
-                    }).then(function (route) {
-                        path = route;
-                        distance = route.getLength();
-                        myMap.geoObjects.add(route);
-                        if (tarif_index === 1) {
-                            document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                            unitChange();
-                        }
-                    }, function (error) {
-                        alert("Error occurred: " + error.message);
-                    }
-            );
-        }
-
-        function getAddress(id, coords) {
+        function setPoint(placemark) {
+            var coords = placemark.geometry.getCoordinates();
             ymaps.geocode(coords).then(function (res) {
                 var firstGeoObject = res.geoObjects.get(0);
-                document.getElementById(id).value = firstGeoObject.getAddressLine();
+                if (placemark === startPoint) {
+                    document.getElementById("trucking_address_a").value = firstGeoObject.getAddressLine();
+                    document.getElementById("trucking_point_a").value = coords;
+                }
+                if (placemark === endPoint) {
+                    document.getElementById("trucking_address_b").value = firstGeoObject.getAddressLine();
+                    document.getElementById("trucking_point_b").value = coords;
+                }
             });
+            drawPath();
         }
 
-        ymaps.ready(init);
-
-        function setStart() {
-            myMap.geoObjects.remove(start);
-            myMap.geoObjects.remove(path);
-            start = false;
+        function drawPath() {
+            if (startPoint === false || endPoint === false)
+                return;
+            navigationMap.geoObjects.remove(path);
+            ymaps.route([startPoint.geometry.getCoordinates(), endPoint.geometry.getCoordinates()], {
+                mapStateAutoApply: true,
+                multiRoute: false
+            }).then(function (route) {
+                        path = route;
+                        distance = (route.getLength() / 1000).toFixed(2);
+                        navigationMap.geoObjects.add(route);
+                        path.getWayPoints().removeAll();
+                        document.getElementById("trucking_distance").value = distance;
+                        calculateTruckingPrice();
+                    }, function (error) {
+                        alert("Возникла ошибка: " + error.message);
+                    }
+            );
         }
 
-        function changeTarif() {
-            tarif_index = document.getElementById('tarif_id').selectedIndex;
-            if (tarif_index === 0) {
-                document.getElementById('label_tarif').innerHTML = "Hours";
-                document.getElementById('unit_id').min = tarifs[tarif_index]['min_hour'];
-                document.getElementById('unit_id').value = tarifs[tarif_index]['min_hour'];
-                document.getElementById('unit_id').readOnly = false;
+        function setStartPoint() {
+            if (startPoint !== false) {
+                navigationMap.geoObjects.remove(startPoint);
+                navigationMap.geoObjects.remove(path);
+                startPoint = false;
+                document.getElementById("trucking_address_a").value =
+                        document.getElementById("trucking_point_a").value = "";
             }
-            else {
-                document.getElementById('label_tarif').innerHTML = "Kilometers";
-                document.getElementById('unit_id').min = tarifs[tarif_index]['min_distance'];
-                if (distance === 0)
-                    document.getElementById('unit_id').value = tarifs[tarif_index]['min_distance'];
-                else
-                    document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                document.getElementById('unit_id').readOnly = true;
+        }
+
+        function setEndPoint() {
+            if (endPoint !== false) {
+                navigationMap.geoObjects.remove(endPoint);
+                navigationMap.geoObjects.remove(path);
+                endPoint = false;
+                document.getElementById("trucking_address_b").value =
+                        document.getElementById("trucking_point_b").value = "";
             }
-            discount = document.getElementById('discount_id').value = tarifs[tarif_index]['discard'];
-            calculatePrice();
         }
 
-        function changeCar() {
-            car_index = document.getElementById('car_id').selectedIndex;
-            calculatePrice();
+        ymaps.ready(initMaps);
+        //----- Maps Scripts End -----//
+
+        //----- Trucking Calculation Scripts Start -----//
+        var arrays = [{!! $tariffs !!}];
+        arrays.push({!! $automobiles !!});
+        var tariff_index;
+        var car_index;
+
+        function changeTariff() {
+            tariff_index = document.getElementById("trucking_tariff_id").selectedIndex;
+            if (tariff_index === 0) {
+                document.getElementById("trucking_hour_wrapper").style.display = "block";
+                document.getElementById("trucking_distance_wrapper").style.display = "none";
+            } else {
+                document.getElementById("trucking_hour_wrapper").style.display = "none";
+                document.getElementById("trucking_distance_wrapper").style.display = "block";
+            }
+            document.getElementById("trucking_discard").value = arrays[0][tariff_index]['discard'];
+            calculateTruckingPrice();
         }
 
-        function personsChange() {
-            persons_price = document.getElementById('person_id').value * tarifs[tarif_index]['price_per_person'];
-            calculatePrice();
+        function changeAutomobile() {
+            car_index = document.getElementById("trucking_automobile_id").selectedIndex;
+            calculateTruckingPrice();
         }
 
-        function unitChange() {
-            if (document.getElementById('unit_id').value < 0)
-                changeTarif();
-            if (tarif_index === 0)
-                unit = (document.getElementById('unit_id').value - tarifs[tarif_index]['min_hour']) * tarifs[tarif_index]['price_per_hour'];
-            else
-                unit = (document.getElementById('unit_id').value - tarifs[tarif_index]['min_distance']) * tarifs[tarif_index]['price_per_distance'];
-            calculatePrice();
+        function calculateTruckingPrice() {
+            var price = arrays[0][tariff_index]['price_minimum'];
+            price += arrays[1][car_index]['price'];
+            price += arrays[0][tariff_index]['price_per_person'] * document.getElementById("trucking_loaders").value;
+            if (arrays[0][tariff_index]['type'] === 0 &&
+                    (document.getElementById("trucking_hour").value > arrays[0][tariff_index]['min_hour']))
+                price += arrays[0][tariff_index]['price_per_hour'] * (document.getElementById("trucking_hour").value -
+                        arrays[0][tariff_index]['min_hour']);
+            else if (document.getElementById("trucking_distance").value > arrays[0][tariff_index]['min_distance'])
+                price += arrays[0][tariff_index]['price_per_distance'] *
+                        (document.getElementById("trucking_distance").value - arrays[0][tariff_index]['min_distance']);
+            document.getElementById("trucking_discard_sum").value = price * arrays[0][tariff_index]['discard'] / 100;
+            document.getElementById("trucking_price").value = price - (price * arrays[0][tariff_index]['discard'] / 100);
         }
+        //----- Trucking Calculation Scripts End -----//
 
-        function calculatePrice() {
-            var price = tarifs[tarif_index]['price_minimum'];
-            price += cars[car_index]['price'];
-            price += persons_price;
-            price += unit;
-            price -= price * discount / 100;
-            document.getElementById('sum_id').value = price;
-        }
+        window.onload = function () {
+            document.getElementById("trucking_tariff_id").selectedIndex = {{ $order->tarif->id }} + 0;
+            document.getElementById("trucking_automobile_id").value = {{ $order->automobile->id }} + '';
+            document.getElementById("trucking_hour").value = {{ $order->unit }} + 0;
+            car_index = document.getElementById("trucking_automobile_id").selectedIndex;
+            changeTariff();
+        };
     </script>
 @endsection
