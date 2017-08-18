@@ -79,8 +79,6 @@ Route::prefix('operator')->group(function () {
         Route::post('/restore/{id}', 'OperatorController@orderRestore')->name('operator.order.restore');
         Route::get('/update/{id}/', 'OperatorController@orderUpdate')->name('operator.order.update');
         Route::post('/update/{id}', 'OperatorController@orderUpdateSubmit')->name('operator.order.update.submit');
-
-
     });
 
     Route::prefix('taxiorder')->group(function () {
