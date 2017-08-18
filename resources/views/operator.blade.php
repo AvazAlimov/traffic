@@ -7,6 +7,10 @@
             margin-top: 6px;
         }
 
+        .icon {
+            margin-right: 5px;
+        }
+
         #container {
             display: none;
             padding: 0 0 20px 0;
@@ -72,35 +76,48 @@
         <ul class="nav navbar-nav">
             <li data-toggle="tab" class="navs">
                 <a onclick="switchSection('section1')">
-                    <i class="fa fa-columns"></i>
+                    <i class="fa fa-columns icon"></i>
                     Сделать заказ
                 </a>
             </li>
-            <li data-toggle="tab" class="navs">
-                <a onclick="switchSection('section2')">
-                    <i class="fa fa-list-alt"></i>
-                    Заказы
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-list-alt icon"></i> Заказы <span class="caret"></span>
                 </a>
+                <ul class="dropdown-menu">
+                    <li class="navs">
+                        <a onclick="switchSection('section2')">
+                            <i class="fa fa-truck icon"></i>
+                            Грузоперевозка
+                        </a>
+                    </li>
+                    <li class="navs">
+                        <a onclick="switchSection('section3')">
+                            <i class="fa fa-cab icon"></i>
+                            Такси
+                        </a>
+                    </li>
+                </ul>
             </li>
-            <li data-toggle="tab" class="navs">
-                <a onclick="switchSection('section3')">
-                    <i class="fa fa-handshake-o"></i>
-                    Заказы Taxi
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-handshake-o icon"></i> Поданные заказы <span class="caret"></span>
                 </a>
+                <ul class="dropdown-menu">
+                    <li class="navs">
+                        <a onclick="switchSection('section4')">
+                            <i class="fa fa-truck icon"></i>
+                            Грузоперевозка
+                        </a>
+                    </li>
+                    <li class="navs">
+                        <a onclick="switchSection('section5')">
+                            <i class="fa fa-cab icon"></i>
+                            Такси
+                        </a>
+                    </li>
+                </ul>
             </li>
-            <li data-toggle="tab" class="navs">
-                <a onclick="switchSection('section4')">
-                    <i class="fa fa-handshake-o"></i>
-                    Поданные заказы
-                </a>
-            </li>
-            <li data-toggle="tab" class="navs">
-                <a onclick="switchSection('section5')">
-                    <i class="fa fa-handshake-o"></i>
-                    Поданные заказы Такси
-                </a>
-            </li>
-
         </ul>
     </nav>
 
@@ -228,7 +245,7 @@
                                                 </div>
                                                 <div class="col-md-1">
                                                     <button type="button" class="btn btn-default" data-toggle="modal"
-                                                            data-target="#mainModal">
+                                                            data-target="#mainModal" onclick="setStartPoint()">
                                                         <i class="fa fa-map-marker"></i>
                                                     </button>
                                                 </div>
@@ -244,7 +261,7 @@
                                                 </div>
                                                 <div class="col-md-1">
                                                     <button type="button" class="btn btn-default" data-toggle="modal"
-                                                            data-target="#mainModal">
+                                                            data-target="#mainModal" onclick="setEndPoint()">
                                                         <i class="fa fa-map-marker"></i>
                                                     </button>
                                                 </div>
@@ -373,7 +390,7 @@
                                                 </div>
                                                 <div class="col-md-1">
                                                     <button type="button" class="btn btn-default" data-toggle="modal"
-                                                            data-target="#mainModal">
+                                                            data-target="#mainModal" onclick="setStartPoint()">
                                                         <i class="fa fa-map-marker"></i>
                                                     </button>
                                                 </div>
@@ -389,7 +406,7 @@
                                                 </div>
                                                 <div class="col-md-1">
                                                     <button type="button" class="btn btn-default" data-toggle="modal"
-                                                            data-target="#mainModal">
+                                                            data-target="#mainModal" onclick="setEndPoint()">
                                                         <i class="fa fa-map-marker"></i>
                                                     </button>
                                                 </div>
@@ -1041,6 +1058,10 @@
 
         function switchSection(id) {
             document.cookie = "operatorPage=" + id + ";";
+            var navs = document.getElementsByClassName("navs");
+            for (var nav = 0; nav < navs.length; nav++)
+                navs[nav].className = "navs";
+            navs[id.replace("section", "") - 1].className = "navs active";
             var section = document.getElementsByClassName('section');
             for (var i = 0; i < section.length; i++)
                 section[i].style.display = "none";
@@ -1159,6 +1180,32 @@
                         alert("Возникла ошибка: " + error.message);
                     }
             );
+        }
+
+        function setStartPoint() {
+            if (startPoint !== false) {
+                navigationMap.geoObjects.remove(startPoint);
+                navigationMap.geoObjects.remove(path);
+                startPoint = false;
+                path = null;
+                document.getElementById("trucking_address_a").value =
+                        document.getElementById("taxi_address_a").value =
+                                document.getElementById("trucking_point_a").value =
+                                        document.getElementById("taxi_point_a").value = "";
+            }
+        }
+
+        function setEndPoint() {
+            if (endPoint !== false) {
+                navigationMap.geoObjects.remove(endPoint);
+                navigationMap.geoObjects.remove(path);
+                endPoint = false;
+                path = null;
+                document.getElementById("trucking_address_b").value =
+                        document.getElementById("taxi_address_b").value =
+                                document.getElementById("trucking_point_b").value =
+                                        document.getElementById("taxi_point_b").value = "";
+            }
         }
 
         ymaps.ready(initMaps);
