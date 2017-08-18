@@ -949,7 +949,7 @@
                                     </div>
                                     <div class="form-group col-md-12">
                                         <div class="col-md-4">
-                                            <strong>Дистанчия (км)</strong>
+                                            <strong>Дистанция (км)</strong>
                                         </div>
                                         <div class="col-md-8">
                                             {{ $served_order->distance }}
