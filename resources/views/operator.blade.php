@@ -732,8 +732,8 @@
                     <div class="page-header">
                         <h2>Поданные заказы</h2>
                     </div>
-                    <form action="{{route('operator.search')}}" method="post">
-                        {{csrf_field()}}
+                    <form action="{{route('operator.search')}}" method="get">
+
                         <div class="input-group">
                             <input type="text" class="form-control" name="search" placeholder="Найти"/>
                             <span class="input-group-btn">
@@ -745,30 +745,30 @@
                     </form>
                     <h3>Сортировать по:</h3>
                     <div class="col-md-12" style="margin-bottom: 24px;">
-                        <form class="col-md-3" action="{{route('operator.search')}}" method="post">
-                            {{csrf_field()}}
+                        <form class="col-md-3" action="{{route('operator.search')}}" method="get">
+
 
                             <button type="submit" name="filter" value="id" class="btn btn-default"
                                     style="display: block; width: 100%;">
                                 Ид номеру
                             </button>
                         </form>
-                        <form class="col-md-3" action="{{route('operator.search')}}" method="post">
-                            {{csrf_field()}}
+                        <form class="col-md-3" action="{{route('operator.search')}}" method="get">
+
                             <button type="submit" name="filter" value="name" class="btn btn-default"
                                     style="display: block; width: 100%;">
                                 Именам
                             </button>
                         </form>
-                        <form class="col-md-3" action="{{route('operator.search')}}" method="post">
-                            {{csrf_field()}}
+                        <form class="col-md-3" action="{{route('operator.search')}}" method="get">
+
                             <button type="submit" name="filter" value="sum" class="btn btn-default"
                                     style="display: block; width: 100%;">
                                 Ценам
                             </button>
                         </form>
-                        <form class="col-md-3" action="{{route('operator.search')}}" method="post">
-                            {{csrf_field()}}
+                        <form class="col-md-3" action="{{route('operator.search')}}" method="get">
+
                             <button type="submit" name="filter" value="date" class="btn btn-default"
                                     style="display: block; width: 100%;">
                                 Время подачи
@@ -883,7 +883,7 @@
                     <div class="page-header">
                         <h2>Поданные заказы</h2>
                     </div>
-                    <form action="{{route('operator.taxi.search')}}" method="post">
+                    <form action="{{route('operator.taxi.search')}}" method="get">
                         {{csrf_field()}}
                         <div class="input-group">
                             <input type="text" class="form-control" name="search" placeholder="Найти"/>
@@ -896,7 +896,7 @@
                     </form>
                     <h3>Сортировать по:</h3>
                     <div class="col-md-12" style="margin-bottom: 24px;">
-                        <form class="col-md-3" action="{{route('operator.taxi.search')}}" method="post">
+                        <form class="col-md-3" action="{{route('operator.taxi.search')}}" method="get">
                             {{csrf_field()}}
 
                             <button type="submit" name="filter" value="id" class="btn btn-default"
@@ -904,21 +904,21 @@
                                 Ид номеру
                             </button>
                         </form>
-                        <form class="col-md-3" action="{{route('operator.taxi.search')}}" method="post">
+                        <form class="col-md-3" action="{{route('operator.taxi.search')}}" method="get">
                             {{csrf_field()}}
                             <button type="submit" name="filter" value="name" class="btn btn-default"
                                     style="display: block; width: 100%;">
                                 Именам
                             </button>
                         </form>
-                        <form class="col-md-3" action="{{route('operator.taxi.search')}}" method="post">
+                        <form class="col-md-3" action="{{route('operator.taxi.search')}}" method="get">
                             {{csrf_field()}}
                             <button type="submit" name="filter" value="sum" class="btn btn-default"
                                     style="display: block; width: 100%;">
                                 Ценам
                             </button>
                         </form>
-                        <form class="col-md-3" action="{{route('operator.taxi.search')}}" method="post">
+                        <form class="col-md-3" action="{{route('operator.taxi.search')}}" method="get">
                             {{csrf_field()}}
                             <button type="submit" name="filter" value="date" class="btn btn-default"
                                     style="display: block; width: 100%;">
