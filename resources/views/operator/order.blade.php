@@ -61,12 +61,11 @@
                             </label>
                             <div class="col-md-2">
                                 <input type="number" name="hour" id="trucking_hour"
-                                       class="form-control" min="{{ $tariffs[0]->type == 0
+                                       class="form-control"
+                                       min="{{ $tariffs[0]->type == 0
                                                            ? $tariffs[0]->min_hour
                                                            : ($tariffs[1]->type == 0 ? $tariffs[1]->min_hour : 0) }}"
-                                       value="{{ $tariffs[0]->type == 0
-                                                           ? $tariffs[0]->min_hour
-                                                           : ($tariffs[1]->type == 0 ? $tariffs[1]->min_hour : 0) }}"
+                                       value="{{ (int)$order->unit }}"
                                        onchange="calculateTruckingPrice()">
                             </div>
                             <label class="col-md-1">час</label>
@@ -396,7 +395,6 @@
         window.onload = function () {
             document.getElementById("trucking_tariff_id").selectedIndex = {{ $order->tarif->id }} + 0;
             document.getElementById("trucking_automobile_id").value = {{ $order->automobile->id }} + '';
-            document.getElementById("trucking_hour").value = {{ $order->unit }} + 0;
             car_index = document.getElementById("trucking_automobile_id").selectedIndex;
             changeTariff();
         };

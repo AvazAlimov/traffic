@@ -177,15 +177,15 @@ class OperatorController extends Controller
         $rules = [
             'name' => 'required',
             'phone' => 'required',
-            'address_A' => 'required',
-            'address_B' => 'required',
-            'point_A' => 'required',
-            'point_B' => 'required',
+            'address_a' => 'required',
+            'address_b' => 'required',
+            'point_a' => 'required',
+            'point_b' => 'required',
         ];
 
         $messages = [
-            'point_A.required' => 'Пункт А не выбран',
-            'point_B.required' => 'Пункт Б не выбран',
+            'point_a.required' => 'Пункт А не выбран',
+            'point_b.required' => 'Пункт Б не выбран',
             'name.required' => 'Введите имя',
             'phone.required' => 'Введите телефон',
         ];
@@ -194,18 +194,30 @@ class OperatorController extends Controller
         Validator::make($request->all(), $rules, $messages)->validate();
 
         $order = Order::findOrFail($id);
-        $order->car_id = $request->car;
-        $order->tarif_id = $request->tarif;
-        $order->address_A = $request->address_A;
-        $order->address_B = $request->address_B;
-        $order->point_A = $request->point_A;
-        $order->point_B = $request->point_B;
-        $order->persons = $request->persons;
-        $order->unit = $request->unit;
+        $order->user_type = 2;
+        $order->user_id = Auth::guard('operator')->user()->id;
+
+        $order->tarif_id = $request->tariff_id;
+        $order->car_id = $request->automobile_id;
+
+        $order->persons = $request->loaders;
+        $tariff = Tarif::findOrFail($request->tariff_id);
+        if ($tariff->type == 0)
+            $order->unit = $request->hour;
+        else
+            $order->unit = $request->distance;
+
+        $order->address_A = $request->address_a;
+        $order->address_B = $request->address_b;
+        $order->point_A = $request->point_a;
+        $order->point_B = $request->point_b;
+        $order->start_time = date('Y-m-d H:i:s', strtotime($request->start));
+
         $order->name = $request->name;
         $order->phone = $request->phone;
-        $order->sum = $request->sum;
-        $order->start_time = Carbon::parse($request->date . " " . $request->time, null);
+        $order->sum = $request->price;
+        $order->status = 0;
+        $order->operator_id = Auth::guard('operator')->user()->id;
         $order->save();
 
         return redirect()->route('operator.dashboard');
