@@ -17,6 +17,7 @@
                 </div>
                 <div class="panel-body">
                     <form action="{{ route('operator.order.update.submit', $order->id) }}" method="post">
+                        {{ csrf_field() }}
                         <div class="form-group col-md-12">
                             <label for="trucking_tariff_id" class="col-md-3">
                                 Выберите тариф:
