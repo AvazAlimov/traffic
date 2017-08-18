@@ -1,134 +1,168 @@
 @extends('layouts.app')
 @section('head')
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <link rel="stylesheet" href="{{ asset("css/bootstrap-datetimepicker.css") }}">
+    <style>
+        label {
+            margin-top: 5px;
+        }
+    </style>
 @endsection
 @section('content')
-    <div class="container-fluid">
-        <div class="col-md-8 col-md-offset-2">
-            {{Form::model($order, ['route' => ['operator.taxiorder.update.submit', $order->id], 'method' => 'post'])}}
+    <div class="container">
+        <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Order</div>
+                <div class="panel-heading">
+                    Идентификационный номер: {{ $order->id }}
+                </div>
                 <div class="panel-body">
-                    <div class="form-group col-md-12">
-                        <label for="date_id" class="col-md-2"> Start Time</label>
-                        <div class="col-md-7">
-                            <input type="date" value="{{ Carbon\Carbon::parse($order->start_time)->format('Y-m-d')}}"
-                                   name="date" class="form-control"
-                                   id="date_id">
+                    <form action="{{ route('operator.taxiorder.update.submit', $order->id) }}" method="post">
+                        {{csrf_field()}}
+                        <div class="form-group col-md-12">
+                            <label for="taxi_minute" class="col-md-3">
+                                Время ожидание:
+                            </label>
+                            <div class="col-md-2">
+                                <input type="number" name="minute" class="form-control"
+                                       id="taxi_minute" onchange="calculateTaxiPrice()"
+                                       min="{{ $taxi_tariff->min_minute }}"
+                                       value="{{ $order->minute }}">
+                            </div>
+                            <label class="col-md-1">
+                                минут
+                            </label>
                         </div>
-                        <div class="col-md-3">
-                            <input type="time"
-                                   value="{{Carbon\Carbon::parse($order->start_time)->format('H:i') }}" name="time"
-                                   class="form-control" id="date_id">
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label for="unit_id" id="label_tarif" class="col-md-2">Unit</label>
-                        <div class="col-md-10">
-                            <input name="unit" type="number" step="0.01" value="{{ $order->unit  }}" min="0.0"
-                                   class="form-control" required id="unit_id" onchange="unitChange()">
-                        </div>
-                    </div>
 
-                    @if ($errors->has('point_A') || $errors->has('address_A'))
-                        <div class="col-md-4">
-                            <span class="help-block">
-                                       <strong class="alert-danger">{{ $errors->first('point_A') }}</strong>
-                            </span>
+                        <div class="form-group col-md-12">
+                            <label for="taxi_distance" class="col-md-3">
+                                Дистанция:
+                            </label>
+                            <div class="col-md-2">
+                                <input type="number" name="distance" class="form-control"
+                                       id="taxi_distance" min="0" step="2" value="{{ $order->distance }}" readonly>
+                            </div>
+                            <label class="col-md-1">
+                                км
+                            </label>
                         </div>
-                    @endif
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2"> From </label>
-                        <div class="col-md-9">
-                            {{Form::text('address_A',$order->address_A, ['class'=>'form-control', 'id'=>'address_a'])}}
-                        </div>
-                        <div class="col-md-1">
-                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"
-                                    onclick="setStart()"><i class="fa fa-compass"></i></button>
-                        </div>
-                    </div>
 
-                    @if ($errors->has('point_B') || $errors->has('address_B'))
-                        <div class="col-md-4">
-                            <span class="help-block">
-                                        <strong class="alert-danger">{{ $errors->first('point_B') }}</strong>
-                            </span>
+                        <div class="col-md-12">
+                            <hr>
                         </div>
-                    @endif
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2"> To </label>
-                        <div class="col-md-9">
-                            {{Form::text('address_B',$order->address_B, ['class'=>'form-control', 'id'=>'address_b'])}}
-                        </div>
-                        <div class="col-md-1">
-                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"
-                                    onclick="setEnd()"><i class="fa fa-compass"></i></button>
-                        </div>
-                    </div>
 
-                    <div class="col-md-4">
-                        {{Form::hidden('point_A',$order->point_A, ['id'=>'point_a', 'class'=>'form-control'])}}
-                    </div>
-                    <div class="col-md-4">
-                        {{Form::hidden('point_B',$order->point_B,['id'=>'point_b', 'class'=>'form-control'])}}
-                    </div>
-
-
-                    <div class="form-group col-md-12">
-                        <label for="discount_id" class="col-md-2">Discount</label>
-                        <div class="col-md-10">
-                            {{Form::number('discount', $order->tarif->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
+                        <div class="form-group col-md-12">
+                            <label for="taxi_start" class="col-md-3">
+                                Время подачи:
+                            </label>
+                            <div class="col-md-3">
+                                <input type="text" name="start"
+                                       value="{{ DateTime::createFromFormat('Y-m-d H:i:s', $order->start_time)
+                                       ->format('Y-m-d H:i') }}"
+                                       class="form-control form_datetime"
+                                       id="taxi_start" readonly>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2">Price</label>
-                        <div class="col-md-10">
-                            {{Form::number('sum',$order->sum, ['class'=>'form-control', 'id'=>'sum_id'])}}
+                        <div class="form-group col-md-12 {{ ($errors->has('address_a') || $errors->has('point_a')) ? ' has-error' : '' }}">
+                            <label for="taxi_address_a" class="col-md-3">
+                                Откуда:
+                            </label>
+                            <div class="col-md-8">
+                                <input type="text" name="address_a" class="form-control"
+                                       id="taxi_address_a">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-default" data-toggle="modal"
+                                        data-target="#mainModal" onclick="setStartPoint()">
+                                    <i class="fa fa-map-marker"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
+                        <div class="form-group col-md-12 {{ ($errors->has('address_b') || $errors->has('point_b')) ? ' has-error' : '' }}">
+                            <label for="taxi_address_b" class="col-md-3">
+                                Куда:
+                            </label>
+                            <div class="col-md-8">
+                                <input type="text" name="address_b" class="form-control"
+                                       id="taxi_address_b">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-default" data-toggle="modal"
+                                        data-target="#mainModal" onclick="setEndPoint()">
+                                    <i class="fa fa-map-marker"></i>
+                                </button>
+                            </div>
+                        </div>
 
-                    @if ($errors->has('name'))
-                        <div class="col-md-4">
-                            <span class="help-block">
-                                <strong class="alert-danger">{{ $errors->first('name') }}</strong>
-                            </span>
-                        </div>
-                    @endif
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2"> Name</label>
-                        <div class="col-md-10">
-                            {{Form::text('name',$order->name,['class'=>'form-control'])}}
-                        </div>
-                    </div>
-                    @if ($errors->has('phone'))
-                        <div class="col-md-4">
-                            <span class="help-block">
-                                <strong class="alert-danger">{{ $errors->first('phone') }}</strong>
-                            </span>
-                        </div>
-                    @endif
-                    <div class="form-group col-md-12">
-                        <label class="col-md-2"> Phone</label>
-                        <div class="col-md-10">
-                            {{Form::text('phone',$order->phone,['class'=>'form-control'])}}
-                        </div>
-                    </div>
+                        <input type="hidden" name="point_a" id="taxi_point_a">
+                        <input type="hidden" name="point_b" id="taxi_point_b">
 
+                        <div class="form-group col-md-12 {{ $errors->has('name') ? ' has-error' : '' }}">
+                            <label for="taxi_name" class="col-md-3">
+                                Имя заказчика:
+                            </label>
+                            <div class="col-md-9">
+                                <input type="text" name="name" id="taxi_name"
+                                       class="form-control" value="{{ $order->name }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12 {{ $errors->has('phone') ? ' has-error' : '' }}">
+                            <label for="taxi_phone" class="col-md-3">
+                                Телефон заказчика:
+                            </label>
+                            <div class="col-md-9">
+                                <input type="text" name="phone" id="taxi_phone"
+                                       class="form-control" value="{{ $order->phone }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label for="taxi_discard" class="col-md-3">
+                                Скидка:
+                            </label>
+                            <div class="col-md-2">
+                                <input type="number" id="taxi_discard" class="form-control"
+                                       readonly value="{{ $taxi_tariff->discard }}">
+                            </div>
+                            <label class="col-md-1">%</label>
+                            <label for="taxi_discard_sum" class="col-md-2 text-right">
+                                Цена скидки:
+                            </label>
+                            <div class="col-md-3">
+                                <input type="number" id="taxi_discard_sum" class="form-control"
+                                       readonly>
+                            </div>
+                            <label class="col-md-1">сум</label>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label for="taxi_price" class="col-md-3">
+                                Итоговая цена:
+                            </label>
+                            <div class="col-md-3">
+                                <input type="number" id="taxi_price" class="form-control"
+                                       name="price" value="{{ $order->price }}">
+                            </div>
+                            <label class="col-md-1">сум</label>
+                        </div>
+
+                        <div class="col-md-12">
+                            <hr>
+                        </div>
+
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-success btn-block">
+                                Изменить
+                            </button>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="panel-footer">
-                    <input type="submit" class="btn btn-success" value="Done">
-                </div>
-
             </div>
-
-            {{Form::close()}}
         </div>
     </div>
 
-    <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal fade" id="mainModal" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -136,212 +170,174 @@
                     <h4 class="modal-title">УКАЖИТЕ АДРЕС</h4>
                 </div>
                 <div class="modal-body" style="height: 500px; padding: 0;">
-                    <div id="map" class="col-md-12" style="height: 500px;"></div>
+                    <div id="navigationMap" class="col-md-12" style="height: 500px;"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Сохранить</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Сохранить
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
+@endsection
+@section('scripts')
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <script src="{{ asset("js/bootstrap-datetimepicker.js") }}"></script>
+    <!--suppress JSUnresolvedVariable, JSUnresolvedFunction -->
     <script>
-        var tarifs = {!! $tarifs !!};
-        var cars = {!! $cars !!};
-        var tarif_index = 0;
-        var car_index = 0;
-        var persons_price = 0;
-        var unit = 0;
-        var discount = 0;
+        $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
 
-        var myMap;
-        var start = false;
-        var end = false;
+        //----- Maps Scripts Start -----//
+        var navigationMap;
+        var startPoint = false;
+        var endPoint = false;
         var distance = 0;
         var path;
 
-        function init() {
-            myMap = new ymaps.Map("map", {
+        function initMaps() {
+            navigationMap = new ymaps.Map("navigationMap", {
                 center: [41.299496, 69.240073],
                 zoom: 13,
                 controls: []
             }, {searchControlProvider: 'yandex#search'});
-            myMap.controls.add('geolocationControl');
-            myMap.controls.add('searchControl');
-            myMap.controls.add('zoomControl');
-            myMap.controls.get('searchControl').options.set('size', 'large');
 
-            myMap.events.add('click', function (event) {
+            navigationMap.controls.add('geolocationControl');
+            navigationMap.controls.add('searchControl');
+            navigationMap.controls.add('zoomControl');
+            navigationMap.controls.get('searchControl').options.set('size', 'large');
+
+            startPoint = new ymaps.Placemark([{!! $order->point_A !!}], {
+                balloonContent: 'Пункт А'
+            }, {
+                draggable: true,
+                preset: 'islands#redHomeIcon',
+                iconColor: '#F44336'
+            });
+
+            endPoint = new ymaps.Placemark([{!! $order->point_B !!}], {
+                balloonContent: 'Пункт Б'
+            }, {
+                draggable: true,
+                preset: 'islands#redGovernmentIcon',
+                iconColor: '#F44336'
+            });
+
+            navigationMap.geoObjects.add(startPoint);
+            navigationMap.geoObjects.add(endPoint);
+            setPoint(startPoint);
+            setPoint(endPoint);
+
+            navigationMap.events.add('click', function (event) {
                 var coords = event.get('coords');
-                if (start === false) {
-                    start = new ymaps.Placemark(coords, {
-                        balloonContent: 'Point A'
-                    }, {
+                if (startPoint === false) {
+                    startPoint = new ymaps.Placemark(coords, {balloonContent: 'Пункт А'}, {
                         draggable: true,
-                        preset: 'islands#icon',
+                        preset: 'islands#redHomeIcon',
                         iconColor: '#F44336'
                     });
-                    myMap.geoObjects.add(start);
-                    start.events.add('dragend', function (e) {
-                        setCoordinates();
+                    navigationMap.geoObjects.add(startPoint);
+
+                    startPoint.events.add('dragend', function () {
+                        setPoint(startPoint);
                     });
-                }
-                else {
-                    if (end === false) {
-                        end = new ymaps.Placemark(coords, {
-                            balloonContent: 'Point B'
-                        }, {
-                            draggable: true,
-                            preset: 'islands#icon',
-                            iconColor: '#2196F3'
-                        });
-                        myMap.geoObjects.add(end);
-                        end.events.add('dragend', function (e) {
-                            setCoordinates();
-                        });
-                    }
-                    else {
-                        end.geometry.setCoordinates(coords);
-                    }
-                }
-                setCoordinates();
-            });
 
-            start = new ymaps.Placemark(document.getElementById('point_a').value, {
-                balloonContent: 'Point A'
-            }, {
-                draggable: true,
-                preset: 'islands#icon',
-                iconColor: '#F44336'
-            });
-            myMap.geoObjects.add(start);
-
-            end = new ymaps.Placemark(document.getElementById('point_b').value, {
-                balloonContent: 'Point B'
-            }, {
-                draggable: true,
-                preset: 'islands#icon',
-                iconColor: '#F44336'
-            });
-            myMap.geoObjects.add(end);
-
-            ymaps.route([start.geometry.getCoordinates(), end.geometry.getCoordinates()],
-                {
-                    mapStateAutoApply: true,
-                    multiRoute: false
-                }).then(function (route) {
-                    path = route;
-                    distance = route.getLength();
-                    myMap.geoObjects.add(route);
-                    if (tarif_index === 1) {
-                        document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                        unitChange();
-                    }
-                }, function (error) {
-                    alert("Error occurred: " + error.message);
+                    setPoint(startPoint);
+                    return;
                 }
-            );
+                if (endPoint === false) {
+                    endPoint = new ymaps.Placemark(coords, {balloonContent: 'Пункт А'}, {
+                        draggable: true,
+                        preset: 'islands#redGovernmentIcon',
+                        iconColor: '#F44336'
+                    });
+                    navigationMap.geoObjects.add(endPoint);
+
+                    endPoint.events.add('dragend', function () {
+                        setPoint(endPoint);
+                    });
+
+                    setPoint(endPoint);
+                }
+            })
         }
 
-        function setCoordinates() {
-            if (start != false) {
-                document.getElementById('point_a').value = start.geometry.getCoordinates();
-                getAddress('address_a', start.geometry.getCoordinates());
-            }
-
-            if (end != false) {
-                document.getElementById('point_b').value = end.geometry.getCoordinates();
-                getAddress('address_b', end.geometry.getCoordinates());
-            }
-
-            if (start === false || end === false)
-                return;
-
-            if (path === null)
-                return;
-
-            myMap.geoObjects.remove(path);
-            ymaps.route([start.geometry.getCoordinates(), end.geometry.getCoordinates()],
-                {
-                    mapStateAutoApply: true,
-                    multiRoute: false
-                }).then(function (route) {
-                    path = route;
-                    distance = route.getLength();
-                    myMap.geoObjects.add(route);
-                    if (tarif_index === 1) {
-                        document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                        unitChange();
-                    }
-                }, function (error) {
-                    alert("Error occurred: " + error.message);
-                }
-            );
-        }
-
-        function getAddress(id, coords) {
+        function setPoint(placemark) {
+            var coords = placemark.geometry.getCoordinates();
             ymaps.geocode(coords).then(function (res) {
                 var firstGeoObject = res.geoObjects.get(0);
-                document.getElementById(id).value = firstGeoObject.getAddressLine();
+                if (placemark === startPoint) {
+                    document.getElementById("taxi_address_a").value = firstGeoObject.getAddressLine();
+                    document.getElementById("taxi_point_a").value = coords;
+                }
+                if (placemark === endPoint) {
+                    document.getElementById("taxi_address_b").value = firstGeoObject.getAddressLine();
+                    document.getElementById("taxi_point_b").value = coords;
+                }
             });
+            drawPath();
         }
 
-        ymaps.ready(init);
-
-        function setStart() {
-            myMap.geoObjects.remove(start);
-            myMap.geoObjects.remove(path);
-            start = false;
+        function drawPath() {
+            if (startPoint === false || endPoint === false)
+                return;
+            navigationMap.geoObjects.remove(path);
+            ymaps.route([startPoint.geometry.getCoordinates(), endPoint.geometry.getCoordinates()], {
+                mapStateAutoApply: true,
+                multiRoute: false
+            }).then(function (route) {
+                        path = route;
+                        distance = (route.getLength() / 1000).toFixed(2);
+                        navigationMap.geoObjects.add(route);
+                        path.getWayPoints().removeAll();
+                        document.getElementById("taxi_distance").value = distance;
+                        calculateTaxiPrice()
+                    }, function (error) {
+                        alert("Возникла ошибка: " + error.message);
+                    }
+            );
         }
 
-        function changeTarif() {
-            tarif_index = document.getElementById('tarif_id').selectedIndex;
-            if (tarif_index === 0) {
-                document.getElementById('label_tarif').innerHTML = "Hours";
-                document.getElementById('unit_id').min = tarifs[tarif_index]['min_hour'];
-                document.getElementById('unit_id').value = tarifs[tarif_index]['min_hour'];
-                document.getElementById('unit_id').readOnly = false;
+        function setStartPoint() {
+            if (startPoint !== false) {
+                navigationMap.geoObjects.remove(startPoint);
+                navigationMap.geoObjects.remove(path);
+                startPoint = false;
+                document.getElementById("taxi_address_a").value =
+                        document.getElementById("taxi_point_a").value = "";
             }
-            else {
-                document.getElementById('label_tarif').innerHTML = "Kilometers";
-                document.getElementById('unit_id').min = tarifs[tarif_index]['min_distance'];
-                if (distance === 0)
-                    document.getElementById('unit_id').value = tarifs[tarif_index]['min_distance'];
-                else
-                    document.getElementById('unit_id').value = (distance / 1000).toFixed(2);
-                document.getElementById('unit_id').readOnly = true;
+        }
+
+        function setEndPoint() {
+            if (endPoint !== false) {
+                navigationMap.geoObjects.remove(endPoint);
+                navigationMap.geoObjects.remove(path);
+                endPoint = false;
+                document.getElementById("taxi_address_b").value =
+                        document.getElementById("taxi_point_b").value = "";
             }
-            discount = document.getElementById('discount_id').value = tarifs[tarif_index]['discard'];
-            calculatePrice();
         }
 
-        function changeCar() {
-            car_index = document.getElementById('car_id').selectedIndex;
-            calculatePrice();
-        }
+        ymaps.ready(initMaps);
+        //----- Maps Scripts End -----//
 
-        function personsChange() {
-            persons_price = document.getElementById('person_id').value * tarifs[tarif_index]['price_per_person'];
-            calculatePrice();
-        }
+        //----- Taxi Calculation Scripts Start -----//
+        var taxiTariff = [{!! $taxi_tariff !!}];
 
-        function unitChange() {
-            if (document.getElementById('unit_id').value < 0)
-                changeTarif();
-            if (tarif_index === 0)
-                unit = (document.getElementById('unit_id').value - tarifs[tarif_index]['min_hour']) * tarifs[tarif_index]['price_per_hour'];
-            else
-                unit = (document.getElementById('unit_id').value - tarifs[tarif_index]['min_distance']) * tarifs[tarif_index]['price_per_distance'];
-            calculatePrice();
+        function calculateTaxiPrice() {
+            var price = taxiTariff[0]['price_minimum'];
+            if (document.getElementById("taxi_minute").value > taxiTariff[0]['min_minute'])
+                price += taxiTariff[0]['price_per_minute'] *
+                        (document.getElementById("taxi_minute").value - taxiTariff[0]['min_minute']);
+            if (document.getElementById("taxi_distance").value > taxiTariff[0]['min_distance'])
+                price += taxiTariff[0]['price_per_distance'] *
+                        (document.getElementById("taxi_distance").value - taxiTariff[0]['min_distance']);
+            document.getElementById("taxi_discard_sum").value = price * taxiTariff[0]['discard'] / 100;
+            document.getElementById("taxi_price").value = price - (price * taxiTariff[0]['discard'] / 100);
         }
+        //----- Taxi Calculation Scripts End -----//
 
-        function calculatePrice() {
-            var price = tarifs[tarif_index]['price_minimum'];
-            price += cars[car_index]['price'];
-            price += persons_price;
-            price += unit;
-            price -= price * discount / 100;
-            document.getElementById('sum_id').value = price;
-        }
+        window.onload = function () {
+            calculateTaxiPrice();
+        };
     </script>
 @endsection

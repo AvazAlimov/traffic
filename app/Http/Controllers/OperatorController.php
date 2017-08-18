@@ -419,7 +419,7 @@ class OperatorController extends Controller
         /** @noinspection PhpUndefinedMethodInspection */
         return view('operator.taxi_order')
             ->withOrder($taxi_order)
-            ->withTaxi_tarif($taxi_tariff);
+            ->withTaxi_tariff($taxi_tariff);
     }
 
     public function taxiOrderUpdateSubmit(Request $request, $id)
