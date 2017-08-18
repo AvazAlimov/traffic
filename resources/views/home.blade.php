@@ -343,9 +343,7 @@
                                 <tbody>
                                 <tr>
                                     <td>
-                                        <form method="get"
-                                              action="{{route('user.order.again', $order->id)}}">
-                                            {{csrf_field()}}
+                                        <form method="get" action="{{route('user.order.again', $order->id)}}">
                                             <input type="submit" class="btn btn-default"
                                                    value="Заказать снова">
                                         </form>

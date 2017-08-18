@@ -37,10 +37,10 @@ class OperatorController extends Controller
 
 
         $taxi_tariff = TaxiTarif::first();
-        $orders = Order::where('status', '!=', 0)->paginate(6);
+        $orders = Order::where('status', '!=', 0)->paginate(6,['*'],'orders');
         $orders_wait = Order::where('status', 0)->get();
 
-        $taxi_orders = TaxiOrder::where('status', '!=', 0)->paginate(6);
+        $taxi_orders = TaxiOrder::where('status', '!=', 0)->paginate(6,['*'],'taxi_orders');
         $taxi_orders_wait = TaxiOrder::where('status', 0)->get();
 
         foreach ($automobiles as $key)
@@ -252,7 +252,7 @@ class OperatorController extends Controller
         $orders = Order::where('status', '!=', 0);
 
         $taxi_tariff = TaxiTarif::first();
-        $taxi_orders = TaxiOrder::where('status', '!=', 0)->paginate(6);
+        $taxi_orders = TaxiOrder::where('status', '!=', 0)->paginate(6,['*'],'taxi_orders');
 
         $taxi_orders_wait = TaxiOrder::where('status', 0)->get();
 
@@ -334,7 +334,7 @@ class OperatorController extends Controller
                 Session::put('sort', true);
             }
         }
-        $orders = $orders->paginate(8);
+        $orders = $orders->paginate(6,['*'],'orders');
 
         /** @noinspection PhpUndefinedMethodInspection */
         return view('operator')
@@ -489,7 +489,7 @@ class OperatorController extends Controller
     public function taxiSearch(Request $request)
     {
         $taxi_tariff = TaxiTarif::first();
-        $orders_main = Order::where('status', '!=', 0)->paginate(6);
+        $orders_main = Order::where('status', '!=', 0)->paginate(6,['*'],'orders');
         $orders_wait = Order::where('status', 0)->get();
 
         $orders = TaxiOrder::where('status', '!=', 0);
@@ -585,7 +585,7 @@ class OperatorController extends Controller
                 Session::put('sort_taxi', true);
             }
         }
-        $orders = $orders->paginate(8);
+        $orders = $orders->paginate(6,['*'],'taxi_orders');
 
         /** @noinspection PhpUndefinedMethodInspection */
         return view('operator')
