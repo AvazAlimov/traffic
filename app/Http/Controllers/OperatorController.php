@@ -58,8 +58,8 @@ class OperatorController extends Controller
             ->withTaxi_tariff($taxi_tariff)
             ->withAutomobiles($automobiles)
             ->withAutomobile($automobile)
-            ->withOrders($orders)
             ->withOrders_wait($orders_wait)
+            ->withOrders($orders)
             ->withTaxi_orders_wait($taxi_orders_wait)
             ->withTaxi_orders($taxi_orders);
     }

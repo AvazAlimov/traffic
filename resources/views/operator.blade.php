@@ -26,9 +26,11 @@
             .navs {
                 left: 10px;
             }
+
             .dropdown {
                 left: 10px;
             }
+
             .page-header {
                 text-align: center;
             }
@@ -544,7 +546,7 @@
                                             @if($order->tarif->type == 0)
                                                 <strong>Срок аренды (час):</strong>
                                             @else
-                                                <strong>Дистанция:</strong>
+                                                <strong>Дистанция (км):</strong>
                                             @endif
                                         </div>
                                         <div class="col-md-8">
@@ -1038,7 +1040,7 @@
                         <h4 class="modal-title">Карта</h4>
                     </div>
                     <div class="modal-body" style="height: 500px; padding: 0;">
-                        <div id="yourMap" class="col-md-12" style="height: 500px;"></div>
+                        <div id="showMap" class="col-md-12" style="height: 500px;"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Закрыт</button>
@@ -1093,12 +1095,19 @@
 
         //----- Maps Scripts Start -----//
         var navigationMap;
+        var showMap;
         var startPoint = false;
         var endPoint = false;
         var distance = 0;
         var path;
 
         function initMaps() {
+            showMap = new ymaps.Map("showMap", {
+                center: [41.299496, 69.240073],
+                zoom: 13,
+                controls: []
+            }, {searchControlProvider: 'yandex#search'});
+
             navigationMap = new ymaps.Map("navigationMap", {
                 center: [41.299496, 69.240073],
                 zoom: 13,
@@ -1212,6 +1221,21 @@
                                 document.getElementById("trucking_point_b").value =
                                         document.getElementById("taxi_point_b").value = "";
             }
+        }
+
+        function setPoints(point_a_1, point_a_2, point_b_1, point_b_2) {
+            var point_a = point_a_1 + "," + point_a_2;
+            var point_b = point_b_1 + "," + point_b_2;
+            showMap.geoObjects.removeAll();
+            ymaps.route([point_a, point_b], {
+                mapStateAutoApply: true,
+                multiRoute: false
+            }).then(function (route) {
+                        showMap.geoObjects.add(route);
+                    }, function (error) {
+                        alert("Error occurred: " + error.message);
+                    }
+            );
         }
 
         ymaps.ready(initMaps);
