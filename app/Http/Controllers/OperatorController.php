@@ -229,7 +229,7 @@ class OperatorController extends Controller
             else
                 $tariff[$tr->id] = "За городом";
         }
-        $orders_wait = Order::where('status', 0);
+        $orders_wait = Order::where('status', 0)->get();
         $orders = Order::where('status','!=', 0);
 
         $taxi_tariff = TaxiTarif::first();
@@ -396,7 +396,7 @@ class OperatorController extends Controller
     }
     public function taxiOrderDelete(Request $request, $taxi_order_id)
     {
-        $order = Order::find($taxi_order_id);
+        $order = TaxiOrder::find($taxi_order_id);
         $order->delete();
         return redirect()->route('operator.dashboard');
     }
@@ -431,8 +431,7 @@ class OperatorController extends Controller
         /** @noinspection PhpUndefinedMethodInspection */
         Validator::make($request->all(), $rules, $messages)->validate();
 
-        $order = new TaxiOrder;
-        $order->tarif_id = TaxiTarif::first()->id;
+        $order = TaxiOrder::findOrFail($id);
 
         $order->minute = $request->minute;
         $order->distance = $request->distance;
@@ -467,7 +466,7 @@ class OperatorController extends Controller
         $orders_main = Order::where('status', '!=', 0)->paginate(6);
         $orders_wait = Order::where('status', 0)->get();
 
-        $orders = TaxiOrder::where('status', '!=', 0)->paginate(6);
+        $orders = TaxiOrder::where('status', '!=', 0);
         $taxi_orders_wait = TaxiOrder::where('status', 0)->get();
 
         $cars = Automobile::all();
