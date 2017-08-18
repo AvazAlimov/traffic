@@ -631,7 +631,7 @@
                 </div>
                 <div id="section3" class="section">
                     <div class="page-header">
-                        <h2>Заказы Такси</h2>
+                        <h2>Заказы на такси</h2>
                     </div>
                     @foreach($taxi_orders_wait as $order)
                         <div class="col-md-12">
