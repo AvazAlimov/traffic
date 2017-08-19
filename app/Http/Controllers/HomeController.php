@@ -93,21 +93,31 @@ class HomeController extends Controller
         Validator::make($request->all(), $rules, $messages)->validate();
 
         $order = new Order;
-        $order->user_type = 1;
-        $order->user_id = Auth::user()->id;
-        $order->car_id = $request->car;
-        $order->tarif_id = $request->tarif;
-        $order->address_A = $request->address_A;
-        $order->address_B = $request->address_B;
-        $order->point_A = $request->point_A;
-        $order->point_B = $request->point_B;
-        $order->persons = $request->persons;
-        $order->unit = $request->unit;
+        $order->user_type = 2;
+        $order->user_id = Auth::guard('operator')->user()->id;
+
+        $order->tarif_id = $request->tariff_id;
+        $order->car_id = $request->automobile_id;
+
+        $order->persons = $request->loaders;
+        $tarif = Tarif::findOrFail($request->tariff_id);
+        if ($tarif->type == 0)
+            $order->unit = $request->hour;
+        else
+            $order->unit = $request->distance;
+
+        $order->address_A = $request->address_a;
+        $order->address_B = $request->address_b;
+        $order->point_A = $request->point_a;
+        $order->point_B = $request->point_b;
+        $order->start_time = date('Y-m-d H:i:s', strtotime($request->start));
+
         $order->name = $request->name;
         $order->phone = $request->phone;
-        $order->sum = $request->sum;
-        $order->status = 0;
-        $order->start_time = Carbon::parse($request->date . " " . $request->time, null);
+        $order->sum = $request->price;
+        $order->status = 1;
+        $order->operator_id = Auth::guard('operator')->user()->id;
+
         $order->save();
         $order->notify(new OrderNotification());
         return redirect()->route('home');
