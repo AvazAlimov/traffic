@@ -394,6 +394,15 @@
             <div class="page-header">
                 <h2>Все мои заказы</h2>
             </div>
+            <h3>Всего заказов на грузоперевозки: {{ $orders->total() }}</h3>
+
+            @foreach($orders as $order)
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+
+                    </div>
+                </div>
+            @endforeach
         </div>
     </div>
 
