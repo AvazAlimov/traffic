@@ -54,18 +54,19 @@ class HomeController extends Controller
 
         $cars = Automobile::all();
         $car = array();
+
         foreach ($cars as $key) {
             $car[$key->id] = $key->name;
         }
 
         $taxi_tariff = TaxiTarif::first();
         return view('home')
-            ->withTarif($tariff)
-            ->withCar($car)
-            ->withTarifs($tariffs)
-            ->withCars($cars)
+            ->withTariff($tariff)
+            ->withTariffs($tariffs)
+            ->withAutomobile($car)
+            ->withAutomobiles($cars)
+            ->withTaxi_tariff($taxi_tariff)
             ->withOrders($orders)
-            ->withTaxi_tarif($taxi_tariff)
             ->withTaxi_orders($taxi_orders);
     }
 
@@ -129,7 +130,16 @@ class HomeController extends Controller
             $car[$key->id] = $key->name;
         }
 
-        return view('user.order-again')->withTarif($tariff)->withCar($car)->withTarifs($tariffs)->withCars($cars)->withOrder($order);
+        return view('user.order-again')
+            ->withTariff($tariff)
+            ->withTariffs($tariffs)
+            ->withAutomobile($car)
+            ->withAutomobiles($cars)
+            ->withTarif($tariff)
+            ->withCar($car)
+            ->withTarifs($tariffs)
+            ->withCars($cars)
+            ->withOrder($order);
 
     }
 
