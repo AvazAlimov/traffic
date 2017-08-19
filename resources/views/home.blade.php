@@ -395,11 +395,65 @@
                 <h2>Все мои заказы</h2>
             </div>
             <h3>Всего заказов на грузоперевозки: {{ $orders->total() }}</h3>
-
             @foreach($orders as $order)
                 <div class="col-md-12">
                     <div class="panel panel-default">
-
+                        <div class="panel-heading" style="background-color: #372e30; color: #ffcb08;">
+                            <h5>Идентификационный номер: {{ $order->id }}</h5>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <p class="col-md-3"><strong>Тариф:</strong></p>
+                                <p class="col-md-9">{{ $order->tarifName() }}</p>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="col-md-3"><strong>Тип автомобиля:</strong></p>
+                                <p class="col-md-9">{{ $order->automobile->name }}</p>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="col-md-3"><strong>Количество грузчиков:</strong></p>
+                                <p class="col-md-9">{{ $order->persons }}</p>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="col-md-3">
+                                    <strong>{{ $order->tarif->type == 0 ? "Срок аренды (час):" : "Дистанция (километр):" }}</strong>
+                                </p>
+                                <p class="col-md-9">{{ $order->unit }}</p>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="col-md-3"><strong>Время подачи:</strong></p>
+                                <p class="col-md-9">{{ DateTime::createFromFormat('Y-m-d H:i:s',
+                                            $order->start_time)->format('Y-m-d H:i') }}</p>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="col-md-3"><strong>Откуда:</strong></p>
+                                <p class="col-md-9">{{ $order->address_A }}</p>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="col-md-3"><strong>Куда:</strong></p>
+                                <p class="col-md-9">{{ $order->address_B }}</p>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="col-md-3"><strong>Посмотреть на карте:</strong></p>
+                                <div class="col-md-9">
+                                    <button class="btn btn-default" data-toggle="modal"
+                                            data-target="#yourModal"
+                                            onclick="setPoints({{$order->point_A}} + '',{{$order->point_B}} + '')">
+                                        <i class="fa fa-globe"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="col-md-3"><strong>Итоговая цена:</strong></p>
+                                <p class="col-md-9">{{ $order->sum }} сум</p>
+                            </div>
+                            <div class="col-md-12">
+                                <button class="btn btn-block" style="background-color: #372e30; color: #ffcb08;"
+                                        onclick="repeatTruckingOrder({{ $loop->index }} + '')">
+                                    Заказать занова
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             @endforeach
@@ -668,6 +722,7 @@
         //----- Trucking Calculation Scripts Start -----//
         var arrays = [{!! $tariffs !!}];
         arrays.push({!! $automobiles !!});
+        arrays.push({!! $orders->toJson() !!});
         var tariff_index = 0;
         var car_index = 0;
 
@@ -720,6 +775,10 @@
             navigationMap.geoObjects.removeAll();
             changeTariff();
             changeAutomobile();
+        }
+
+        function repeatTruckingOrder(index) {
+            alert(arrays[2]['data'][index]['id']);
         }
         //----- Trucking Calculation Scripts End -----//
 
