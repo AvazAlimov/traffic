@@ -59,6 +59,7 @@ Route::prefix('admin')->group(function () {
     Route::post('automobile/delete{id}', 'AutomobileController@delete')->name('automobile.delete');
 
     Route::get('order/excel', 'AdminController@orderToExcel')->name('admin.order.excel');
+    Route::get('taxiorder/excel', 'AdminController@taxiOrderToExcel')->name('admin.taxiorder.excel');
 
     Route::post('tarif/update{id}', 'AdminController@updateTarif')->name('tarif.update');
     Route::post('taxitarif/update{id}', 'AdminController@updateTaxiTarif')->name('taxitarif.update');

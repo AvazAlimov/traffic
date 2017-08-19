@@ -594,7 +594,7 @@
                             </div>
                         </div>
                         <div class="panel-footer">
-                            <a type="button" class="btn btn-success" href="{{ route('admin.order.excel') }}">Скачать</a>
+                            <a type="button" class="btn btn-success" href="{{ route('admin.taxiorder.excel') }}">Скачать</a>
                         </div>
                     </div>
                 </div>

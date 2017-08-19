@@ -133,7 +133,7 @@ class AdminController extends Controller
             array_push($temp, $item);
         }
         $orders = $temp;
-        Excel::create('Заказы_такси', function ($excel) use ($orders) {
+        Excel::create('Заказы-такси', function ($excel) use ($orders) {
             $excel->sheet('Лист 1', function ($sheet) use ($orders) {
                 $sheet->fromArray($orders);
                 $sheet->row(1, array('идентификационный номер', 'пункт а', 'пункт б', 'адрес а', 'адрес б', 'Время ожидания (мин)', 'Дистанция (км)', 'время подачи', 'телефон номер', 'имя заказчика', 'цена', 'создан', 'обновлен'));
