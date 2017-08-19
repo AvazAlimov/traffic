@@ -12,8 +12,8 @@ use App\Automobile;
 use App\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
+
 class HomeController extends Controller
 {
     /** @noinspection PhpDocSignatureInspection */
@@ -100,8 +100,8 @@ class HomeController extends Controller
         $order->car_id = $request->automobile_id;
 
         $order->persons = $request->loaders;
-        $tarif = Tarif::findOrFail($request->tariff_id);
-        if ($tarif->type == 0)
+        $tariff = Tarif::findOrFail($request->tariff_id);
+        if ($tariff->type == 0)
             $order->unit = $request->hour;
         else
             $order->unit = $request->distance;
