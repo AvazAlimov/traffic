@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\TaxiOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -32,6 +33,7 @@ class AdminController extends Controller
         $operators = DB::table('operators')->get();
         $tariffs = DB::table('tarifs')->get();
         $orders = Order::where('status', '>', 0)->get();
+        $taxi_orders = TaxiOrder::where('status', '>',0)->get();
         $taxi_tarif = TaxiTarif::first();
 
         return view('admin')
@@ -39,6 +41,7 @@ class AdminController extends Controller
             ->with('operators', $operators)
             ->with('tarifs', $tariffs)
             ->with('orders', $orders)
+            ->with('taxi_orders', $taxi_orders)
             ->with('taxiTarif', $taxi_tarif);
     }
 
@@ -104,6 +107,36 @@ class AdminController extends Controller
             $excel->sheet('Лист 1', function ($sheet) use ($orders) {
                 $sheet->fromArray($orders);
                 $sheet->row(1, array('идентификационный номер', 'автомобиль', 'тариф', 'пункт а', 'пункт б', 'адрес а', 'адрес б', 'Срок(час)/дистанция(км)', 'количество грузчиков', 'время подачи', 'телефон номер', 'имя заказчика', 'цена', 'создан', 'обновлен'));
+            });
+        })->export('xls');
+    }
+    public function taxiOrderToExcel()
+    {
+        $orders = TaxiOrder::select('id', 'point_A', 'point_B', 'address_A', 'address_B', 'minute', 'distance', 'start_time', 'phone', 'name', 'price', 'created_at', 'updated_at')->where('status', '>', 0)->get();
+        $temp = array();
+        foreach ($orders as $order) {
+            $item = array();
+            array_push($item, $order->id);
+            array_push($item, $order->point_A);
+            array_push($item, $order->point_B);
+            array_push($item, $order->address_A);
+            array_push($item, $order->address_B);
+            array_push($item, $order->minute);
+            array_push($item, $order->distance);
+            array_push($item, $order->start_time);
+            array_push($item, $order->phone);
+            array_push($item, $order->name);
+            array_push($item, $order->price);
+            array_push($item, $order->created_at);
+            array_push($item, $order->updated_at);
+
+            array_push($temp, $item);
+        }
+        $orders = $temp;
+        Excel::create('Заказы-такси', function ($excel) use ($orders) {
+            $excel->sheet('Лист 1', function ($sheet) use ($orders) {
+                $sheet->fromArray($orders);
+                $sheet->row(1, array('идентификационный номер', 'пункт а', 'пункт б', 'адрес а', 'адрес б', 'Время ожидания (мин)', 'Дистанция (км)', 'время подачи', 'телефон номер', 'имя заказчика', 'цена', 'создан', 'обновлен'));
             });
         })->export('xls');
     }
