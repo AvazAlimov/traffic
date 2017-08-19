@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\OrderNotification;
+use App\Notifications\TaxiOrderNotification;
 use App\TaxiOrder;
 use App\TaxiTarif;
 use Illuminate\Http\Request;
@@ -107,6 +109,7 @@ class HomeController extends Controller
         $order->status = 0;
         $order->start_time = Carbon::parse($request->date . " " . $request->time, null);
         $order->save();
+        $order->notify(new OrderNotification());
         return redirect()->route('home');
     }
 
@@ -185,6 +188,7 @@ class HomeController extends Controller
         $order->status = 1;
 
         $order->save();
+        $order->notify(new TaxiOrderNotification());
         return redirect()->route('home');
     }
 

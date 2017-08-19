@@ -38,7 +38,7 @@ class TaxiOrderNotification extends Notification
         $point2 = explode(",", $order->point_B, 2);
         return TelegramMessage::create()
             ->to(-237163806) // Optional.
-            ->content("*Такси - Новый Заказ!*\n*Ид:*".$order->id."\n*Дистанция:*".$order->distance."\n*Время ожидания (мин):*".$order->minute."\n*Авто:* ".$order->getCarName()."\n*Имя:*".$order->name."\n*Тел:*".$order->phone."\n*Откуда:*".$order->address_A."\n*Куда:*".$order->address_B."\n*Время подачи:*".$order->start_time."\n*Цена:*".$order->sum
+            ->content("*Такси - Новый Заказ!*\n*Ид:*".$order->id."\n*Дистанция: (км)*".$order->distance."\n*Время ожидания (мин):*".$order->minute."\n*Имя:*".$order->name."\n*Тел:*".$order->phone."\n*Откуда:*".$order->address_A."\n*Куда:*".$order->address_B."\n*Время подачи:*".$order->start_time."\n*Цена:*".$order->price
             );
 
     }

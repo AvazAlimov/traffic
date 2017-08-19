@@ -38,6 +38,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('users/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 Route::post('user/order/submit', 'HomeController@orderSubmit')->name('user.order.submit');
 Route::get('user/order/again{id}', 'HomeController@orderAgain')->name('user.order.again');
+Route::post('user/taxiorder/submit', 'HomeController@taxiOrderSubmit')->name('user.taxiorder.submit');
+Route::get('user/taxiorder/again{id}', 'HomeController@taxiOrderAgain')->name('user.taxiorder.again');
 Route::post('/','WebController@orderSubmit')->name('order.submit');
 
 Route::prefix('admin')->group(function () {

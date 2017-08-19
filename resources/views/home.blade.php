@@ -241,7 +241,7 @@
                         </form>
                     </div>
                     <div class="tab-pane" id="taxi">
-                        <form action="{{ route('operator.taxiorder.submit') }}" method="post">
+                        <form action="{{ route('user.taxiorder.submit') }}" method="post">
                             {{csrf_field()}}
                             <div class="col-md-6">
                                 <div class="form-group col-md-12">
