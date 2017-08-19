@@ -113,39 +113,6 @@ class HomeController extends Controller
         return redirect()->route('home');
     }
 
-    public function orderAgain($id)
-    {
-        $order = Order::findOrFail($id);
-
-        $tariffs = Tarif::all();
-        $tariff = array();
-
-        foreach ($tariffs as $tr) {
-            if ($tr->type == 0)
-                $tariff[$tr->id] = "Внутри города";
-            else
-                $tariff[$tr->id] = "За городом";
-        }
-
-        $cars = Automobile::all();
-        $car = array();
-        foreach ($cars as $key) {
-            $car[$key->id] = $key->name;
-        }
-
-        return view('user.order-again')
-            ->withTariff($tariff)
-            ->withTariffs($tariffs)
-            ->withAutomobile($car)
-            ->withAutomobiles($cars)
-            ->withTarif($tariff)
-            ->withCar($car)
-            ->withTarifs($tariffs)
-            ->withCars($cars)
-            ->withOrder($order);
-
-    }
-
     public function taxiorderSubmit(Request $request)
     {
         $rules = [
@@ -190,6 +157,39 @@ class HomeController extends Controller
         $order->save();
         $order->notify(new TaxiOrderNotification());
         return redirect()->route('home');
+    }
+
+    public function orderAgain($id)
+    {
+        $order = Order::findOrFail($id);
+
+        $tariffs = Tarif::all();
+        $tariff = array();
+
+        foreach ($tariffs as $tr) {
+            if ($tr->type == 0)
+                $tariff[$tr->id] = "Внутри города";
+            else
+                $tariff[$tr->id] = "За городом";
+        }
+
+        $cars = Automobile::all();
+        $car = array();
+        foreach ($cars as $key) {
+            $car[$key->id] = $key->name;
+        }
+
+        return view('user.order-again')
+            ->withTariff($tariff)
+            ->withTariffs($tariffs)
+            ->withAutomobile($car)
+            ->withAutomobiles($cars)
+            ->withTarif($tariff)
+            ->withCar($car)
+            ->withTarifs($tariffs)
+            ->withCars($cars)
+            ->withOrder($order);
+
     }
 
     public function taxiOrderAgain($id)
