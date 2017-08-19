@@ -9,4 +9,5 @@ class Tarif extends Model
     public function order(){
         return $this->hasOne('App\Order');
     }
+
 }

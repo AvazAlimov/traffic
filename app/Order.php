@@ -3,9 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Notifications\Notifiable;
 class Order extends Model
 {
+    use Notifiable;
     public function tarif()
     {
         return $this->belongsTo('App\Tarif');
@@ -26,5 +27,7 @@ class Order extends Model
     public function getTarifName(){
         return $this->tarif->type;
     }
-
+    public function tarifName(){
+        return $this->type == 0 ? 'Внутри города' : 'За городом';
+    }
 }

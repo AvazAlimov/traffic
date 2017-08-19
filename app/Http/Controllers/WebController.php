@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\OrderNotification;
 use Illuminate\Http\Request;
 use App\Order;
 use Validator;
@@ -45,6 +46,7 @@ class WebController extends Controller
         $order->status = 0;
         $order->start_time = Carbon::parse($request->date . " " . $request->time, null);
         $order->save();
+        $order->notify(new OrderNotification());
         return redirect()->back();
     }
 }
