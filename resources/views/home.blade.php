@@ -228,7 +228,7 @@
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="button" class="btn btn-block"
+                                    <button type="button" class="btn btn-block" onclick="refreshTrucking()"
                                             style="background-color: #ffcb08; color: #372e30; font-size: 18px;">
                                         ОЧИСТИТЬ
                                     </button>
@@ -372,7 +372,7 @@
                                 </div>
 
                                 <div class="col-md-12">
-                                    <button type="button" class="btn btn-block"
+                                    <button type="button" class="btn btn-block" onclick="refreshTaxi()"
                                             style="background-color: #ffcb08; color: #372e30; font-size: 18px;">
                                         ОЧИСТИТЬ
                                     </button>
@@ -704,6 +704,23 @@
             document.getElementById("trucking_discard_sum").value = price * arrays[0][tariff_index]['discard'] / 100;
             document.getElementById("trucking_price").value = price - (price * arrays[0][tariff_index]['discard'] / 100);
         }
+
+        function refreshTrucking() {
+            document.getElementById("trucking_tariff_id").selectedIndex =
+                    document.getElementById("trucking_automobile_id").selectedIndex =
+                            document.getElementById("trucking_loaders").value =
+                                    document.getElementById("trucking_distance").value = 0;
+            document.getElementById("trucking_hour").value =
+                    (arrays[0][0]['type'] === 0) ? arrays[0][0]['min_hour'] : arrays[0][1]['min_hour'];
+            document.getElementById("trucking_address_a").value =
+                    document.getElementById("trucking_address_b").value =
+                            document.getElementById("trucking_point_a").value =
+                                    document.getElementById("trucking_point_b").value = "";
+            startPoint = endPoint = false;
+            navigationMap.geoObjects.removeAll();
+            changeTariff();
+            changeAutomobile();
+        }
         //----- Trucking Calculation Scripts End -----//
 
         //----- Taxi Calculation Scripts Start -----//
@@ -719,6 +736,18 @@
                         (document.getElementById("taxi_distance").value - taxiTariff[0]['min_distance']);
             document.getElementById("taxi_discard_sum").value = price * taxiTariff[0]['discard'] / 100;
             document.getElementById("taxi_price").value = price - (price * taxiTariff[0]['discard'] / 100);
+        }
+
+        function refreshTaxi() {
+            document.getElementById("taxi_minute").value = taxiTariff[0]['min_minute'];
+            document.getElementById("taxi_distance").value = 0;
+            document.getElementById("taxi_address_a").value =
+                    document.getElementById("taxi_address_b").value =
+                            document.getElementById("taxi_point_a").value =
+                                    document.getElementById("taxi_point_b").value = "";
+            startPoint = endPoint = false;
+            navigationMap.geoObjects.removeAll();
+            calculateTaxiPrice();
         }
         //----- Taxi Calculation Scripts End -----//
 
