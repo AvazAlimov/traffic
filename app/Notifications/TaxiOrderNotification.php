@@ -36,9 +36,10 @@ class TaxiOrderNotification extends Notification
     {
         $point1 = explode(",", $order->point_A, 2);
         $point2 = explode(",", $order->point_B, 2);
+        $user=($order->user_type == 0) ? "Пользователь" : "Юридическое лицо";
         return TelegramMessage::create()
             ->to(-237163806) // Optional.
-            ->content("*Такси - Новый Заказ!*\n*Ид:*".$order->id."\n*Дистанция: (км)*".$order->distance."\n*Время ожидания (мин):*".$order->minute."\n*Имя:*".$order->name."\n*Тел:*".$order->phone."\n*Откуда:*".$order->address_A."\n*Куда:*".$order->address_B."\n*Время подачи:*".$order->start_time."\n*Цена:*".$order->price
+            ->content("*Такси - Новый Заказ!*\n*Ид:* ".$order->id."\n*Заказчик:* ".$user."\n*Дистанция (км): * ".$order->distance."\n*Время ожидания (мин):* ".$order->minute."\n*Имя:* ".$order->name."\n*Тел:* ".$order->phone."\n*Откуда:* ".$order->address_A."\n*Куда:* ".$order->address_B."\n*Время подачи:* ".$order->start_time."\n*Цена:* ".$order->price
             );
 
     }

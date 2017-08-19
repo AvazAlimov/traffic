@@ -13,7 +13,7 @@ use App\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Session;
 class HomeController extends Controller
 {
     /** @noinspection PhpDocSignatureInspection */
@@ -77,15 +77,15 @@ class HomeController extends Controller
         $rules = [
             'name' => 'required',
             'phone' => 'required',
-            'address_A' => 'required',
-            'address_B' => 'required',
-            'point_A' => 'required',
-            'point_B' => 'required',
+            'address_a' => 'required',
+            'address_b' => 'required',
+            'point_a' => 'required',
+            'point_b' => 'required',
         ];
 
         $messages = [
-            'point_A.required' => 'Пункт А не выбран',
-            'point_B.required' => 'Пункт Б не выбран',
+            'point_a.required' => 'Пункт А не выбран',
+            'point_b.required' => 'Пункт Б не выбран',
             'name.required' => 'Введите имя',
             'phone.required' => 'Введите телефон',
         ];
@@ -93,8 +93,8 @@ class HomeController extends Controller
         Validator::make($request->all(), $rules, $messages)->validate();
 
         $order = new Order;
-        $order->user_type = 2;
-        $order->user_id = Auth::guard('operator')->user()->id;
+        $order->user_type = 1;
+        $order->user_id = Auth::user()->id;
 
         $order->tarif_id = $request->tariff_id;
         $order->car_id = $request->automobile_id;
@@ -115,10 +115,11 @@ class HomeController extends Controller
         $order->name = $request->name;
         $order->phone = $request->phone;
         $order->sum = $request->price;
-        $order->status = 1;
-        $order->operator_id = Auth::guard('operator')->user()->id;
-
+        $order->status = 0;
+        $order->operator_id = null;
         $order->save();
+        /** @noinspection PhpUndefinedMethodInspection */
+        Session::flash('message', 'Ваш заказ успешно создано');
         $order->notify(new OrderNotification());
         return redirect()->route('home');
     }

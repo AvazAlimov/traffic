@@ -33,9 +33,10 @@ class OrderNotification extends Notification
     {
         $point1 = explode(",", $order->point_A, 2);
         $point2 = explode(",", $order->point_B, 2);
+       $user=($order->user_type == 0) ? "Пользователь" : "Юридическое лицо";
         return TelegramMessage::create()
             ->to(-237163806) // Optional.
-            ->content("*Грузоперевозка - Новый Заказ!*\n*Ид:*".$order->id."\n*Тариф:* ".$order->tarifName()."\n*Авто:* ".$order->getCarName()."\n*Имя:*".$order->name."\n*Тел:*".$order->phone."\n*Откуда:*".$order->address_A."\n*Куда:*".$order->address_B."\n*Время подачи:*".$order->start_time."\n*Цена:*".$order->sum
+            ->content("*Грузоперевозка - Новый Заказ!*\n*Ид:* ".$order->id."\n*Заказчик:* ".$user."\n*Тариф:* ".$order->tarifName()."\n*Авто:* ".$order->getCarName()."\n*Имя:* ".$order->name."\n*Тел:* ".$order->phone."\n*Откуда:* ".$order->address_A."\n*Куда:* ".$order->address_B."\n*Время подачи:* ".$order->start_time."\n*Цена:* ".$order->sum
              );
 
     }
