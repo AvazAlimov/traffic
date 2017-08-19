@@ -8,17 +8,19 @@ use Illuminate\Http\Request;
 use App\Tarif;
 use App\Automobile;
 use App\Order;
-use Auth;
-use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
 class HomeController extends Controller
 {
+    /** @noinspection PhpDocSignatureInspection */
     /**
      * Create a new controller instance.
      *
      * @return void
      */
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -29,21 +31,25 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
-        $orders = Order::where('user_type',1)->where('user_id',Auth::user()->id)->orderBy('id', 'desc')->paginate(6, ['*'], 'orders');
-        $taxi_orders = TaxiOrder::where('user_type',1)
+        $orders = Order::where('user_type', 1)
             ->where('user_id', Auth::user()->id)
-            ->orderBy('id','desc')
+            ->orderBy('id', 'desc')
+            ->paginate(6, ['*'], 'orders');
+        $taxi_orders = TaxiOrder::where('user_type', 1)
+            ->where('user_id', Auth::user()->id)
+            ->orderBy('id', 'desc')
             ->paginate(6, ['*'], 'taxi_orders');
 
-        $tarifs = Tarif::all();
-        $tarif = array();
-        foreach ($tarifs as $tr) {
+        $tariffs = Tarif::all();
+        $tariff = array();
+        foreach ($tariffs as $tr) {
             if ($tr->type == 0)
-                $tarif[$tr->id] = "Внутри города";
+                $tariff[$tr->id] = "Внутри города";
             else
-                $tarif[$tr->id] = "За городом";
+                $tariff[$tr->id] = "За городом";
         }
 
         $cars = Automobile::all();
@@ -52,17 +58,19 @@ class HomeController extends Controller
             $car[$key->id] = $key->name;
         }
 
-        $taxi_tarif = TaxiTarif::first();
+        $taxi_tariff = TaxiTarif::first();
         return view('home')
-            ->withTarif($tarif)
+            ->withTarif($tariff)
             ->withCar($car)
-            ->withTarifs($tarifs)
+            ->withTarifs($tariffs)
             ->withCars($cars)
             ->withOrders($orders)
-            ->withTaxi_tarif($taxi_tarif)
+            ->withTaxi_tarif($taxi_tariff)
             ->withTaxi_orders($taxi_orders);
     }
-    public function orderSubmit(Request $request){
+
+    public function orderSubmit(Request $request)
+    {
         $rules = [
             'name' => 'required',
             'phone' => 'required',
@@ -100,18 +108,19 @@ class HomeController extends Controller
         $order->save();
         return redirect()->route('home');
     }
+
     public function orderAgain($id)
     {
         $order = Order::findOrFail($id);
 
-        $tarifs = Tarif::all();
-        $tarif = array();
+        $tariffs = Tarif::all();
+        $tariff = array();
 
-        foreach ($tarifs as $tr) {
+        foreach ($tariffs as $tr) {
             if ($tr->type == 0)
-                $tarif[$tr->id] = "Внутри города";
+                $tariff[$tr->id] = "Внутри города";
             else
-                $tarif[$tr->id] = "За городом";
+                $tariff[$tr->id] = "За городом";
         }
 
         $cars = Automobile::all();
@@ -120,11 +129,12 @@ class HomeController extends Controller
             $car[$key->id] = $key->name;
         }
 
-        return view('user.order-again')->withTarif($tarif)->withCar($car)->withTarifs($tarifs)->withCars($cars)->withOrder($order);
+        return view('user.order-again')->withTarif($tariff)->withCar($car)->withTarifs($tariffs)->withCars($cars)->withOrder($order);
 
     }
 
-    public function taxiorderSubmit(Request $request){
+    public function taxiorderSubmit(Request $request)
+    {
         $rules = [
             'name' => 'required',
             'phone' => 'required',
@@ -167,12 +177,13 @@ class HomeController extends Controller
         $order->save();
         return redirect()->route('home');
     }
+
     public function taxiOrderAgain($id)
     {
         $order = TaxiOrder::findOrFail($id);
-        $tarif = TaxiTarif::first();
+        $tariff = TaxiTarif::first();
 
-        return view('user.taxi-order-again')->withTarif($tarif)->withOrder($order);
+        return view('user.taxi-order-again')->withTarif($tariff)->withOrder($order);
 
     }
 }
