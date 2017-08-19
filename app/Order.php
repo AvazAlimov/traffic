@@ -28,6 +28,6 @@ class Order extends Model
         return $this->tarif->type;
     }
     public function tarifName(){
-        return $this->type == 0 ? 'Внутри города' : 'За городом';
+        return $this->tarif->type == 0 ? 'Внутри города' : 'За городом';
     }
 }
