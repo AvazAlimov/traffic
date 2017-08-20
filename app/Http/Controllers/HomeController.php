@@ -39,11 +39,11 @@ class HomeController extends Controller
         $orders = Order::where('user_type', 1)
             ->where('user_id', Auth::user()->id)
             ->orderBy('id', 'desc')
-            ->paginate(6, ['*'], 'orders');
+            ->paginate(3, ['*'], 'orders');
         $taxi_orders = TaxiOrder::where('user_type', 1)
             ->where('user_id', Auth::user()->id)
             ->orderBy('id', 'desc')
-            ->paginate(6, ['*'], 'taxi_orders');
+            ->paginate(3, ['*'], 'taxi_orders');
 
         $tariffs = Tarif::all();
         $tariff = array();
