@@ -2,14 +2,41 @@
 
 namespace App\Http\Controllers;
 
+use App\Automobile;
 use App\Notifications\OrderNotification;
+use App\Tarif;
 use Illuminate\Http\Request;
 use App\Order;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
 class WebController extends Controller
 {
+    public function index()
+    {
+        $tariffs = Tarif::all();
+        $tariff = array();
+
+        foreach ($tariffs as $tr) {
+            if ($tr->type == 0)
+                $tariff[$tr->id] = "Внутри города";
+            else
+                $tariff[$tr->id] = "За городом";
+        }
+
+        $cars = Automobile::all();
+        $car = array();
+        foreach ($cars as $key) {
+            $car[$key->id] = $key->name;
+        }
+
+        return view('welcome')
+            ->withTarif($tariff)
+            ->withCar($car)
+            ->withTarifs($tariffs)
+            ->withCars($cars);
+    }
+
     public function orderSubmit(Request $request)
     {
         $rules = [

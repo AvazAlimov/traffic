@@ -13,25 +13,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-    $tariffs = App\Tarif::all();
-    $tariff = array();
+Route::get('/', 'WebController@index')->name('web');
 
-    foreach ($tariffs as $tr) {
-        if ($tr->type == 0)
-            $tariff[$tr->id] = "Внутри города";
-        else
-            $tariff[$tr->id] = "За городом";
-    }
-
-    $cars = App\Automobile::all();
-    $car = array();
-    foreach ($cars as $key) {
-        $car[$key->id] = $key->name;
-    }
-
-    return view('welcome')->withTarif($tariff)->withCar($car)->withTarifs($tariffs)->withCars($cars);
-});
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
