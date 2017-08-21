@@ -986,13 +986,15 @@
         <div class="row slideanim">
             <div class="col-md-12 col-sm-12">
                 <ul style="list-style-type: none; margin: 0; padding: 0;">
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-facebook"
-                                                                             aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
+                    <li style="display: inline; margin: 4px;"><a
+                                href="https://www.facebook.com/Trafficuz-1660904457276030/"><i class="fa fa-facebook"
+                                                                                               aria-hidden="true"
+                                                                                               style="font-size: 32px; color: #ffcb08;"></i></a>
                     </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-twitter"
-                                                                             aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
+                    <li style="display: inline; margin: 4px;"><a href="mailto:trafficmotors.uz@gmail.com"><i
+                                    class="fa fa-twitter"
+                                    aria-hidden="true"
+                                    style="font-size: 32px; color: #ffcb08;"></i></a>
                     </li>
                     <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-google-plus"
                                                                              aria-hidden="true"
