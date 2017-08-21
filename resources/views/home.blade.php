@@ -542,6 +542,22 @@
         </div>
     </div>
 
+    <div class="modal fade" id="carModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="border-radius: 0;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            style="color: #ffcb08;">&times;</button>
+                    <p class="modal-title">Автомобиль</p>
+                </div>
+                <div class="modal-body">
+                    <textarea id="automobile_info" style="width: 100%; resize: none; border-width: 0;"
+                              readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="yourModal" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -554,22 +570,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Закрыт</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="carModal" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content" style="border-radius: 0;">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"
-                            style="color: #ffcb08;">&times;</button>
-                    <p class="modal-title">Автомобиль</p>
-                </div>
-                <div class="modal-body">
-                    <textarea id="automobile_info" style="width: 100%; resize: none; border-width: 0;"
-                              readonly></textarea>
                 </div>
             </div>
         </div>

@@ -6,11 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Traffic.uz</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset("css/font-awesome.css") }}">
+    <link rel="stylesheet" href="{{ asset("css/bootstrap-datetimepicker.css") }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans|Shrikhand" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <style>
         @media (max-width: 978px) {
             .panel-body {
@@ -374,7 +374,7 @@
                 <li><a href="#about" class="active" style="color: #ffcb08;">О НАС</a></li>
                 <li><a href="#pricing" style="color: #ffcb08;">ТАРИФЫ</a></li>
                 <li><a href="#contacts" style="color: #ffcb08;">КОНТАКТЫ</a></li>
-                @if(Auth::check())
+                @if(Illuminate\Support\Facades\Auth::check())
                     <li><a href="{{ url('/home') }}" style="color: #ffcb08;"><i class="fa fa-home"
                                                                                 aria-hidden="true"></i> ГЛАВНАЯ</a></li>
                 @else
@@ -401,179 +401,378 @@
 </div>
 
 <div class="container-fluid bg-yellow" id="makeorder">
-    <div class="container" id="orderContiner">
-        {{Form::open(['route' => ['order.submit'], 'method'=>'post'])}}
-        {{csrf_field()}}
+    <div class="container slideanim">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                СДЕЛАТЬ ЗАКАЗ
-            </div>
-            <div class="panel-body">
-                <div class="col-md-6 col-xs-12">
-                    <div class="form-group col-md-12 col-xs-12">
-                        <label for="tarif" class="col-md-4 col-xs-12">Тариф:</label>
-                        <div class="col-md-8">
-                            {{Form::select('tarif', $tarif, null, ['class'=>'form-control', 'onchange'=>'changeTarif()', 'id'=>'tarif_id'])}}
-                        </div>
-                    </div>
-
-                    <div class="form-group col-md-12 col-xs-12">
-                        <label class="col-md-4 col-xs-12">Тип автомобиля:</label>
-                        <div class="col-md-8 col-xs-12">
-                            {{Form::select('car', $car, null, ['class'=>'form-control', 'onchange' => 'changeCar()', 'id' => 'car_id'])}}
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12 col-xs-12 text-center">
-                        <img id="car_image" src="{{asset('automobile/'.$cars[0]->image)}}" data-toggle="modal"
-                             data-target="#carModal" onclick="showAutoInfo()">
-                        <p style="margin-top: 10px;">Нажмите на автомобиль чтобы увидеть информацию об автомобиле</p>
-                    </div>
-
-                    <div class="form-group col-md-12 col-xs-12">
-                        <label class="col-md-4 col-xs-12">Количество грузчиков:</label>
-                        <div class="col-md-8 col-xs-12">
-                            {{Form::number('persons', 0, ['max' => 8, 'min'=>0, 'class'=>'form-control', 'id' =>'person_id', 'onchange' => 'personsChange()'])}}
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12 col-xs-12">
-                        <label for="date_id" class="col-md-4 col-xs-12">Время подачи:</label>
-                        <div class="col-md-5 col-xs-12">
-                            <input type="date" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"
-                                   name="date"
-                                   class="form-control"
-                                   id="date_id">
-                        </div>
-                        <div class="col-md-3 col-xs-12">
-                            <input type="time"
-                                   value="{{ \Carbon\Carbon::now()->setTimezone('Asia/Tashkent')->format('H:i') }}"
-                                   name="time"
-                                   class="form-control" id="date_id">
-                        </div>
-                    </div>
-                    <div class="form-group col-md-12 col-xs-12">
-                        <label for="unit_id" id="label_tarif" class="col-md-4 col-xs-12">Срок аренды (час):</label>
-                        <div class="col-md-8 col-xs-12">
-                            <input name="unit" type="number"
-                                   value="{{ $tarifs[0]->min_hour  }}" min="{{ $tarifs[0]->min_hour  }}"
-                                   class="form-control" required id="unit_id"
-                                   onchange="unitChange()">
-                        </div>
-                    </div>
+            <div class="panel-heading" style="background-color: #372e30;">
+                <h4 style="color: #ffcb08; margin-bottom: 0;">
+                    СДЕЛАТЬ ЗАКАЗ НА
+                </h4>
+                <div class="btn-group" data-toggle="buttons">
+                    <button class="btn btn-warning active" data-toggle="tab"
+                            data-target="#trucking" style="color: #372e30;" id="trucking_tab">
+                        ГРУЗОПЕРЕВОЗКУ
+                    </button>
+                    <button class="btn btn-warning" data-toggle="tab"
+                            data-target="#taxi" style="color: #372e30;" id="taxi_tab">
+                        ТАКСИ
+                    </button>
                 </div>
-                <div class="col-md-6 col-xs-12">
-                    @if ($errors->has('point_A') || $errors->has('address_A'))
-                        <div class="col-md-12 col-xs-12">
-                                            <span class="help-block">
-                                                <strong class="alert-danger">{{ $errors->first('point_A') }}</strong>
-                                            </span>
+            </div>
+            <div class="panel-body tab-content">
+                <div class="tab-pane active" id="trucking">
+                    <form action="{{ route('user.order.submit') }}" method="post">
+                        {{ csrf_field() }}
+                        <div class="col-md-6">
+                            <div class="form-group col-md-12">
+                                <label for="trucking_tariff_id" class="col-md-4">
+                                    Тариф:
+                                </label>
+                                <div class="col-md-8">
+                                    <select name="tariff_id" id="trucking_tariff_id"
+                                            class="form-control" onchange="changeTariff()">
+                                        @foreach($tariff as $index => $item)
+                                            <option value="{{ $index }}">{{ $item }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="trucking_automobile_id" class="col-md-4">
+                                    Тип автомобиля:
+                                </label>
+                                <div class="col-md-8">
+                                    <select name="automobile_id" id="trucking_automobile_id"
+                                            class="form-control" onchange="changeAutomobile()">
+                                        @foreach($automobile as $index => $auto)
+                                            <option value="{{$index}}">{{ $auto }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12 text-center">
+                                <img id="car_image" src="{{asset('automobile/'.$automobiles[0]->image)}}"
+                                     data-toggle="modal"
+                                     data-target="#carModal" onclick="showAutoInfo()">
+                                <p style="margin-top: 10px;">Нажмите на автомобиль чтобы увидеть информацию об
+                                    автомобиле</p>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="trucking_loaders" class="col-md-5">
+                                    Количество грузчиков:
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="number" name="loaders" class="form-control"
+                                           id="trucking_loaders" min="0" max="8" value="0"
+                                           onchange="calculateTruckingPrice()">
+                                </div>
+                                <label class="col-md-1">человек</label>
+                            </div>
+                            <div class="form-group col-md-12" id="trucking_hour_wrapper">
+                                <label for="trucking_hour" class="col-md-5">
+                                    Срок аренды:
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="number" name="hour" id="trucking_hour"
+                                           class="form-control" min="{{ $tariffs[0]->type == 0
+                                                           ? $tariffs[0]->min_hour
+                                                           : ($tariffs[1]->type == 0 ? $tariffs[1]->min_hour : 0) }}"
+                                           value="{{ $tariffs[0]->type == 0
+                                                           ? $tariffs[0]->min_hour
+                                                           : ($tariffs[1]->type == 0 ? $tariffs[1]->min_hour : 0) }}"
+                                           onchange="calculateTruckingPrice()">
+                                </div>
+                                <label class="col-md-1">час</label>
+                            </div>
+                            <div class="form-group col-md-12" id="trucking_distance_wrapper">
+                                <label for="trucking_distance" class="col-md-5">
+                                    Дистанция:
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="number" name="distance" id="trucking_distance" step="2"
+                                           class="form-control" min="0" value="0" readonly>
+                                </div>
+                                <label class="col-md-1">километр</label>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label for="trucking_start" class="col-md-5">
+                                    Время подачи:
+                                </label>
+                                <div class="col-md-5">
+                                    <input type="text" name="start"
+                                           value="{{ \Carbon\Carbon::now()
+                                                           ->setTimezone('Asia/Tashkent')
+                                                           ->format("Y-m-d H:i") }}"
+                                           class="form-control form_datetime"
+                                           id="trucking_start" readonly>
+                                </div>
+                            </div>
                         </div>
-                    @endif
-                    <div class="form-group col-md-12">
-                        <label class="col-md-3 col-xs-12">Откуда:</label>
-                        <div class="col-md-8 col-xs-12">
-                            {{Form::text('address_A',null, ['class'=>'form-control', 'id'=>'address_a', 'readOnly'])}}
-                        </div>
-                        <div class="col-md-1">
-                            <button type="button" class="btn btn-default" data-toggle="modal"
-                                    data-target="#firstMapModal" onclick="setStartPoint()"><i class="fa fa-compass"></i>
-                            </button>
-                        </div>
-                    </div>
-                    @if ($errors->has('point_B') || $errors->has('address_B'))
-                        <div class="col-md-12 col-xs-12">
-                        <span class="help-block">
-                            <strong class="alert-danger">{{ $errors->first('point_B') }}</strong>
-                        </span>
-                        </div>
-                    @endif
-                    <div class="form-group col-md-12">
-                        <label class="col-md-3 col-xs-12">Куда:</label>
-                        <div class="col-md-8 col-xs-12">
-                            {{Form::text('address_B',null, ['class'=>'form-control', 'id'=>'address_b', 'readOnly'])}}
-                        </div>
-                        <div class="col-md-1">
-                            <button type="button" class="btn btn-default" data-toggle="modal"
-                                    data-target="#firstMapModal" onclick="setEndPoint()"><i class="fa fa-compass"></i>
-                            </button>
-                        </div>
-                    </div>
+                        <div class="col-md-6">
+                            <div class="form-group col-md-12 {{ ($errors->has('address_a') || $errors->has('point_a')) ? ' has-error' : '' }}">
+                                <label for="trucking_address_a" class="col-md-3">
+                                    Откуда:
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" name="address_a" class="form-control"
+                                           id="trucking_address_a">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                            data-target="#mainModal" onclick="setStartPoint()">
+                                        <i class="fa fa-map-marker"></i>
+                                    </button>
+                                </div>
+                            </div>
 
-                    <div class="col-md-4 col-xs-12">
-                        {{Form::hidden('point_A',null, ['id'=>'point_a', 'class'=>'form-control'])}}
-                    </div>
-                    <div class="col-md-4 col-xs-12">
-                        {{Form::hidden('point_B',null,['id'=>'point_b', 'class'=>'form-control'])}}
-                    </div>
+                            <div class="form-group col-md-12 {{ ($errors->has('address_b') || $errors->has('point_b')) ? ' has-error' : '' }}">
+                                <label for="trucking_address_b" class="col-md-3">
+                                    Куда:
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="text" name="address_b" class="form-control"
+                                           id="trucking_address_b">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                            data-target="#mainModal" onclick="setEndPoint()">
+                                        <i class="fa fa-map-marker"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="hidden" name="point_a" id="trucking_point_a">
+                            <input type="hidden" name="point_b" id="trucking_point_b">
 
-                    @if ($errors->has('name'))
-                        <div class="col-md-4 col-xs-12">
-                        <span class="help-block">
-                            <strong class="alert-danger">{{ $errors->first('name') }}</strong>
-                        </span>
-                        </div>
-                    @endif
+                            <div class="col-md-12">
+                                <hr>
+                            </div>
 
-                    <div class="form-group col-md-12">
-                        <label class="col-md-3">Имя заказчика:</label>
-                        <div class="col-md-9">
-                            {{Form::text('name', '',['class'=>'form-control'])}}
-                        </div>
-                    </div>
-                    @if ($errors->has('phone'))
-                        <div class="col-md-4">
-                        <span class="help-block">
-                            <strong class="alert-danger">{{ $errors->first('phone') }}</strong>
-                        </span>
-                        </div>
-                    @endif
-                    <div class="form-group col-md-12">
-                        <label class="col-md-3">Телефон:</label>
-                        <div class="col-md-9">
-                            {{Form::text('phone','+998',['class'=>'form-control'])}}
-                        </div>
-                    </div>
+                            <div class="form-group col-md-12 {{ $errors->has('name') ? ' has-error' : '' }}">
+                                <label for="trucking_name" class="col-md-5">
+                                    Имя заказчика:
+                                </label>
+                                <div class="col-md-7">
+                                    <input type="text" name="name" id="trucking_name"
+                                           class="form-control">
+                                </div>
+                            </div>
 
-                    <div class="form-group col-md-12 col-xs-12">
-                        <label for="discount_id" class="col-md-3 col-xs-12">Скидка:</label>
-                        <div class="col-md-3 col-xs-10">
-                            {{Form::number('discount', $tarifs[0]->discard, ['id' => 'discount_id', 'class' => 'form-control', 'readonly'])}}
-                        </div>
-                        <div class="col-md-1 col-xs-2">
-                            <label>%</label>
-                        </div>
-                        <div class="col-md-4 col-xs-10">
-                            {{Form::number('discount', 0, ['id' => 'sum_discount_id', 'class' => 'form-control', 'readonly'])}}
-                        </div>
-                        <div class="col-md-1 col-xs-2">
-                            <label>сум</label>
-                        </div>
-                    </div>
+                            <div class="form-group col-md-12 {{ $errors->has('phone') ? ' has-error' : '' }}">
+                                <label for="trucking_phone" class="col-md-5">
+                                    Телефон заказчика:
+                                </label>
+                                <div class="col-md-7">
+                                    <input type="text" name="phone" id="trucking_phone"
+                                           class="form-control"
+                                           value="+998">
+                                </div>
+                            </div>
 
-                    <div class="form-group col-md-12">
-                        <label class="col-md-3 col-xs-12" style="font-size: 24px; padding-top: 0;">Цена:</label>
-                        <div class="col-md-8 col-xs-10">
-                            {{Form::number('sum',null, ['class'=>'form-control', 'id'=>'sum_id', 'readOnly', 'style' => 'font-size: 24px; margin-top: 4px;'])}}
-                        </div>
-                        <label class="col-md-1 col-xs-2">
-                            сум
-                        </label>
-                    </div>
+                            <div class="form-group col-md-12">
+                                <label for="trucking_discard" class="col-md-3">
+                                    Скидка:
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="number" id="trucking_discard" class="form-control"
+                                           readonly>
+                                </div>
+                                <label class="col-md-1">%</label>
+                                <div class="col-md-4">
+                                    <input type="number" id="trucking_discard_sum" class="form-control"
+                                           readonly>
+                                </div>
+                                <label class="col-md-1">сум</label>
+                            </div>
 
-                    <div class="col-md-12 col-xs-12">
-                        <button type="submit" class="btn btn-block" id="submit_button"
-                                style="background-color: #372e30; color: #ffcb08; font-size: 18px;">
-                            ЗАКАЗАТЬ
-                        </button>
-                        <button type="button" class="btn btn-block" id="submit_button" onclick="refresh()"
-                                style="background-color: #ffcb08; color: #372e30; font-size: 18px;">
-                            ОЧИСТИТЬ
-                        </button>
-                    </div>
+                            <div class="form-group col-md-12">
+                                <label for="trucking_price" class="col-md-5">
+                                    Итоговая цена:
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="number" id="trucking_price" class="form-control"
+                                           name="price" readonly>
+                                </div>
+                                <label class="col-md-1">сум</label>
+                            </div>
+
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-block" onclick="refreshTrucking()"
+                                        style="background-color: #ffcb08; color: #372e30; font-size: 18px;">
+                                    ОЧИСТИТЬ
+                                </button>
+                                <button type="submit" class="btn btn-block"
+                                        style="background-color: #372e30; color: #ffcb08; font-size: 18px;">
+                                    ЗАКАЗАТЬ
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane" id="taxi">
+                    <form action="{{ route('user.taxiorder.submit') }}" method="post">
+                        {{csrf_field()}}
+                        <div class="col-md-6">
+                            <div class="form-group col-md-12">
+                                <label for="taxi_minute" class="col-md-4">
+                                    Время ожидание:
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="number" name="minute" class="form-control"
+                                           id="taxi_minute" onchange="calculateTaxiPrice()"
+                                           min="{{ $taxi_tariff->min_minute }}"
+                                           value="{{ $taxi_tariff->min_minute }}">
+                                </div>
+                                <label class="col-md-1">
+                                    минут
+                                </label>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="taxi_distance" class="col-md-4">
+                                    Дистанция:
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="number" name="distance" class="form-control"
+                                           id="taxi_distance" min="0" step="2" value="0" readonly>
+                                </div>
+                                <label class="col-md-1">
+                                    км
+                                </label>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="taxi_start" class="col-md-4">
+                                    Время подачи:
+                                </label>
+                                <div class="col-md-5">
+                                    <input type="text" name="start"
+                                           value="{{ \Carbon\Carbon::now()
+                                                           ->setTimezone('Asia/Tashkent')
+                                                           ->format("Y-m-d H:i") }}"
+                                           class="form-control form_datetime"
+                                           id="taxi_start" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12 {{ ($errors->has('address_a') || $errors->has('point_a')) ? ' has-error' : '' }}">
+                                <label for="taxi_address_a" class="col-md-2">
+                                    Откуда:
+                                </label>
+                                <div class="col-md-9">
+                                    <input type="text" name="address_a" class="form-control"
+                                           id="taxi_address_a">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                            data-target="#mainModal" onclick="setStartPoint()">
+                                        <i class="fa fa-map-marker"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12 {{ ($errors->has('address_b') || $errors->has('point_b')) ? ' has-error' : '' }}">
+                                <label for="taxi_address_b" class="col-md-2">
+                                    Куда:
+                                </label>
+                                <div class="col-md-9">
+                                    <input type="text" name="address_b" class="form-control"
+                                           id="taxi_address_b">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                            data-target="#mainModal" onclick="setEndPoint()">
+                                        <i class="fa fa-map-marker"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="point_a" id="taxi_point_a">
+                            <input type="hidden" name="point_b" id="taxi_point_b">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group col-md-12 {{ $errors->has('name') ? ' has-error' : '' }}">
+                                <label for="taxi_name" class="col-md-5">
+                                    Имя заказчика:
+                                </label>
+                                <div class="col-md-7">
+                                    <input type="text" name="name" id="taxi_name"
+                                           class="form-control"
+                                           value="{{ Illuminate\Support\Facades\Auth::guard('web')->user()->name }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12 {{ $errors->has('phone') ? ' has-error' : '' }}">
+                                <label for="taxi_phone" class="col-md-5">
+                                    Телефон заказчика:
+                                </label>
+                                <div class="col-md-7">
+                                    <input type="text" name="phone" id="taxi_phone"
+                                           class="form-control"
+                                           value="+{{ Illuminate\Support\Facades\Auth::guard('web')->user()->phone }}">
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="taxi_discard" class="col-md-3">
+                                    Скидка:
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="number" id="taxi_discard" class="form-control"
+                                           readonly value="{{ $taxi_tariff->discard }}">
+                                </div>
+                                <label class="col-md-1">%</label>
+                                <div class="col-md-4">
+                                    <input type="number" id="taxi_discard_sum" class="form-control"
+                                           readonly>
+                                </div>
+                                <label class="col-md-1">сум</label>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="taxi_price" class="col-md-5">
+                                    Итоговая цена:
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="number" id="taxi_price" class="form-control"
+                                           name="price" readonly>
+                                </div>
+                                <label class="col-md-1">сум</label>
+                            </div>
+
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-block" onclick="refreshTaxi()"
+                                        style="background-color: #ffcb08; color: #372e30; font-size: 18px;">
+                                    ОЧИСТИТЬ
+                                </button>
+                                <button type="submit" class="btn btn-block"
+                                        style="background-color: #372e30; color: #ffcb08; font-size: 18px;">
+                                    ЗАКАЗАТЬ
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        {{Form::close()}}
+    </div>
 
+    <div class="modal fade" id="mainModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="border: none;">
+                <div class="modal-header" style="border: none;">
+                    <button type="button" class="close" data-dismiss="modal" style="color: #ffcb08;">&times;</button>
+                    <h4 class="modal-title" style="color: #ffcb08;">УКАЖИТЕ АДРЕС</h4>
+                </div>
+                <div class="modal-body" style="height: 500px; padding: 0; background-color: #372e30;">
+                    <div id="navigationMap" class="col-md-12" style="height: 500px;"></div>
+                </div>
+                <div class="modal-footer" style="background-color: #372e30; border: none;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            style="background-color: #ffcb08; color: #372e30; border: none;">
+                        Сохранить
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade" id="carModal" role="dialog">
@@ -582,31 +781,11 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"
                             style="color: #ffcb08;">&times;</button>
-                    <p class="modal-title">Автомобиль</p>
+                    <p class="modal-title" style="color: #ffcb08;">Автомобиль</p>
                 </div>
                 <div class="modal-body">
                     <textarea id="automobile_info" style="width: 100%; resize: none; border-width: 0;"
                               readonly></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="firstMapModal" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content" style="border-radius: 0;">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"
-                            style="color: #ffcb08;">&times;</button>
-                    <p class="modal-title">Карта</p>
-                </div>
-                <div class="modal-body" style="height: 500px; padding: 0; background-color: #372e30;">
-                    <div id="firstMap" class="col-md-12" style="height: 500px;"></div>
-                </div>
-                <div class="modal-footer" style="background-color: #372e30;">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"
-                            style="background-color: #ffcb08; color: #0d3625;">ОК
-                    </button>
                 </div>
             </div>
         </div>
@@ -699,7 +878,7 @@
         <h2>Автопарк</h2>
         <br>
         <div class="col-md-12">
-            @foreach($cars as $car)
+            @foreach($automobiles as $car)
                 @if(($loop->index % 4) == 0)
                     <div class="row slideanim row-centered">
                         @endif
@@ -742,24 +921,24 @@
             <h2>ТАРИФЫ</h2>
         </div>
         <div class="row slideanim">
-            @foreach($tarifs as $tariff)
+            @foreach($tariffs as $item)
                 <div class="col-sm-6 col-xs-12">
                     <div class="panel panel-default text-center">
                         <div class="panel-heading">
-                            <h3 style="color: #ffcb08;"> {{ $tariff->type == 0 ? "Внутри города" : "За городом" }}</h3>
+                            <h3 style="color: #ffcb08;"> {{ $item->type == 0 ? "Внутри города" : "За городом" }}</h3>
                         </div>
                         <div class="panel-body">
                             <h4>
-                                <strong>{{ $tariff->type == 0 ? "Цена за час:" : "Цена за км:" }}</strong> {{ $tariff->type == 0 ? $tariff->price_per_hour : $tariff->price_per_distance }}
+                                <strong>{{ $item->type == 0 ? "Цена за час:" : "Цена за км:" }}</strong> {{ $item->type == 0 ? $item->price_per_hour : $item->price_per_distance }}
                                 сум</h4>
                             <h4>
-                                <strong>{{ $tariff->type == 0 ? "По умолчанию (час):" : "По умолчанию (км):" }}</strong> {{ $tariff->type == 0 ? $tariff->min_hour : $tariff->min_distance }}
+                                <strong>{{ $item->type == 0 ? "По умолчанию (час):" : "По умолчанию (км):" }}</strong> {{ $item->type == 0 ? $item->min_hour : $item->min_distance }}
                             </h4>
-                            <h4><strong>Начальная цена:</strong> {{ $tariff->price_minimum  }} сум</h4>
+                            <h4><strong>Начальная цена:</strong> {{ $item->price_minimum  }} сум</h4>
                             <h4><strong>Плата за обслуживание
-                                    погрузчика:</strong> {{ $tariff->price_per_person  }} сум
+                                    погрузчика:</strong> {{ $item->price_per_person  }} сум
                             </h4>
-                            <h4><strong>Скидка:</strong> {{ $tariff->discard  }} %</h4>
+                            <h4><strong>Скидка:</strong> {{ $item->discard  }} %</h4>
                         </div>
                         <div class="panel-footer">
                             <a href="#makeorder" class="btn"
@@ -782,8 +961,8 @@
             <h4>Звоните в любое время и когда угодно!</h4>
             <h2>НАШ АДРЕС</h2>
             <h4>
-                Улица Сакичмон, Шайхонтохурский район, Шайхантахурский район, Tashkent, 100000,
-                Uzbekistan
+                Лалит Угон 1, Шайхантахур, Ташкент
+                Tashkent, Uzbekistan
             </h4>
         </div>
     </div>
@@ -838,231 +1017,10 @@
     </div>
 </footer>
 
+<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset("js/bootstrap-datetimepicker.js") }}"></script>
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 <script>
-    var baseUrl = '{{ URL::asset("") }}';
-    var automobiles = {!! $cars !!};
-    var tarifs = {!! $tarifs !!};
-    var tarif_index = 0;
-    var car_index = 0;
-    var hour = 0;
-    var distance = 0;
-    var min_price = 0;
-    var price_for_unit;
-    var min_price_unit;
-    var price_per_person;
-    var discount = 0;
-    var car_price = 0;
-    var persons = 0;
-    var firstMap;
-    var startPoint = false;
-    var endPoint = false;
-    var path;
-
-    function showAutoImage() {
-        document.getElementById('car_image').src = baseUrl + "automobile/" + automobiles[document.getElementById('car_id').selectedIndex]['image'];
-    }
-
-    function showAutoInfo() {
-        var info = automobiles[document.getElementById('car_id').selectedIndex]['info'];
-        var rows = 0;
-        for (var i = 0; i < info.length; i++)
-            if (info[i] === '\n')
-                rows++;
-        document.getElementById('automobile_info').rows = rows + 4;
-        document.getElementById('automobile_info').innerHTML = info;
-    }
-
-    function showThumbAutoInfo(value) {
-        var info = automobiles[value]['info'];
-        var rows = 0;
-        for (var i = 0; i < info.length; i++)
-            if (info[i] === '\n')
-                rows++;
-        document.getElementById('automobile_info').rows = rows + 4;
-        document.getElementById('automobile_info').innerHTML = info;
-    }
-
-    function init() {
-        var address = new ymaps.Map("thirdMap", {
-            center: [41.323100, 69.230100],
-            zoom: 14,
-            controls: []
-        });
-        address.geoObjects.add(new ymaps.Placemark([41.323100, 69.230100], {
-            balloonContent: 'Наш Офис'
-        }, {
-            preset: 'islands#redHomeIcon',
-            iconColor: '#F44336'
-        }));
-
-        firstMap = new ymaps.Map("firstMap", {
-            center: [41.299496, 69.240073],
-            zoom: 13,
-            controls: []
-        }, {searchControlProvider: 'yandex#search'});
-
-        firstMap.controls.add('geolocationControl');
-        firstMap.controls.add('searchControl');
-        firstMap.controls.add('zoomControl');
-        firstMap.controls.get('searchControl').options.set('size', 'large');
-
-        firstMap.events.add('click', function (event) {
-            var coords = event.get('coords');
-            if (startPoint === false) {
-                startPoint = new ymaps.Placemark(coords, {
-                    balloonContent: 'Пункт А'
-                }, {
-                    draggable: true,
-                    preset: 'islands#redHomeIcon',
-                    iconColor: '#F44336'
-                });
-
-                firstMap.geoObjects.add(startPoint);
-
-                startPoint.events.add('dragend', function (e) {
-                    setPoint(startPoint, 'address_a', 'point_a');
-                });
-
-                setPoint(startPoint, "address_a", "point_a");
-                return;
-            }
-            if (endPoint === false) {
-                endPoint = new ymaps.Placemark(coords, {
-                    balloonContent: 'Пункт Б'
-                }, {
-                    draggable: true,
-                    preset: 'islands#redGovernmentIcon',
-                    iconColor: '#F44336'
-                });
-
-                firstMap.geoObjects.add(endPoint);
-
-                endPoint.events.add('dragend', function (e) {
-                    setPoint(endPoint, 'address_b', 'point_b');
-                });
-                setPoint(endPoint, "address_b", "point_b");
-            }
-        });
-    }
-
-    function setPoint(placemark, id_address, id_point) {
-        var coords = placemark.geometry.getCoordinates();
-        ymaps.geocode(coords).then(function (res) {
-            var firstGeoObject = res.geoObjects.get(0);
-            document.getElementById(id_address).value = firstGeoObject.getAddressLine();
-        });
-        document.getElementById(id_point).value = coords;
-        drawPath();
-    }
-
-    function drawPath() {
-        if (startPoint === false || endPoint === false)
-            return;
-
-        firstMap.geoObjects.remove(path);
-
-        ymaps.route([startPoint.geometry.getCoordinates(), endPoint.geometry.getCoordinates()], {
-            mapStateAutoApply: true,
-            multiRoute: false
-        }).then(function (route) {
-                    path = route;
-                    distance = (route.getLength() / 1000).toFixed(2);
-                    firstMap.geoObjects.add(route);
-                    path.getWayPoints().removeAll();
-                    if (tarifs[tarif_index]['type'] === 1) {
-                        document.getElementById('unit_id').value = distance;
-                        calculatePrice();
-                    }
-                }, function (error) {
-                    alert("Возникла ошибка: " + error.message);
-                }
-        );
-    }
-
-    function setStartPoint() {
-        document.getElementById('point_a').value = document.getElementById('address_a').value = "";
-        firstMap.geoObjects.remove(startPoint);
-        firstMap.geoObjects.remove(path);
-        startPoint = false;
-    }
-
-    function setEndPoint() {
-        document.getElementById('point_b').value = document.getElementById('address_b').value = "";
-        firstMap.geoObjects.remove(endPoint);
-        firstMap.geoObjects.remove(path);
-        endPoint = false;
-    }
-
-    function changeTarif() {
-        tarif_index = document.getElementById('tarif_id').selectedIndex;
-        var unit = document.getElementById('unit_id');
-        if (tarifs[tarif_index]['type'] === 0) {
-            unit.min = tarifs[tarif_index]['min_hour'];
-            unit.value = tarifs[tarif_index]['min_hour'] > hour ? tarifs[tarif_index]['min_hour'] : hour;
-            unit.readOnly = false;
-            price_for_unit = tarifs[tarif_index]['price_per_hour'];
-            min_price_unit = tarifs[tarif_index]['min_hour'];
-            document.getElementById('label_tarif').innerHTML = 'Срок аренды (час):';
-        } else {
-            unit.min = tarifs[tarif_index]['min_distance'];
-            unit.value = tarifs[tarif_index]['min_distance'] > distance ? tarifs[tarif_index]['min_distance'] : distance;
-            unit.readOnly = true;
-            price_for_unit = tarifs[tarif_index]['price_per_distance'];
-            min_price_unit = tarifs[tarif_index]['min_distance'];
-            document.getElementById('label_tarif').innerHTML = 'Дистанция (км):';
-        }
-        min_price = tarifs[tarif_index]['price_minimum'];
-        price_per_person = tarifs[tarif_index]['price_per_person'];
-        document.getElementById('discount_id').value = discount = tarifs[tarif_index]['discard'];
-
-        calculatePrice();
-    }
-
-    function changeCar() {
-        car_index = document.getElementById('car_id').selectedIndex;
-        car_price = automobiles[car_index]['price'];
-        showAutoImage();
-        calculatePrice();
-    }
-
-    function personsChange() {
-        persons = document.getElementById('person_id').value;
-        calculatePrice();
-    }
-
-    function unitChange() {
-        calculatePrice();
-    }
-
-    function calculatePrice() {
-        var price = min_price;
-        price += car_price;
-        price += price_for_unit * (document.getElementById('unit_id').value - min_price_unit);
-        price += persons * price_per_person;
-
-        price -= (document.getElementById('sum_discount_id').value = (price * (discount / 100))).toFixed(0);
-        document.getElementById('sum_id').value = price;
-    }
-
-    ymaps.ready(init);
-
-    function refresh() {
-        tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
-        car_index = document.getElementById('car_id').selectedIndex = 0;
-        changeTarif();
-        changeCar();
-        setStartPoint();
-        setEndPoint();
-        distance = 0;
-    }
-
-    window.onload = function () {
-        tarif_index = document.getElementById('tarif_id').selectedIndex = 0;
-        car_index = document.getElementById('car_id').selectedIndex = 0;
-        changeTarif();
-        changeCar();
-    }
-
     $(document).ready(function () {
         // Add smooth scrolling to all links in navbar + footer link
         $(".navbar a, footer a[href='#myPage']").on('click', function (event) {
@@ -1097,7 +1055,270 @@
             });
         });
     });
+
+    $(".btn-group > .btn").click(function () {
+        $(this).addClass("active").siblings().removeClass("active");
+    });
+
+    $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
+
+    var baseUrl = '{{ asset("") }}';
+
+    function showAutoImage() {
+        document.getElementById("car_image").src = baseUrl + "automobile/" + arrays[1][document.getElementById('trucking_automobile_id').selectedIndex]['image'];
+    }
+
+    function showAutoInfo() {
+        var info = arrays[1][document.getElementById('trucking_automobile_id').selectedIndex]['info'];
+        var rows = 0;
+        for (var i = 0; i < info.length; i++)
+            if (info[i] === '\n')
+                rows++;
+        document.getElementById('automobile_info').rows = rows + 4;
+        document.getElementById('automobile_info').innerHTML = info;
+    }
+
+    function showThumbAutoInfo(value) {
+        var info = arrays[1][value]['info'];
+        var rows = 0;
+        for (var i = 0; i < info.length; i++)
+            if (info[i] === '\n')
+                rows++;
+        document.getElementById('automobile_info').rows = rows + 4;
+        document.getElementById('automobile_info').innerHTML = info;
+    }
+
+    //----- Maps Scripts Start -----//
+    var navigationMap;
+    var startPoint = false;
+    var endPoint = false;
+    var distance = 0;
+    var path;
+
+    function initMaps() {
+        var address = new ymaps.Map("thirdMap", {
+            center: [41.323100, 69.230100],
+            zoom: 14,
+            controls: []
+        });
+        address.geoObjects.add(new ymaps.Placemark([41.323100, 69.230100], {
+            balloonContent: 'Наш Офис'
+        }, {
+            preset: 'islands#redHomeIcon',
+            iconColor: '#F44336'
+        }));
+
+        navigationMap = new ymaps.Map("navigationMap", {
+            center: [41.299496, 69.240073],
+            zoom: 13,
+            controls: []
+        }, {searchControlProvider: 'yandex#search'});
+
+        navigationMap.controls.add('geolocationControl');
+        navigationMap.controls.add('searchControl');
+        navigationMap.controls.add('zoomControl');
+        navigationMap.controls.get('searchControl').options.set('size', 'large');
+
+        navigationMap.events.add('click', function (event) {
+            var coords = event.get('coords');
+            if (startPoint === false) {
+                startPoint = new ymaps.Placemark(coords, {balloonContent: 'Пункт А'}, {
+                    draggable: true,
+                    preset: 'islands#redHomeIcon',
+                    iconColor: '#F44336'
+                });
+                navigationMap.geoObjects.add(startPoint);
+
+                startPoint.events.add('dragend', function () {
+                    setPoint(startPoint);
+                });
+
+                setPoint(startPoint);
+                return;
+            }
+            if (endPoint === false) {
+                endPoint = new ymaps.Placemark(coords, {balloonContent: 'Пункт А'}, {
+                    draggable: true,
+                    preset: 'islands#redGovernmentIcon',
+                    iconColor: '#F44336'
+                });
+                navigationMap.geoObjects.add(endPoint);
+
+                endPoint.events.add('dragend', function () {
+                    setPoint(endPoint);
+                });
+
+                setPoint(endPoint);
+            }
+        })
+    }
+
+    function setPoint(placemark) {
+        var coords = placemark.geometry.getCoordinates();
+        ymaps.geocode(coords).then(function (res) {
+            var firstGeoObject = res.geoObjects.get(0);
+            if (placemark === startPoint) {
+                document.getElementById("trucking_address_a").value = firstGeoObject.getAddressLine();
+                document.getElementById("taxi_address_a").value = firstGeoObject.getAddressLine();
+                document.getElementById("trucking_point_a").value = coords;
+                document.getElementById("taxi_point_a").value = coords;
+            }
+            if (placemark === endPoint) {
+                document.getElementById("trucking_address_b").value = firstGeoObject.getAddressLine();
+                document.getElementById("taxi_address_b").value = firstGeoObject.getAddressLine();
+                document.getElementById("trucking_point_b").value = coords;
+                document.getElementById("taxi_point_b").value = coords;
+            }
+        });
+        drawPath();
+    }
+
+    function drawPath() {
+        if (startPoint === false || endPoint === false)
+            return;
+
+        navigationMap.geoObjects.remove(path);
+
+        ymaps.route([startPoint.geometry.getCoordinates(), endPoint.geometry.getCoordinates()], {
+            mapStateAutoApply: true,
+            multiRoute: false
+        }).then(function (route) {
+                    path = route;
+                    distance = (route.getLength() / 1000).toFixed(2);
+                    navigationMap.geoObjects.add(route);
+                    path.getWayPoints().removeAll();
+                    document.getElementById("trucking_distance").value = distance;
+                    document.getElementById("taxi_distance").value = distance;
+                    calculateTruckingPrice();
+                    calculateTaxiPrice();
+                }, function (error) {
+                    alert("Возникла ошибка: " + error.message);
+                }
+        );
+    }
+
+    function setStartPoint() {
+        if (startPoint !== false) {
+            navigationMap.geoObjects.remove(startPoint);
+            navigationMap.geoObjects.remove(path);
+            startPoint = false;
+            path = null;
+            document.getElementById("trucking_address_a").value =
+                    document.getElementById("taxi_address_a").value =
+                            document.getElementById("trucking_point_a").value =
+                                    document.getElementById("taxi_point_a").value = "";
+        }
+    }
+
+    function setEndPoint() {
+        if (endPoint !== false) {
+            navigationMap.geoObjects.remove(endPoint);
+            navigationMap.geoObjects.remove(path);
+            endPoint = false;
+            path = null;
+            document.getElementById("trucking_address_b").value =
+                    document.getElementById("taxi_address_b").value =
+                            document.getElementById("trucking_point_b").value =
+                                    document.getElementById("taxi_point_b").value = "";
+        }
+    }
+
+    ymaps.ready(initMaps);
+    //----- Maps Scripts End -----//
+
+    //----- Trucking Calculation Scripts Start -----//
+    var arrays = [{!! $tariffs !!}];
+    arrays.push({!! $automobiles !!});
+    var tariff_index = 0;
+    var car_index = 0;
+
+    function changeTariff() {
+        tariff_index = document.getElementById("trucking_tariff_id").selectedIndex;
+        if (tariff_index === 0) {
+            document.getElementById("trucking_hour_wrapper").style.display = "block";
+            document.getElementById("trucking_distance_wrapper").style.display = "none";
+        } else {
+            document.getElementById("trucking_hour_wrapper").style.display = "none";
+            document.getElementById("trucking_distance_wrapper").style.display = "block";
+        }
+        document.getElementById("trucking_discard").value = arrays[0][tariff_index]['discard'];
+        calculateTruckingPrice();
+    }
+
+    function changeAutomobile() {
+        car_index = document.getElementById("trucking_automobile_id").selectedIndex;
+        calculateTruckingPrice();
+        showAutoImage();
+    }
+
+    function calculateTruckingPrice() {
+        var price = arrays[0][tariff_index]['price_minimum'];
+        price += arrays[1][car_index]['price'];
+        price += arrays[0][tariff_index]['price_per_person'] * document.getElementById("trucking_loaders").value;
+        if (arrays[0][tariff_index]['type'] === 0 &&
+                (document.getElementById("trucking_hour").value > arrays[0][tariff_index]['min_hour']))
+            price += arrays[0][tariff_index]['price_per_hour'] * (document.getElementById("trucking_hour").value -
+                    arrays[0][tariff_index]['min_hour']);
+        else if (document.getElementById("trucking_distance").value > arrays[0][tariff_index]['min_distance'])
+            price += arrays[0][tariff_index]['price_per_distance'] *
+                    (document.getElementById("trucking_distance").value - arrays[0][tariff_index]['min_distance']);
+        document.getElementById("trucking_discard_sum").value = price * arrays[0][tariff_index]['discard'] / 100;
+        document.getElementById("trucking_price").value = price - (price * arrays[0][tariff_index]['discard'] / 100);
+    }
+
+    function refreshTrucking() {
+        document.getElementById("trucking_tariff_id").selectedIndex =
+                document.getElementById("trucking_automobile_id").selectedIndex =
+                        document.getElementById("trucking_loaders").value =
+                                document.getElementById("trucking_distance").value = 0;
+        document.getElementById("trucking_hour").value =
+                (arrays[0][0]['type'] === 0) ? arrays[0][0]['min_hour'] : arrays[0][1]['min_hour'];
+        document.getElementById("trucking_address_a").value =
+                document.getElementById("trucking_address_b").value =
+                        document.getElementById("trucking_point_a").value =
+                                document.getElementById("trucking_point_b").value = "";
+        startPoint = endPoint = false;
+        navigationMap.geoObjects.removeAll();
+        changeTariff();
+        changeAutomobile();
+    }
+    //----- Trucking Calculation Scripts End -----//
+
+    //----- Taxi Calculation Scripts Start -----//
+    var taxiTariff = [{!! $taxi_tariff !!}];
+
+    function calculateTaxiPrice() {
+        var price = taxiTariff[0]['price_minimum'];
+        if (document.getElementById("taxi_minute").value > taxiTariff[0]['min_minute'])
+            price += taxiTariff[0]['price_per_minute'] *
+                    (document.getElementById("taxi_minute").value - taxiTariff[0]['min_minute']);
+        if (document.getElementById("taxi_distance").value > taxiTariff[0]['min_distance'])
+            price += taxiTariff[0]['price_per_distance'] *
+                    (document.getElementById("taxi_distance").value - taxiTariff[0]['min_distance']);
+        document.getElementById("taxi_discard_sum").value = price * taxiTariff[0]['discard'] / 100;
+        document.getElementById("taxi_price").value = price - (price * taxiTariff[0]['discard'] / 100);
+    }
+
+    function refreshTaxi() {
+        document.getElementById("taxi_minute").value = taxiTariff[0]['min_minute'];
+        document.getElementById("taxi_distance").value = 0;
+        document.getElementById("taxi_address_a").value =
+                document.getElementById("taxi_address_b").value =
+                        document.getElementById("taxi_point_a").value =
+                                document.getElementById("taxi_point_b").value = "";
+        startPoint = endPoint = false;
+        navigationMap.geoObjects.removeAll();
+        calculateTaxiPrice();
+    }
+    //----- Taxi Calculation Scripts End -----//
+
+    window.onload = function () {
+        document.getElementById("trucking_tariff_id").selectedIndex = 0;
+        document.getElementById("trucking_automobile_id").selectedIndex = 0;
+        changeTariff();
+        changeAutomobile();
+        calculateTaxiPrice();
+    };
 </script>
-<script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

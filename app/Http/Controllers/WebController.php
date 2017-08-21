@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Automobile;
 use App\Notifications\OrderNotification;
 use App\Tarif;
+use App\TaxiTarif;
 use Illuminate\Http\Request;
 use App\Order;
 use Illuminate\Support\Facades\Validator;
@@ -16,6 +17,7 @@ class WebController extends Controller
     {
         $tariffs = Tarif::all();
         $tariff = array();
+        $taxi_tariff = TaxiTarif::first();
 
         foreach ($tariffs as $tr) {
             if ($tr->type == 0)
@@ -31,10 +33,11 @@ class WebController extends Controller
         }
 
         return view('welcome')
-            ->withTarif($tariff)
-            ->withCar($automobile)
-            ->withTarifs($tariffs)
-            ->withCars($automobiles);
+            ->withTariff($tariff)
+            ->withTariffs($tariffs)
+            ->withTaxi_tariff($taxi_tariff)
+            ->withAutomobile($automobile)
+            ->withAutomobiles($automobiles);
     }
 
     public function orderSubmit(Request $request)
