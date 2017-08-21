@@ -24,17 +24,17 @@ class WebController extends Controller
                 $tariff[$tr->id] = "За городом";
         }
 
-        $cars = Automobile::all();
-        $car = array();
-        foreach ($cars as $key) {
-            $car[$key->id] = $key->name;
+        $automobiles = Automobile::all();
+        $automobile = array();
+        foreach ($automobiles as $key) {
+            $automobile[$key->id] = $key->name;
         }
 
         return view('welcome')
             ->withTarif($tariff)
-            ->withCar($car)
+            ->withCar($automobile)
             ->withTarifs($tariffs)
-            ->withCars($cars);
+            ->withCars($automobiles);
     }
 
     public function orderSubmit(Request $request)
