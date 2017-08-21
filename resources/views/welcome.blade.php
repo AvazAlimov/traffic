@@ -695,8 +695,7 @@
                                 </label>
                                 <div class="col-md-7">
                                     <input type="text" name="name" id="taxi_name"
-                                           class="form-control"
-                                           value="{{ Illuminate\Support\Facades\Auth::guard('web')->user()->name }}">
+                                           class="form-control">
                                 </div>
                             </div>
 
@@ -707,7 +706,7 @@
                                 <div class="col-md-7">
                                     <input type="text" name="phone" id="taxi_phone"
                                            class="form-control"
-                                           value="+{{ Illuminate\Support\Facades\Auth::guard('web')->user()->phone }}">
+                                           value="+998">
                                 </div>
                             </div>
 

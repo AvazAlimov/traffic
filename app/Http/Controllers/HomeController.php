@@ -163,7 +163,7 @@ class HomeController extends Controller
         $order->name = $request->name;
         $order->phone = $request->phone;
         $order->price = $request->price;
-        $order->status = 1;
+        $order->status = 0;
 
         $order->save();
         $order->notify(new TaxiOrderNotification());
