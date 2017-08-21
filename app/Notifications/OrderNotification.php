@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 use NotificationChannels\Telegram\TelegramChannel;
 use NotificationChannels\Telegram\TelegramMessage;
+
 class OrderNotification extends Notification
 {
     use Queueable;
@@ -29,16 +30,15 @@ class OrderNotification extends Notification
     {
         return [TelegramChannel::class];
     }
+
     public function toTelegram($order)
     {
-        $point1 = explode(",", $order->point_A, 2);
-        $point2 = explode(",", $order->point_B, 2);
-       $user=($order->user_type == 0) ? "Пользователь" : "Юридическое лицо";
-       $unit = $order->tarif->type == 0 ? "*Срок аренды (час):* " : "*Дистанция (км):* ";
+        $user = ($order->user_type == 0) ? "Пользователь" : "Юридическое лицо";
+        $unit = $order->tarif->type == 0 ? "*Срок аренды (час):* " : "*Дистанция (км):* ";
         return TelegramMessage::create()
-            ->to(-237163806) // Optional.
-            ->content("*Грузоперевозка - Новый Заказ!*\n*Ид:* ".$order->id."\n*Заказчик:* ".$user."\n*Тариф:* ".$order->tarifName()."\n*Количество грузчиков:* ".$order->persons."\n".$unit.$order->unit."\n*Авто:* ".$order->getCarName()."\n".$unit.$order->unit."\n*Имя:* ".$order->name."\n*Тел:* ".$order->phone."\n*Откуда:* ".$order->address_A."\n*Куда:* ".$order->address_B."\n*Время подачи:* ".$order->start_time."\n*Цена:* ".$order->sum
-             );
+            ->to(-237163806)// Optional.
+            ->content("*Грузоперевозка - Новый Заказ!*\n*Ид:* " . $order->id . "\n*Заказчик:* " . $user . "\n*Тариф:* " . $order->tarifName() . "\n*Количество грузчиков:* " . $order->persons . "\n*Авто:* " . $order->getCarName() . "\n" . $unit . $order->unit . "\n*Имя:* " . $order->name . "\n*Тел:* " . $order->phone . "\n*Откуда:* " . $order->address_A . "\n*Куда:* " . $order->address_B . "\n*Время подачи:* " . $order->start_time . "\n*Цена:* " . $order->sum
+            );
 
     }
 
@@ -50,9 +50,9 @@ class OrderNotification extends Notification
     public function toMail()
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our application!');
     }
 
     /**
