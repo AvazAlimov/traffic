@@ -633,149 +633,6 @@
             document.getElementById('automobile_info').innerHTML = info;
         }
 
-        //----- Trucking Calculation Scripts Start -----//
-        var arrays = [{!! $tariffs !!}];
-        arrays.push({!! $automobiles !!});
-        arrays.push({!! $orders->toJson() !!});
-        arrays.push({!! $taxi_orders->toJson() !!})
-        var tariff_index = 0;
-        var car_index = 0;
-
-        function changeTariff() {
-            tariff_index = document.getElementById("trucking_tariff_id").selectedIndex;
-            if (tariff_index === 0) {
-                document.getElementById("trucking_hour_wrapper").style.display = "block";
-                document.getElementById("trucking_distance_wrapper").style.display = "none";
-            } else {
-                document.getElementById("trucking_hour_wrapper").style.display = "none";
-                document.getElementById("trucking_distance_wrapper").style.display = "block";
-            }
-            document.getElementById("trucking_discard").value = arrays[0][tariff_index]['discard'];
-            calculateTruckingPrice();
-        }
-
-        function changeAutomobile() {
-            car_index = document.getElementById("trucking_automobile_id").selectedIndex;
-            calculateTruckingPrice();
-            showAutoImage();
-        }
-
-        function calculateTruckingPrice() {
-            var price = arrays[0][tariff_index]['price_minimum'];
-            price += arrays[1][car_index]['price'];
-            price += arrays[0][tariff_index]['price_per_person'] * document.getElementById("trucking_loaders").value;
-            if (arrays[0][tariff_index]['type'] === 0 &&
-                    (document.getElementById("trucking_hour").value > arrays[0][tariff_index]['min_hour']))
-                price += arrays[0][tariff_index]['price_per_hour'] * (document.getElementById("trucking_hour").value -
-                        arrays[0][tariff_index]['min_hour']);
-            else if (document.getElementById("trucking_distance").value > arrays[0][tariff_index]['min_distance'])
-                price += arrays[0][tariff_index]['price_per_distance'] *
-                        (document.getElementById("trucking_distance").value - arrays[0][tariff_index]['min_distance']);
-            document.getElementById("trucking_discard_sum").value = price * arrays[0][tariff_index]['discard'] / 100;
-            document.getElementById("trucking_price").value = price - (price * arrays[0][tariff_index]['discard'] / 100);
-        }
-
-        function refreshTrucking() {
-            document.getElementById("trucking_tariff_id").selectedIndex =
-                    document.getElementById("trucking_automobile_id").selectedIndex =
-                            document.getElementById("trucking_loaders").value =
-                                    document.getElementById("trucking_distance").value = 0;
-            document.getElementById("trucking_hour").value =
-                    (arrays[0][0]['type'] === 0) ? arrays[0][0]['min_hour'] : arrays[0][1]['min_hour'];
-            document.getElementById("trucking_address_a").value =
-                    document.getElementById("trucking_address_b").value =
-                            document.getElementById("trucking_point_a").value =
-                                    document.getElementById("trucking_point_b").value = "";
-            startPoint = endPoint = false;
-            navigationMap.geoObjects.removeAll();
-            changeTariff();
-            changeAutomobile();
-        }
-
-        function repeatTruckingOrder(index) {
-            document.getElementById("taxi_tab").classList.remove("active");
-            document.getElementById("taxi").classList.remove("active");
-
-            document.getElementById("trucking_tab").classList.add("active");
-            document.getElementById("trucking").classList.add("active");
-
-            for (var i = 0; i < document.getElementById("trucking_tariff_id").children.length; i++)
-                if (document.getElementById("trucking_tariff_id").children[i].value == arrays[2]['data'][index]['tarif_id'])
-                    document.getElementById("trucking_tariff_id").selectedIndex = i;
-            changeTariff();
-            for (var i = 0; i < document.getElementById("trucking_automobile_id").children.length; i++)
-                if (document.getElementById("trucking_automobile_id").children[i].value == arrays[2]['data'][index]['car_id'])
-                    document.getElementById("trucking_automobile_id").selectedIndex = i;
-            changeAutomobile();
-            document.getElementById("trucking_loaders").value = arrays[2]['data'][index]['persons'];
-            if (arrays[2]['data'][index]['tarif']['type'] == 0)
-                document.getElementById("trucking_hour").value = arrays[2]['data'][index]['unit'];
-            else
-                document.getElementById("trucking_distance").value = arrays[2]['data'][index]['unit'];
-            document.getElementById("trucking_start").value = arrays[2]['data'][index]['start_time'];
-
-            //TODO:
-
-            document.getElementById("trucking_name").value = arrays[2]['data'][index]['name'];
-            document.getElementById("trucking_phone").value = arrays[2]['data'][index]['phone'];
-            calculateTruckingPrice();
-        }
-        //----- Trucking Calculation Scripts End -----//
-
-        //----- Taxi Calculation Scripts Start -----//
-        var taxiTariff = [{!! $taxi_tariff !!}];
-
-        function calculateTaxiPrice() {
-            var price = taxiTariff[0]['price_minimum'];
-            if (document.getElementById("taxi_minute").value > taxiTariff[0]['min_minute'])
-                price += taxiTariff[0]['price_per_minute'] *
-                        (document.getElementById("taxi_minute").value - taxiTariff[0]['min_minute']);
-            if (document.getElementById("taxi_distance").value > taxiTariff[0]['min_distance'])
-                price += taxiTariff[0]['price_per_distance'] *
-                        (document.getElementById("taxi_distance").value - taxiTariff[0]['min_distance']);
-            document.getElementById("taxi_discard_sum").value = price * taxiTariff[0]['discard'] / 100;
-            document.getElementById("taxi_price").value = price - (price * taxiTariff[0]['discard'] / 100);
-        }
-
-        function refreshTaxi() {
-            document.getElementById("taxi_minute").value = taxiTariff[0]['min_minute'];
-            document.getElementById("taxi_distance").value = 0;
-            document.getElementById("taxi_address_a").value =
-                    document.getElementById("taxi_address_b").value =
-                            document.getElementById("taxi_point_a").value =
-                                    document.getElementById("taxi_point_b").value = "";
-            startPoint = endPoint = false;
-            navigationMap.geoObjects.removeAll();
-            calculateTaxiPrice();
-        }
-
-        function repeatTaxiOrder(index) {
-            document.getElementById("taxi_tab").classList.add("active");
-            document.getElementById("taxi").classList.add("active");
-
-            document.getElementById("trucking_tab").classList.remove("active");
-            document.getElementById("trucking").classList.remove("active");
-
-            document.getElementById("taxi_minute").value = arrays[3]['data'][index]['minute'];
-            document.getElementById("taxi_distance").value = arrays[3]['data'][index]['distance'];
-            document.getElementById("taxi_start").value = arrays[3]['data'][index]['start_time'];
-
-            //TODO:
-
-            document.getElementById("taxi_name").value = arrays[3]['data'][index]['name'];
-            document.getElementById("taxi_phone").value = arrays[3]['data'][index]['phone'];
-            calculateTaxiPrice();
-        }
-        //----- Taxi Calculation Scripts End -----//
-
-        window.onload = function () {
-            document.getElementById("trucking_tariff_id").selectedIndex = 0;
-            document.getElementById("trucking_automobile_id").selectedIndex = 0;
-            changeTariff();
-            changeAutomobile();
-            calculateTaxiPrice();
-        };
-
         //----- Maps Scripts Start -----//
         var navigationMap;
         var showMap;
@@ -923,5 +780,186 @@
 
         ymaps.ready(initMaps);
         //----- Maps Scripts End -----//
+
+        //----- Trucking Calculation Scripts Start -----//
+        var arrays = [{!! $tariffs !!}];
+        arrays.push({!! $automobiles !!});
+        arrays.push({!! $orders->toJson() !!});
+        arrays.push({!! $taxi_orders->toJson() !!})
+        var tariff_index = 0;
+        var car_index = 0;
+
+        function changeTariff() {
+            tariff_index = document.getElementById("trucking_tariff_id").selectedIndex;
+            if (tariff_index === 0) {
+                document.getElementById("trucking_hour_wrapper").style.display = "block";
+                document.getElementById("trucking_distance_wrapper").style.display = "none";
+            } else {
+                document.getElementById("trucking_hour_wrapper").style.display = "none";
+                document.getElementById("trucking_distance_wrapper").style.display = "block";
+            }
+            document.getElementById("trucking_discard").value = arrays[0][tariff_index]['discard'];
+            calculateTruckingPrice();
+        }
+
+        function changeAutomobile() {
+            car_index = document.getElementById("trucking_automobile_id").selectedIndex;
+            calculateTruckingPrice();
+            showAutoImage();
+        }
+
+        function calculateTruckingPrice() {
+            var price = arrays[0][tariff_index]['price_minimum'];
+            price += arrays[1][car_index]['price'];
+            price += arrays[0][tariff_index]['price_per_person'] * document.getElementById("trucking_loaders").value;
+            if (arrays[0][tariff_index]['type'] === 0 &&
+                    (document.getElementById("trucking_hour").value > arrays[0][tariff_index]['min_hour']))
+                price += arrays[0][tariff_index]['price_per_hour'] * (document.getElementById("trucking_hour").value -
+                        arrays[0][tariff_index]['min_hour']);
+            else if (document.getElementById("trucking_distance").value > arrays[0][tariff_index]['min_distance'])
+                price += arrays[0][tariff_index]['price_per_distance'] *
+                        (document.getElementById("trucking_distance").value - arrays[0][tariff_index]['min_distance']);
+            document.getElementById("trucking_discard_sum").value = price * arrays[0][tariff_index]['discard'] / 100;
+            document.getElementById("trucking_price").value = price - (price * arrays[0][tariff_index]['discard'] / 100);
+        }
+
+        function refreshTrucking() {
+            document.getElementById("trucking_tariff_id").selectedIndex =
+                    document.getElementById("trucking_automobile_id").selectedIndex =
+                            document.getElementById("trucking_loaders").value =
+                                    document.getElementById("trucking_distance").value = 0;
+            document.getElementById("trucking_hour").value =
+                    (arrays[0][0]['type'] === 0) ? arrays[0][0]['min_hour'] : arrays[0][1]['min_hour'];
+            document.getElementById("trucking_address_a").value =
+                    document.getElementById("trucking_address_b").value =
+                            document.getElementById("trucking_point_a").value =
+                                    document.getElementById("trucking_point_b").value = "";
+            startPoint = endPoint = false;
+            navigationMap.geoObjects.removeAll();
+            changeTariff();
+            changeAutomobile();
+        }
+
+        function repeatTruckingOrder(index) {
+            document.getElementById("taxi_tab").classList.remove("active");
+            document.getElementById("taxi").classList.remove("active");
+
+            document.getElementById("trucking_tab").classList.add("active");
+            document.getElementById("trucking").classList.add("active");
+
+            for (var i = 0; i < document.getElementById("trucking_tariff_id").children.length; i++)
+                if (document.getElementById("trucking_tariff_id").children[i].value == arrays[2]['data'][index]['tarif_id'])
+                    document.getElementById("trucking_tariff_id").selectedIndex = i;
+            changeTariff();
+            for (var i = 0; i < document.getElementById("trucking_automobile_id").children.length; i++)
+                if (document.getElementById("trucking_automobile_id").children[i].value == arrays[2]['data'][index]['car_id'])
+                    document.getElementById("trucking_automobile_id").selectedIndex = i;
+            changeAutomobile();
+            document.getElementById("trucking_loaders").value = arrays[2]['data'][index]['persons'];
+            if (arrays[2]['data'][index]['tarif']['type'] == 0)
+                document.getElementById("trucking_hour").value = arrays[2]['data'][index]['unit'];
+            else
+                document.getElementById("trucking_distance").value = arrays[2]['data'][index]['unit'];
+            document.getElementById("trucking_start").value = arrays[2]['data'][index]['start_time'];
+
+            document.getElementById("trucking_name").value = arrays[2]['data'][index]['name'];
+            document.getElementById("trucking_phone").value = arrays[2]['data'][index]['phone'];
+
+            navigationMap.geoObjects.removeAll();
+            startPoint = new ymaps.Placemark([arrays[2]['data'][index]['point_A'].split(',')[0], arrays[2]['data'][index]['point_A'].split(',')[1]], {
+                balloonContent: 'Пункт А'
+            }, {
+                draggable: true,
+                preset: 'islands#redHomeIcon',
+                iconColor: '#F44336'
+            });
+
+            endPoint = new ymaps.Placemark([arrays[2]['data'][index]['point_B'].split(',')[0], arrays[2]['data'][index]['point_B'].split(',')[1]], {
+                balloonContent: 'Пункт Б'
+            }, {
+                draggable: true,
+                preset: 'islands#redGovernmentIcon',
+                iconColor: '#F44336'
+            });
+
+            navigationMap.geoObjects.add(startPoint);
+            navigationMap.geoObjects.add(endPoint);
+            setPoint(startPoint);
+            setPoint(endPoint);
+        }
+        //----- Trucking Calculation Scripts End -----//
+
+        //----- Taxi Calculation Scripts Start -----//
+        var taxiTariff = [{!! $taxi_tariff !!}];
+
+        function calculateTaxiPrice() {
+            var price = taxiTariff[0]['price_minimum'];
+            if (document.getElementById("taxi_minute").value > taxiTariff[0]['min_minute'])
+                price += taxiTariff[0]['price_per_minute'] *
+                        (document.getElementById("taxi_minute").value - taxiTariff[0]['min_minute']);
+            if (document.getElementById("taxi_distance").value > taxiTariff[0]['min_distance'])
+                price += taxiTariff[0]['price_per_distance'] *
+                        (document.getElementById("taxi_distance").value - taxiTariff[0]['min_distance']);
+            document.getElementById("taxi_discard_sum").value = price * taxiTariff[0]['discard'] / 100;
+            document.getElementById("taxi_price").value = price - (price * taxiTariff[0]['discard'] / 100);
+        }
+
+        function refreshTaxi() {
+            document.getElementById("taxi_minute").value = taxiTariff[0]['min_minute'];
+            document.getElementById("taxi_distance").value = 0;
+            document.getElementById("taxi_address_a").value =
+                    document.getElementById("taxi_address_b").value =
+                            document.getElementById("taxi_point_a").value =
+                                    document.getElementById("taxi_point_b").value = "";
+            startPoint = endPoint = false;
+            navigationMap.geoObjects.removeAll();
+            calculateTaxiPrice();
+        }
+
+        function repeatTaxiOrder(index) {
+            document.getElementById("taxi_tab").classList.add("active");
+            document.getElementById("taxi").classList.add("active");
+
+            document.getElementById("trucking_tab").classList.remove("active");
+            document.getElementById("trucking").classList.remove("active");
+
+            document.getElementById("taxi_minute").value = arrays[3]['data'][index]['minute'];
+            document.getElementById("taxi_distance").value = arrays[3]['data'][index]['distance'];
+            document.getElementById("taxi_start").value = arrays[3]['data'][index]['start_time'];
+
+            document.getElementById("taxi_name").value = arrays[3]['data'][index]['name'];
+            document.getElementById("taxi_phone").value = arrays[3]['data'][index]['phone'];
+
+            navigationMap.geoObjects.removeAll();
+            startPoint = new ymaps.Placemark([arrays[3]['data'][index]['point_A'].split(',')[0], arrays[3]['data'][index]['point_A'].split(',')[1]], {
+                balloonContent: 'Пункт А'
+            }, {
+                draggable: true,
+                preset: 'islands#redHomeIcon',
+                iconColor: '#F44336'
+            });
+
+            endPoint = new ymaps.Placemark([arrays[3]['data'][index]['point_B'].split(',')[0], arrays[3]['data'][index]['point_B'].split(',')[1]], {
+                balloonContent: 'Пункт Б'
+            }, {
+                draggable: true,
+                preset: 'islands#redGovernmentIcon',
+                iconColor: '#F44336'
+            });
+
+            navigationMap.geoObjects.add(startPoint);
+            navigationMap.geoObjects.add(endPoint);
+            setPoint(startPoint);
+            setPoint(endPoint);
+        }
+        //----- Taxi Calculation Scripts End -----//
+
+        window.onload = function () {
+            document.getElementById("trucking_tariff_id").selectedIndex = 0;
+            document.getElementById("trucking_automobile_id").selectedIndex = 0;
+            changeTariff();
+            changeAutomobile();
+            calculateTaxiPrice();
+        };
     </script>
 @endsection
