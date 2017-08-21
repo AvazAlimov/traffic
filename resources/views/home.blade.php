@@ -519,6 +519,8 @@
                 </div>
             @endforeach
             {{ $taxi_orders->links() }}
+            <br>
+            <br>
         </div>
     </div>
 
