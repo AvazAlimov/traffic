@@ -79,4 +79,9 @@ class WebController extends Controller
         $order->notify(new OrderNotification());
         return redirect()->back();
     }
+
+    public function taxiOrderSubmit(Request $request)
+    {
+
+    }
 }

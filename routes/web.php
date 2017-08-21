@@ -23,7 +23,8 @@ Route::post('user/order/submit', 'HomeController@orderSubmit')->name('user.order
 Route::get('user/order/again{id}', 'HomeController@orderAgain')->name('user.order.again');
 Route::post('user/taxiorder/submit', 'HomeController@taxiOrderSubmit')->name('user.taxiorder.submit');
 Route::get('user/taxiorder/again{id}', 'HomeController@taxiOrderAgain')->name('user.taxiorder.again');
-Route::post('/','WebController@orderSubmit')->name('order.submit');
+Route::post('/order','WebController@orderSubmit')->name('web.order.submit');
+Route::post('/taxi_order','WebController@taxiOrderSubmit')->name('web.taxiorder.submit');
 
 Route::prefix('admin')->group(function () {
     Route::get('/login', 'Auth\AdminLoginController@showLoginForm')->name('admin.login');
@@ -76,7 +77,6 @@ Route::prefix('operator')->group(function () {
         Route::post('/restore/{id}', 'OperatorController@taxiOrderRestore')->name('operator.taxiorder.restore');
         Route::get('/update/{id}/', 'OperatorController@taxiOrderUpdate')->name('operator.taxiorder.update');
         Route::post('/update/{id}', 'OperatorController@taxiOrderUpdateSubmit')->name('operator.taxiorder.update.submit');
-
     });
 
 });
