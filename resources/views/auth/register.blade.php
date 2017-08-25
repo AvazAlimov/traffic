@@ -101,7 +101,7 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
-                @if(Auth::check())
+                @if(Illuminate\Support\Facades\Auth::check())
                     <li><a href="{{ url('/home') }}" style="color: #ffcb08;"><i class="fa fa-home"
                                                                                 aria-hidden="true"></i> ГЛАВНАЯ</a>
                     </li>
