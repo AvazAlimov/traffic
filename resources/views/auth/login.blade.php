@@ -219,6 +219,8 @@
             <h4 style="color: #ffcb08;">Ташкент 2017</h4>
         </div>
     </div>
+    <br>
+    <br>
 </footer>
 <script src="{{ asset('js/app.js') }}"></script>
 </body>
