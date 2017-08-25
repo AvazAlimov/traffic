@@ -405,7 +405,7 @@
 </div>
 
 <div class="container-fluid bg-yellow" id="makeorder">
-    <div class="container slideanim">
+    <div class="container">
         <div class="panel panel-default">
             <div class="panel-heading" style="background-color: #372e30;">
                 <h4 style="color: #ffcb08; margin-bottom: 0;">
