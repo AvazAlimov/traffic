@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{asset('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')}}" type="text/css">
     <link rel="stylesheet" href="{{asset('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')}}" type="text/css">
     <link href="{{asset('https://fonts.googleapis.com/css?family=Raleway:100,600')}}" rel="stylesheet" type="text/css">
-
+    <link href="https://fonts.googleapis.com/css?family=Shrikhand" rel="stylesheet">
     <script src="{{asset('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')}}"></script>
     <script src="{{asset('https://api-maps.yandex.ru/2.1/?lang=ru_RU')}}" type="text/javascript"></script>
@@ -82,8 +82,8 @@
                                  style="width: 24px; height: 24px; margin-right: 12px;">
                         </td>
                         <td>
-                            <div style="color: #ffcb08;">
-                                Traffic.uz
+                            <div style="color: #ffcb08; font-family: 'Shrikhand', cursive;">
+                                TRAFFIC.UZ
                             </div>
                         </td>
                     </tr>
