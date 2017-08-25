@@ -56,6 +56,10 @@
                 margin: 0;
                 padding: 0;
             }
+
+            .panel-body {
+                padding-bottom: 10px;
+            }
         }
 
         .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a.active {
