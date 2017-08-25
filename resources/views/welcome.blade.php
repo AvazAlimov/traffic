@@ -799,10 +799,10 @@
     <div class="container slideanim">
         <h2 class="text-center">О НАС</h2>
 
-        <div class="col-md-4">
+        <div class="col-md-4 text-center">
             <h3><strong>КТО</strong> МЫ</h3>
             <hr>
-            <p>
+            <p style="text-align: justify;">
                 Компания SOS (Smart Outsourcing Solutions) занимается разработкой сайтов, мобильных приложений,
                 продвижением сайтов и дизайном рекламы. Компания сотрудничает со многими успешными отечественными
                 компаниями и предприятиями. Также налажено многогранное и успешное сотрудничество со многими зарубежными
@@ -810,10 +810,10 @@
             </p>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 text-center">
             <h3><strong>ЧТО</strong> ДЕЛАЕМ</h3>
             <hr>
-            <p>
+            <p style="text-align: justify;">
                 Команда профессиональных, отважных и креативных специалистов, которая готова реализовать любые ваши
                 пожелания от разработки уникальных и неповторимых сайтов до создания бренда с дизайном упаковки,
                 логотипа и фирменного стиля, для повышения эффективности вашего бизнеса и значительного повышения ваших
@@ -821,10 +821,10 @@
             </p>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 text-center">
             <h3><strong>НАША</strong> МИССИЯ</h3>
             <hr>
-            <p>
+            <p style="text-align: justify;">
                 Наша главная миссия: Стремительно развиваться в сфере интернет-технологий и занять лидирующие позиции на
                 рынке Узбекистана, параллельно добиваясь мирового успеха посредством сотрудничества с развитыми
                 международными компаниями!
@@ -987,7 +987,7 @@
     </a>
 
     <div class="container">
-        <div class="row slideanim">
+        <div class="row">
             <div class="col-md-12 col-sm-12">
                 <ul style="list-style-type: none; margin: 0; padding: 0;">
                     <li style="display: inline; margin: 4px;"><a
@@ -995,14 +995,17 @@
                                                                                                aria-hidden="true"
                                                                                                style="font-size: 32px; color: #ffcb08;"></i></a>
                     </li>
-                    <li style="display: inline; margin: 4px;"><a href="mailto:trafficmotors.uz@gmail.com"><i
-                                    class="fa fa-twitter"
+                    <li style="display: inline; margin: 4px;">
+                        <a href="mailto:trafficmotors.uz@gmail.com"><i
+                                    class="fa fa-google-plus"
                                     aria-hidden="true"
                                     style="font-size: 32px; color: #ffcb08;"></i></a>
                     </li>
-                    <li style="display: inline; margin: 4px;"><a href="#"><i class="fa fa-google-plus"
-                                                                             aria-hidden="true"
-                                                                             style="font-size: 32px; color: #ffcb08;"></i></a>
+                    <li style="display: inline; margin: 4px;">
+                        <a href="mailto:trafficmotors.uz@gmail.com"><i
+                                    class="fa fa-twitter"
+                                    aria-hidden="true"
+                                    style="font-size: 32px; color: #ffcb08;"></i></a>
                     </li>
                 </ul>
             </div>
