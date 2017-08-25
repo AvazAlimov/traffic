@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('css/font-awesome.css') }}">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Shrikhand" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!--suppress CssOptimizeSimilarProperties -->
     <style>
@@ -90,8 +91,8 @@
                                  style="width: 24px; height: 24px; margin-right: 12px;">
                         </td>
                         <td>
-                            <div style="color: #ffcb08;">
-                                Traffic.uz
+                            <div style="color: #ffcb08; font-family: 'Shrikhand', cursive;">
+                                TRAFFIC.UZ
                             </div>
                         </td>
                     </tr>

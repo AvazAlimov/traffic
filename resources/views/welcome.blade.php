@@ -364,7 +364,7 @@
                         </td>
                         <td>
                             <div style="color: #ffcb08; font-family: 'Shrikhand', cursive;">
-                                T r a f f i c . u z
+                                TRAFFIC.UZ
                             </div>
                         </td>
                     </tr>
