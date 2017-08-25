@@ -994,7 +994,7 @@
                                         <tr>
                                             <td>
                                                 <form method="post" onsubmit="return confirm('Восстановить?');"
-                                                      action="{{route('operator.order.restore', $served_order->id)}}">
+                                                      action="{{route('operator.taxiorder.restore', $served_order->id)}}">
                                                     {{csrf_field()}}
                                                     <input type="submit" class="btn btn-primary"
                                                            value="Восстановить">
@@ -1002,7 +1002,7 @@
                                             </td>
                                             <td>
                                                 <form method="post" onsubmit="return confirm('Хотите удалить?');"
-                                                      action="{{route('operator.order.delete', $served_order->id)}}">
+                                                      action="{{route('operator.taxiorder.delete', $served_order->id)}}">
                                                     {{csrf_field()}}
                                                     <input type="submit" class="btn btn-danger" value="Удалить">
                                                 </form>
