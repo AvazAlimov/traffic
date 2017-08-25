@@ -26,6 +26,10 @@
                 padding: 0;
                 font-size: 13px;
             }
+
+            .panel-body {
+                padding-bottom: 10px;
+            }
         }
     </style>
 @endsection
