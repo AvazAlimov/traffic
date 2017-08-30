@@ -146,6 +146,7 @@
                                             <img src="{{ "operator_file/".$operator->image }}" class="img-circle"
                                                  style="width: 128px; height: 128px">
                                         </div>
+
                                         <div class="media-body">
                                             <h3 class="media-heading">Имя: {{ $operator->name }}</h3>
                                             <br>
