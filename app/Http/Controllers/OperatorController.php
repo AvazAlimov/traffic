@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Notifications\OperatorOrderNotification;
+use App\Notifications\OperatorTaxiOrderNotification;
 use App\Order;
 use App\TaxiOrder;
 use Carbon\Carbon;
@@ -112,6 +115,7 @@ class OperatorController extends Controller
         $order->operator_id = Auth::guard('operator')->user()->id;
 
         $order->save();
+        $order->notify(new OperatorOrderNotification());
         /** @noinspection PhpUndefinedMethodInspection */
         Session::flash('message', 'Ваш заказ успешно создано');
         return redirect()->back();
@@ -123,6 +127,7 @@ class OperatorController extends Controller
         $order->operator_id = $operator_id;
         $order->status = 1;
         $order->save();
+        $order->notify(new OperatorTaxiOrderNotification());
         return redirect()->back();
     }
 
@@ -393,6 +398,7 @@ class OperatorController extends Controller
         $order->operator_id = Auth::guard('operator')->user()->id;
 
         $order->save();
+        $order->notify(new OperatorTaxiOrderNotification());
         /** @noinspection PhpUndefinedMethodInspection */
         Session::flash('message', 'Ваш заказ успешно создано');
         return redirect()->back();
@@ -404,6 +410,7 @@ class OperatorController extends Controller
         $order->operator_id = $operator_id;
         $order->status = 1;
         $order->save();
+        $order->notify(new OperatorTaxiOrderNotification());
         return redirect()->back();
     }
 
